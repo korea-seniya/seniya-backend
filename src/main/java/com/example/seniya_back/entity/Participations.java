@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @Table(name = "participations")
 @NoArgsConstructor
 @Getter
-public class ParticipationsEntity {
+public class Participations {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "participation_id")
-    private Long id;
+    private Long participationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -20,5 +20,5 @@ public class ParticipationsEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", nullable = false)
-    private ClassEntity classEntity;
+    private Class classEntity;
 }
