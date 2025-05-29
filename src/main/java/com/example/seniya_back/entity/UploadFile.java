@@ -14,7 +14,7 @@ import lombok.*;
 public class UploadFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long uploadFileId;
 
     @Column(nullable = false)
     private String originalName;

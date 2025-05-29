@@ -17,7 +17,7 @@ public class Pass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long passId;
 
     // 회원 id
     @ManyToOne(fetch = FetchType.LAZY)
