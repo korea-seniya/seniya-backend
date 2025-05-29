@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "health_data")
@@ -37,17 +38,14 @@ public class HealthData {
     @Column(name = "blood_pressure")
     private BloodPressure bloodPressure;
 
-    @ManyToOne
-    @JoinColumn(name = "disease_id", nullable = false)
-    private Disease diseaseId;
+    @OneToMany(mappedBy = "healthData", cascade = CascadeType.ALL)
+    private List<Disease> disease;
 
-    @ManyToOne
-    @JoinColumn(name = "medication_id", nullable = false)
-    private Medication medicationId;
+    @OneToMany(mappedBy = "healthData", cascade = CascadeType.ALL)
+    private List<Disease> medication;
 
-    @ManyToOne
-    @JoinColumn(name = "allergy_id", nullable = false)
-    private Allergy allergyId;
+    @OneToMany(mappedBy = "healthData", cascade = CascadeType.ALL)
+    private List<Disease> allergy;
 
     @Column(name = "smoking", nullable = false)
     private Boolean smoking = false;

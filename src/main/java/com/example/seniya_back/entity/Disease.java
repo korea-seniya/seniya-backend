@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "diseases")
@@ -23,10 +25,14 @@ public class Disease {
     @Column(name = "disease_name", nullable = false, length = 100)
     private String diseaseName;
 
+    @OneToOne(mappedBy = "Disease", cascade = CascadeType.ALL)
+    private  Medication medication;
+
     @Column(name = "disease_date")
     private LocalDate diseaseDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "disease_status")
     private DiseaseStatus diseaseStatus;
+
 }

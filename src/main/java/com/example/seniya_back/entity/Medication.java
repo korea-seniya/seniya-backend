@@ -17,8 +17,9 @@ public class Medication {
     @Column(name = "medication_id", updatable = false)
     private Long medicationId;
 
-    @Column(name = "disease_id", nullable = false)
-    private Long diseaseId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "disease_id", nullable = false)
+    private Disease disease;
 
     @Column(name = "medication_name", nullable = false, length = 100)
     private String medicationName;
