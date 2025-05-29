@@ -1,6 +1,5 @@
 package com.example.seniya_back.entity;
 
-import com.example.seniya_back.common.enums.ApprovalStatus;
 import com.example.seniya_back.common.enums.Specialty;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,7 +19,8 @@ public class TrainerProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long trainerId;
 
-    @Column(nullable = false)
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Enumerated(EnumType.STRING)

@@ -16,9 +16,12 @@ public class Inquiry {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long inquiryId;
 
-    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "trainer_id")
     private TrainerProfile trainer;
 
     @Column(nullable = false)

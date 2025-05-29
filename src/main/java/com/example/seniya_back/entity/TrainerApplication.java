@@ -19,11 +19,12 @@ public class TrainerApplication {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long applicationId;
 
-    @Column(nullable = false)
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Enumerated(EnumType.STRING)
-    @joinColumn(nullable = false)
+    @Column(nullable = false)
     private ApprovalStatus ApprovalStatus;
 
     private LocalDate appliedDate;
