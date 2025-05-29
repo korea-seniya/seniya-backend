@@ -4,7 +4,6 @@ import com.example.seniya_back.common.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -15,18 +14,19 @@ import java.time.LocalTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClassEntity {
+public class Class {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "class_id")
-    private Long id;
+    private Long classId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "categry", nullable = false)
     private Category category;
 
-    @Column(nullable = false)
-    private Long trainerId;
+    @ManyToOne
+    @JoinColumn(name = "tariner_id")
+    private TrainerProfile trainerProfile;
 
     @Column(nullable = false)
     private String title;
