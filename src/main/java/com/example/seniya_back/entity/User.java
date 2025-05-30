@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table (name = "users")
@@ -21,8 +19,9 @@ public class User {
     @Column(name = "user_id", updatable = false)
     private Long userId;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<Role> role;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
     @Column(name = "username", nullable = false, unique = true)
     private String userName;
@@ -44,5 +43,4 @@ public class User {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
 }

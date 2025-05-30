@@ -16,12 +16,12 @@ public class Inquiry {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long inquiryId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "trainer_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trainer_id", nullable = false)
     private TrainerProfile trainer;
 
     @Column(nullable = false)
@@ -32,8 +32,8 @@ public class Inquiry {
     private LocalDateTime responseAt = LocalDateTime.now();
 
     @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private LocalDateTime updatedAt;
 
 }

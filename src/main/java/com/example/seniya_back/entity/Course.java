@@ -6,10 +6,9 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
 
 @Entity
-@Table(name = "classes")
+@Table(name = "courses")
 @Getter
 @Setter
 @Builder
@@ -31,9 +30,6 @@ public class Course {
 
     @Column(nullable = false)
     private String title;
-
-    @OneToOne(mappedBy = "Course", cascade = CascadeType.ALL)
-    private Participations participations;
 
     @Column(nullable = false)
     private String description;
