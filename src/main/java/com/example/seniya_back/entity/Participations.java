@@ -18,7 +18,7 @@ public class Participations {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "class_id", nullable = false)
+    private Class classEntity;
 }
