@@ -2,7 +2,6 @@ package com.example.seniya_back.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.catalina.User;
 
 import java.time.LocalDateTime;
 
