@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class Inquiry {
+public class Inquiry extends BaseTimeEntity{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long inquiryId;
 
@@ -30,10 +30,4 @@ public class Inquiry {
     private String response;
 
     private LocalDateTime responseAt = LocalDateTime.now();
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
 }

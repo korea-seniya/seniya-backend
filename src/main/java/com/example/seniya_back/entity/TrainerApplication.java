@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class TrainerApplication {
+public class TrainerApplication extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long applicationId;
@@ -28,9 +28,4 @@ public class TrainerApplication {
     private ApprovalStatus ApprovalStatus;
 
     private LocalDate appliedDate;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    private LocalDateTime updatedAt = LocalDateTime.now();
 }
