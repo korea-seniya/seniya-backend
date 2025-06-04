@@ -1,0 +1,15 @@
+package com.example.seniya_back.dto.user.response;
+
+import com.example.seniya_back.entity.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+public class UserSignUpResponseDto {
+    User user;
+}
