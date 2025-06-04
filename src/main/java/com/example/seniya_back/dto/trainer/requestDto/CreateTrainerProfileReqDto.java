@@ -7,11 +7,11 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-public class PostTrainerProfileRequestDto {
+public class CreateTrainerProfileReqDto {
     private String name;
     private String specialty;
     private String certificate;
     private LocalDate certificateDate;
-    private Integer experienceYears;
+    private Long experienceYears;
     private String description;
 }

@@ -6,10 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class PostInquiryRequestDto {
+public class InquiryAnswerReqDto {
     @NotBlank
-    private String title;
-
-    @NotBlank
-    private String content;
+    private String response;
 }

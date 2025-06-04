@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetTrainerProfileRepsonseDto {
+public class TrainerProfileResDto {
     private String name;
     private String specialty;
     private String certificate;

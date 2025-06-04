@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetMyInquiryResponseDto {
+public class MyInquiryResDto {
     private String title;
     private String content;
     private LocalDateTime createdAt;
