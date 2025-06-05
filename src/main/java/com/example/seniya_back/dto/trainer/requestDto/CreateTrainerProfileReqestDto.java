@@ -1,21 +1,17 @@
-package com.example.seniya_back.dto.trainer.responseDto;
+package com.example.seniya_back.dto.trainer.requestDto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Setter
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-public class TrainerProfileResDto {
+public class CreateTrainerProfileReqestDto {
     private String name;
     private String specialty;
     private String certificate;
     private LocalDate certificateDate;
-    private Integer experienceYears;
+    private Long experienceYears;
     private String description;
 }

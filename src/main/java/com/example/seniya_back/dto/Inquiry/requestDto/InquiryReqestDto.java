@@ -6,7 +6,10 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class InquiryAnswerReqDto {
+public class InquiryReqestDto {
     @NotBlank
-    private String response;
+    private String title;
+
+    @NotBlank
+    private String content;
 }

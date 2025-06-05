@@ -1,19 +1,19 @@
 package com.example.seniya_back.dto.Inquiry.responseDto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Setter
 @Getter
-@NoArgsConstructor
+@Setter
+@Builder
 @AllArgsConstructor
-public class MyInquiryResDto {
+public class InquiryResponseDto {
+    private Long inquiryId;
     private String title;
     private String content;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

@@ -5,6 +5,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class TrainerApplicationStatusReqDto {
+public class TrainerApplicationStatusReqestDto {
     private String approvalStatus;
 }
