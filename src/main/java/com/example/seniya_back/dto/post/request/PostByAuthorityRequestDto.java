@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PostByAuthorityReqDto {
+public class PostByAuthorityRequestDto {
     private String roleName;
 }

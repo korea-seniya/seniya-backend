@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Builder
 @AllArgsConstructor
-public class HealthDataResDto {
+public class HealthDataResponseDto {
     private Float height;
     private Float weight;
     private Float bodyFatPercentage;
