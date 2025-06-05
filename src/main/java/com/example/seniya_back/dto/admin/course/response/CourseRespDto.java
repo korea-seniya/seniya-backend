@@ -17,7 +17,7 @@ public class CourseRespDto {
     private String description;
     private LocalDateTime classDate;
     private LocalTime classStartTime;
-    private LocalDateTime classEndTime;
+    private LocalTime classEndTime;
     private Category category;
     private String classroom;
 }
