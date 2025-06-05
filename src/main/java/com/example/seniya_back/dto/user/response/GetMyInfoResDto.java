@@ -17,4 +17,12 @@ public class GetMyInfoResDto {
     private String email;
     private String phone;
     private LocalDate createdAt;
+    private LocalDate updatedAt;
+
+    public GetMyInfoResDto(Long id, String userName, String email, String phone) {
+        this.id = id;
+        this.userName = userName;
+        this.email = email;
+        this.phone = phone;
+    }
 }
