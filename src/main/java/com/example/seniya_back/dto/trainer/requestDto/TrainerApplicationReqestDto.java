@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class TrainerApplicationReqDto {
+public class TrainerApplicationReqestDto {
     @NotBlank
     private String specialty;
 }

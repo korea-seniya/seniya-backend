@@ -25,6 +25,9 @@ public class Inquiry extends BaseTimeEntity{
     private TrainerProfile trainer;
 
     @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
     private String content;
 
     private String response;

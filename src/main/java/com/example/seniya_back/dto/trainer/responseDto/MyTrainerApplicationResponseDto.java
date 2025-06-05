@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MyTrainerApplicationResDto {
+public class MyTrainerApplicationResponseDto {
     private String approvalStatus;
 }
