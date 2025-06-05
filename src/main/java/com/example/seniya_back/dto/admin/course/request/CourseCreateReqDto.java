@@ -13,7 +13,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseReqDto {
+public class CourseCreateReqDto {
     private Long trainerId;
     private String title;
     private String description;

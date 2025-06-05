@@ -14,7 +14,6 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Builder
 public class CourseUpdateReqDto {
-    private Long classId;
     private Long trainerId;
     private String title;
     private String description;
