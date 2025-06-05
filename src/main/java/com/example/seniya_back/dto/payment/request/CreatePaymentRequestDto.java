@@ -1,4 +1,4 @@
-package com.example.seniya_back.dto.coupon.request;
+package com.example.seniya_back.dto.payment.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PaymentReqDto {
+public class CreatePaymentRequestDto {
     private String method;
     private int couponCount;
     private String couponType;

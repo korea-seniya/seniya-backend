@@ -1,18 +1,20 @@
-package com.example.seniya_back.dto.admin.course.response;
+package com.example.seniya_back.dto.admin.course.request;
 
 import com.example.seniya_back.common.enums.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-@Getter
-@Builder
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
-public class CourseUpdateRespDto {
-    private String name;
+@Builder
+public class CreateCourseRequestDto {
+    private Long trainerId;
     private String title;
     private String description;
     private LocalDateTime classDate;
