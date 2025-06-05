@@ -2,17 +2,15 @@ package com.example.seniya_back.dto.post.response;
 
 import com.example.seniya_back.entity.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
-public class PostDetailResDto {
+public class PostListResponseDto {
     private Long id;
     private User userName;
     private String title;

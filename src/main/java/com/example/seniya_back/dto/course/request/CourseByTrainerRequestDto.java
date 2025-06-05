@@ -1,4 +1,4 @@
-package com.example.seniya_back.dto.user.request;
+package com.example.seniya_back.dto.course.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MyInfoUpdReqDto {
-    private String userName;
-    private String email;
-    private String phone;
+public class CourseByTrainerRequestDto {
+    private Long trainerId;
 }

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class HealthDataReqDto {
+public class HealthDataUpdRequestDto {
     private Float height;
     private Float weight;
     private Float bodyFatPercentage;

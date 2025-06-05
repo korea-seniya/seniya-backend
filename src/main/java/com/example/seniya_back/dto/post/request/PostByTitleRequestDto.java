@@ -1,4 +1,4 @@
-package com.example.seniya_back.dto.course.request;
+package com.example.seniya_back.dto.post.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseByIdReqDto {
-    private Long courseId;
+public class PostByTitleRequestDto {
+    private String title;
 }

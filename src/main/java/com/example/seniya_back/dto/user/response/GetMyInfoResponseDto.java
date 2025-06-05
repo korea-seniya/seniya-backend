@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetMyInfoResDto {
+public class GetMyInfoResponseDto {
     private Long id;
     private String userName;
     private String email;
@@ -19,7 +19,7 @@ public class GetMyInfoResDto {
     private LocalDate createdAt;
     private LocalDate updatedAt;
 
-    public GetMyInfoResDto(Long id, String userName, String email, String phone) {
+    public GetMyInfoResponseDto(Long id, String userName, String email, String phone) {
         this.id = id;
         this.userName = userName;
         this.email = email;

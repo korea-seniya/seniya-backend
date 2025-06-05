@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PostCreateReqDto {
+public class PostCreateRequsetDto {
     @NotBlank(message = "제목 입력은 필수 입니다.")
     private String title;
 
