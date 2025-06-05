@@ -1,4 +1,4 @@
-package com.example.seniya_back.service.implmentations;
+package com.example.seniya_back.service.implementations;
 
 import com.example.seniya_back.provider.JwtProvider;
 import com.example.seniya_back.service.MailService;
