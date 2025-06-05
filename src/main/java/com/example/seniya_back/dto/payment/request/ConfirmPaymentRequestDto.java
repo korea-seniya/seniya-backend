@@ -1,4 +1,4 @@
-package com.example.seniya_back.dto.coupon.request;
+package com.example.seniya_back.dto.payment.request;
 
 import com.example.seniya_back.common.enums.payment.Status;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PaymentConfirmReqDto {
+public class ConfirmPaymentRequestDto {
     private Status status;
     private LocalDateTime updatedAt;
 }

@@ -3,11 +3,11 @@ package com.example.seniya_back.service.implmentations;
 import com.example.seniya_back.common.constants.ResponseCode;
 import com.example.seniya_back.common.constants.ResponseMessage;
 import com.example.seniya_back.dto.ResponseDto;
-import com.example.seniya_back.dto.admin.course.request.CourseCreateReqDto;
-import com.example.seniya_back.dto.admin.course.request.CourseUpdateReqDto;
-import com.example.seniya_back.dto.admin.course.response.CourseDetailRespDto;
-import com.example.seniya_back.dto.admin.course.response.CourseRespDto;
-import com.example.seniya_back.dto.admin.course.response.CourseUpdateRespDto;
+import com.example.seniya_back.dto.admin.course.request.CreateCourseRequestDto;
+import com.example.seniya_back.dto.admin.course.request.UpdateCourseRequestDto;
+import com.example.seniya_back.dto.admin.course.response.GetCourseDetailResponseDto;
+import com.example.seniya_back.dto.admin.course.response.CourseResponseDto;
+import com.example.seniya_back.dto.admin.course.response.UpdateCourseResponseDto;
 import com.example.seniya_back.entity.Course;
 import com.example.seniya_back.entity.TrainerProfile;
 import com.example.seniya_back.repository.CourseRepository;
@@ -28,8 +28,8 @@ public class CourseServiceImpl implements CourseService {
     private final TrainerProfileRepository trainerProfileRepository;
 
     @Override
-    public ResponseDto<CourseRespDto> createCourse(CourseCreateReqDto dto) {
-        CourseRespDto respDto = null;
+    public ResponseDto<CourseResponseDto> createCourse(CreateCourseRequestDto dto) {
+        CourseResponseDto respDto = null;
 
         TrainerProfile trainerProfile = trainerProfileRepository.findById(dto.getTrainerId()).orElseThrow(() -> new IllegalArgumentException(ResponseMessage.USER_NOT_FOUND));
 
@@ -46,7 +46,7 @@ public class CourseServiceImpl implements CourseService {
 
         Course savedCourse = courseRepository.save(newCourse);
 
-        respDto = CourseRespDto.builder()
+        respDto = CourseResponseDto.builder()
                 .name(savedCourse.getTrainerProfile().getUser().getName())
                 .title(savedCourse.getTitle())
                 .description(savedCourse.getDescription())
@@ -61,8 +61,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public ResponseDto<CourseUpdateRespDto> updateCourse(Long id, CourseUpdateReqDto dto) {
-        CourseUpdateRespDto respDto = null;
+    public ResponseDto<UpdateCourseResponseDto> updateCourse(Long id, UpdateCourseRequestDto dto) {
+        UpdateCourseResponseDto respDto = null;
 
         Course course = courseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Course not found"));
 
@@ -100,7 +100,7 @@ public class CourseServiceImpl implements CourseService {
 
         Course updatedCourse = courseRepository.save(course);
 
-        respDto = CourseUpdateRespDto.builder()
+        respDto = UpdateCourseResponseDto.builder()
                 .name(updatedCourse.getTrainerProfile().getUser().getName())
                 .title(updatedCourse.getTitle())
                 .description(updatedCourse.getDescription())
@@ -115,13 +115,13 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public ResponseDto<List<CourseRespDto>> getAllCourses() {
-        List<CourseRespDto> respDtos = null;
+    public ResponseDto<List<CourseResponseDto>> getAllCourses() {
+        List<CourseResponseDto> respDtos = null;
 
         List<Course> courses = courseRepository.findAll();
 
         respDtos = courses.stream()
-                .map(course -> CourseRespDto.builder()
+                .map(course -> CourseResponseDto.builder()
                         .name(course.getTrainerProfile().getUser().getName())
                         .title(course.getTitle())
                         .description(course.getDescription())
@@ -137,12 +137,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public ResponseDto<CourseDetailRespDto> getCourseById(Long id) {
-        CourseDetailRespDto respDto = null;
+    public ResponseDto<GetCourseDetailResponseDto> getCourseById(Long id) {
+        GetCourseDetailResponseDto respDto = null;
 
         Course course = courseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Course not found"));
 
-        respDto = CourseDetailRespDto.builder()
+        respDto = GetCourseDetailResponseDto.builder()
                 .trainerId(course.getTrainerProfile().getTrainerId())
                 .trainerName(course.getTrainerProfile().getUser().getName())
                 .title(course.getTitle())

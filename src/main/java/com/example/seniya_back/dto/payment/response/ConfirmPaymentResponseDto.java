@@ -1,4 +1,4 @@
-package com.example.seniya_back.dto.coupon.response;
+package com.example.seniya_back.dto.payment.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @AllArgsConstructor
-public class PaymentConfirmRespDto {
+public class ConfirmPaymentResponseDto {
 
     private Long passId;
     private Long userId;

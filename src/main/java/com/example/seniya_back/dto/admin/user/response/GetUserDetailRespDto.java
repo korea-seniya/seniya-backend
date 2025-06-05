@@ -1,6 +1,6 @@
 package com.example.seniya_back.dto.admin.user.response;
 
-import com.example.seniya_back.dto.admin.course.response.CourseRespDto;
+import com.example.seniya_back.dto.admin.course.response.CourseResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,5 +18,5 @@ public class GetUserDetailRespDto {
     private BigDecimal amount;
     private int couponCount;
     private int availablePasses;
-    private List<CourseRespDto> courses;
+    private List<CourseResponseDto> courses;
 }

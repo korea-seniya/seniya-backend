@@ -1,4 +1,4 @@
-package com.example.seniya_back.dto.coupon.response;
+package com.example.seniya_back.dto.payment.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

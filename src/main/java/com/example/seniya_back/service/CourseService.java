@@ -1,22 +1,22 @@
 package com.example.seniya_back.service;
 
 import com.example.seniya_back.dto.ResponseDto;
-import com.example.seniya_back.dto.admin.course.request.CourseCreateReqDto;
-import com.example.seniya_back.dto.admin.course.request.CourseUpdateReqDto;
-import com.example.seniya_back.dto.admin.course.response.CourseDetailRespDto;
-import com.example.seniya_back.dto.admin.course.response.CourseRespDto;
-import com.example.seniya_back.dto.admin.course.response.CourseUpdateRespDto;
+import com.example.seniya_back.dto.admin.course.request.CreateCourseRequestDto;
+import com.example.seniya_back.dto.admin.course.request.UpdateCourseRequestDto;
+import com.example.seniya_back.dto.admin.course.response.GetCourseDetailResponseDto;
+import com.example.seniya_back.dto.admin.course.response.CourseResponseDto;
+import com.example.seniya_back.dto.admin.course.response.UpdateCourseResponseDto;
 
 import java.util.List;
 
 public interface CourseService {
-    ResponseDto<CourseRespDto> createCourse(CourseCreateReqDto dto);
+    ResponseDto<CourseResponseDto> createCourse(CreateCourseRequestDto dto);
 
-    ResponseDto<CourseUpdateRespDto> updateCourse(Long id, CourseUpdateReqDto dto);
+    ResponseDto<UpdateCourseResponseDto> updateCourse(Long id, UpdateCourseRequestDto dto);
 
-    ResponseDto<List<CourseRespDto>> getAllCourses();
+    ResponseDto<List<CourseResponseDto>> getAllCourses();
 
-    ResponseDto<CourseDetailRespDto> getCourseById(Long id);
+    ResponseDto<GetCourseDetailResponseDto> getCourseById(Long id);
 
     ResponseDto<?> deleteCourse(Long id);
 }

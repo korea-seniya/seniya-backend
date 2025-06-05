@@ -11,16 +11,13 @@ import java.time.LocalTime;
 @Getter
 @Builder
 @AllArgsConstructor
-public class CourseDetailRespDto {
-    private Long trainerId;
-    private String trainerName;
+public class UpdateCourseResponseDto {
+    private String name;
     private String title;
     private String description;
     private LocalDateTime classDate;
     private LocalTime classStartTime;
     private LocalTime classEndTime;
     private Category category;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
     private String classroom;
 }
