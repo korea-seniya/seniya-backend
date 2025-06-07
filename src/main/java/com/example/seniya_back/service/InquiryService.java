@@ -20,5 +20,5 @@ public interface InquiryService {
 
     ResponseDto<InquiryByIdResponseDto> getInquiryDetail(String username, Long id)throws AccessDeniedException;
 
-    ResponseDto<InquiryResponseDto> updateInquiry(String username, Long id, @Valid InquiryReqestDto dto);
+    ResponseDto<InquiryByIdResponseDto> updateInquiry(String username, Long id, @Valid InquiryReqestDto dto);
 }
