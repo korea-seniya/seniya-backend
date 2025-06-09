@@ -16,4 +16,5 @@ public class InquiryResponseDto {
     private String title;
     private String content;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

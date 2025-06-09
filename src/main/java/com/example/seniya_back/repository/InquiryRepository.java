@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
-    List<Inquiry> getInquiryByUser(User user);
+    List<Inquiry> getInquiriesByUser(User user);
 }

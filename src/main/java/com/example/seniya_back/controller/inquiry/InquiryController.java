@@ -62,14 +62,26 @@ public class InquiryController {
 
     // 문의 수정
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseDto<InquiryResponseDto>> updateInquiry(
+    public ResponseEntity<ResponseDto<InquiryByIdResponseDto>> updateInquiry(
             @AuthenticationPrincipal String username,
             @PathVariable Long id,
             @Valid @RequestBody InquiryReqestDto dto
     ) {
-        ResponseDto<InquiryResponseDto> inquiry = inquiryService.updateInquiry(username, id, dto);
+        ResponseDto<InquiryByIdResponseDto> inquiry = inquiryService.updateInquiry(username, id, dto);
         return ResponseEntity.ok(inquiry);
     }
+
+    // 문의 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDto<Void>> deleteInquiry(
+            @AuthenticationPrincipal String username,
+            @PathVariable Long id
+    ) {
+        ResponseDto<Void> inquiry = inquiryService.deleteInquiry(username, id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 
 
 
