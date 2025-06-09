@@ -7,25 +7,30 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
 @AllArgsConstructor
 public class HealthDataResponseDto {
+    private Long healthDataId;
     private Float height;
     private Float weight;
     private Float bodyFatPercentage;
     private BloodPressure bloodPressure;
 
+    private Long diseaseId;
     private String diseaseName;
     private LocalDate diseaseDate;
     private DiseaseStatus diseaseStatus;
 
+    private Long allergyId;
     private String allergyName;
     private String reaction;
 
+    private Long medicineId;
     private String medicationName;
 
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

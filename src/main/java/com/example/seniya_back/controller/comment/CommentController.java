@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(ApiMappingPattern.COMMENT_API)
+@RequestMapping
 @RequiredArgsConstructor
 public class CommentController {
     // 댓글
