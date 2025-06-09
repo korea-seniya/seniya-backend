@@ -26,6 +26,10 @@ public class Disease {
     @Column(name = "disease_date")
     private LocalDate diseaseDate;
 
+    @ManyToOne
+    @JoinColumn(name = "healthdata_id")
+    private HealthData healthData;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "disease_status")
     private DiseaseStatus diseaseStatus;

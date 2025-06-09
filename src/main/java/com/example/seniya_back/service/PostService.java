@@ -17,4 +17,8 @@ public interface PostService {
     ResponseDto<?> deletePost(Long id);
 
     ResponseDto<List<PostListResponseDto>> getAllPosts();
+
+    ResponseDto<List<PostListResponseDto>> searchPostsByTitle(String title);
+
+    ResponseDto<List<PostListResponseDto>> searchPostsByRole(String roleName);
 }

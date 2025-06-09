@@ -91,4 +91,40 @@ public class PostServiceImpl implements PostService {
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos).getBody();
     }
+
+    @Override
+    public ResponseDto<List<PostListResponseDto>> searchPostsByTitle(String title) {
+        List<PostListResponseDto> responseDtos = null;
+
+        List<Post> posts = postRepository.findByTitleIgnoreCaseContaining(title);
+
+        responseDtos = posts.stream()
+                .map(post -> PostListResponseDto.builder()
+                        .id(post.getPostId())
+                        .title(post.getTitle())
+                        .content(post.getContent())
+                        .userName(post.getUser())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos).getBody();
+    }
+
+    @Override
+    public ResponseDto<List<PostListResponseDto>> searchPostsByRole(String roleName) {
+        List<PostListResponseDto> responseDtos = null;
+
+        List<Post> posts = postRepository.findByRoleIgnoreCaseContaining(roleName);
+
+        responseDtos = posts.stream()
+                .map(post -> PostListResponseDto.builder()
+                        .id(post.getPostId())
+                        .title(post.getTitle())
+                        .content(post.getContent())
+                        .userName(post.getUser())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos).getBody();
+    }
 }
