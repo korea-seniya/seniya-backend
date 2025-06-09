@@ -1,6 +1,9 @@
 package com.example.seniya_back.service.implementations;
 
+import com.example.seniya_back.dto.ResponseDto;
+import com.example.seniya_back.dto.user.request.MyInfoUpdateRequestDto;
 import com.example.seniya_back.dto.user.request.UserSignInRequestDto;
+import com.example.seniya_back.dto.user.response.GetMyInfoResponseDto;
 import com.example.seniya_back.entity.User;
 import com.example.seniya_back.repository.UserRepository;
 import com.example.seniya_back.service.UserService;
@@ -14,6 +17,21 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public ResponseDto<GetMyInfoResponseDto> getUserInfo(String email) {
+        return null;
+    }
+
+    @Override
+    public ResponseDto<Void> deleteUser(String userEmail) {
+        return null;
+    }
+
+    @Override
+    public ResponseDto<GetMyInfoResponseDto> updateUserInfo(String email, MyInfoUpdateRequestDto dto) {
+        return null;
+    }
 
     @Override
     @Transactional
