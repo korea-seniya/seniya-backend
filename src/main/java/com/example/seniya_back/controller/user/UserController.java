@@ -2,8 +2,8 @@ package com.example.seniya_back.controller.user;
 
 import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.dto.ResponseDto;
-import com.example.seniya_back.dto.user.request.MyInfoUpdReqDto;
-import com.example.seniya_back.dto.user.response.GetMyInfoResDto;
+import com.example.seniya_back.dto.user.request.MyInfoUpdateRequestDto;
+import com.example.seniya_back.dto.user.response.GetMyInfoResponseDto;
 import com.example.seniya_back.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(ApiMappingPattern.USER_API)
+@RequestMapping
 @RequiredArgsConstructor
 public class UserController {
 
@@ -25,23 +25,23 @@ public class UserController {
 
     // 1) 회원 정보 조회
     @GetMapping(GET_USER_INFO)
-    public ResponseEntity<ResponseDto<GetMyInfoResDto>> getUserInfo(
+    public ResponseEntity<ResponseDto<GetMyInfoResponseDto>> getUserInfo(
             // SecurityContextHolder에 저장된 인증 객체의 principal을 가져와서 사용
             // : 현재 인증된(로그인된) 사용자의 정보를 가져오는 애너테이션
-            @AuthenticationPrincipal String userEmail
+            @AuthenticationPrincipal String email
     ) {
-        ResponseDto<GetMyInfoResDto> response = userService.getUserInfo(userEmail);
+        ResponseDto<GetMyInfoResponseDto> response = userService.getUserInfo(email);
         return ResponseEntity.ok(response);
 //       return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 2) 회원 정보 수정
         @PutMapping(PUT_USER_INFO)
-        public ResponseEntity<ResponseDto<GetMyInfoResDto>> updateUserInfo(
-                @AuthenticationPrincipal String userEmail,
-                @Valid @RequestBody MyInfoUpdReqDto dto
+        public ResponseEntity<ResponseDto<GetMyInfoResponseDto>> updateUserInfo(
+                @AuthenticationPrincipal String email,
+                @Valid @RequestBody MyInfoUpdateRequestDto dto
         ) {
-        ResponseDto<GetMyInfoResDto> response = userService.updateUserInfo(userEmail, dto);
+        ResponseDto<GetMyInfoResponseDto> response = userService.updateUserInfo(email, dto);
         return ResponseEntity.ok(response);
     }
 
