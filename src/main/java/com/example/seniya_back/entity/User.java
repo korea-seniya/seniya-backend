@@ -17,9 +17,13 @@ public class User extends BaseTimeEntity{
     @Column(name = "user_id", updatable = false)
     private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
     @Column(name = "username", nullable = false, unique = true)
     private String userName;
@@ -37,10 +41,13 @@ public class User extends BaseTimeEntity{
     private String phone;
 
     @Builder
-    public User(String userName, String email, String password) {
+    public User(String userName, String name,String email, String password, String phone, Set<Role> roles) {
         this.userName = userName;
+        this.name = name;
         this.email = email;
         this.password = password;
+        this.phone = phone;
+        this.roles = roles;
     }
 
 }
