@@ -4,4 +4,5 @@ public interface ApiMappingPattern {
     // 예시
     String AUTH_API = "/api/v1/auth";
     String INQUIRY_API = "/api/v1/inquiries";
+    String TRAINER_APPLY_API = "api/v1/trainer-applications";
 }
