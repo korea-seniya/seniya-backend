@@ -1,10 +1,12 @@
 package com.example.seniya_back.dto.payment.response;
 
+import com.example.seniya_back.common.enums.payment.Method;
 import com.example.seniya_back.common.enums.payment.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,9 +16,10 @@ public class GetAllPaymentResponseDto {
     private Long paymentId;
     private String name;
     private String phone;
-    private int amount;
-    private String method;
+    private BigDecimal amount;
+    private Method method;
     private Status status;
     private int couponCount;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

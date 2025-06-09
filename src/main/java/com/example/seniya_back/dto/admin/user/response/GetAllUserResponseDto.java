@@ -5,12 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
 @Builder
 @AllArgsConstructor
 public class GetAllUserResponseDto {
-    private List<User> users;
+    private User user;
     private int availablePasses;
 }
