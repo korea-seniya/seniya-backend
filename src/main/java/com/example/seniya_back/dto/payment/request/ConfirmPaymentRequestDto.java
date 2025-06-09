@@ -14,5 +14,5 @@ import java.time.LocalDateTime;
 @Builder
 public class ConfirmPaymentRequestDto {
     private Status status;
-    private LocalDateTime updatedAt;
+//    private LocalDateTime updatedAt;
 }

@@ -5,7 +5,7 @@ import com.example.seniya_back.dto.payment.request.ConfirmPaymentRequestDto;
 import com.example.seniya_back.dto.payment.request.CreatePaymentRequestDto;
 import com.example.seniya_back.dto.payment.response.ConfirmPaymentResponseDto;
 import com.example.seniya_back.dto.payment.response.GetAllPaymentResponseDto;
-import com.example.seniya_back.dto.payment.response.PaymentRespDto;
+import com.example.seniya_back.dto.payment.response.PaymentResponseDto;
 import com.example.seniya_back.service.PaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +24,8 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/request")
-    public ResponseEntity<ResponseDto<PaymentRespDto>> createPayment(@AuthenticationPrincipal long id, @Valid @RequestBody CreatePaymentRequestDto dto) {
-        ResponseDto<CreatePaymentRequestDto> response = paymentService.createPayment(id, dto);
+    public ResponseEntity<ResponseDto<PaymentResponseDto>> createPayment(@AuthenticationPrincipal long id, @Valid @RequestBody CreatePaymentRequestDto dto) {
+        ResponseDto<PaymentResponseDto> response = paymentService.createPayment(id, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -35,9 +35,9 @@ public class PaymentController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseDto<ConfirmPaymentResponseDto>> confirmPayment(@PathVariable long id, @RequestBody ConfirmPaymentRequestDto dto) {
-        ResponseDto<ConfirmPaymentResponseDto> response = paymentService.confirmPayment(id, dto);
+    @PutMapping("/confirm/{id}")
+    public ResponseEntity<ResponseDto<PaymentResponseDto>> confirmPayment(@PathVariable long id, @RequestBody ConfirmPaymentRequestDto dto) {
+        ResponseDto<PaymentResponseDto> response = paymentService.confirmPayment(id, dto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
