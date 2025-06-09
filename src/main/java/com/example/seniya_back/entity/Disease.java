@@ -2,16 +2,15 @@ package com.example.seniya_back.entity;
 
 import com.example.seniya_back.common.enums.DiseaseStatus;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "diseases")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class Disease {
@@ -29,6 +28,9 @@ public class Disease {
     @ManyToOne
     @JoinColumn(name = "healthdata_id")
     private HealthData healthData;
+
+    @OneToOne(mappedBy = "disease")
+    private Medication medication;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "disease_status")
