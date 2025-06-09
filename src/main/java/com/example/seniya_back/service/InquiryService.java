@@ -1,6 +1,6 @@
 package com.example.seniya_back.service;
 
-import com.example.seniya_back.dto.Inquiry.requestDto.InquiryReqestDto;
+import com.example.seniya_back.dto.Inquiry.requestDto.InquiryRequestDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.AllInquiryResponseDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.InquiryByIdResponseDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.InquiryResponseDto;
@@ -12,7 +12,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 public interface InquiryService {
-    ResponseDto<InquiryResponseDto> createInquiry(String username, @Valid InquiryReqestDto dto);
+    ResponseDto<InquiryResponseDto> createInquiry(String username, @Valid InquiryRequestDto dto);
 
     ResponseDto<List<MyInquiryResponseDto>> getMyInquiry(String username);
 
@@ -20,7 +20,7 @@ public interface InquiryService {
 
     ResponseDto<InquiryByIdResponseDto> getInquiryDetail(String username, Long id)throws AccessDeniedException;
 
-    ResponseDto<InquiryByIdResponseDto> updateInquiry(String username, Long id, @Valid InquiryReqestDto dto);
+    ResponseDto<InquiryByIdResponseDto> updateInquiry(String username, Long id, @Valid InquiryRequestDto dto);
 
     ResponseDto<Void> deleteInquiry(String username, Long id);
 }

@@ -1,23 +1,20 @@
 package com.example.seniya_back.dto.trainer.responseDto;
 
-import com.example.seniya_back.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.example.seniya_back.common.enums.ApprovalStatus;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Setter
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AllTrainerApplicationResponseDto {
-    private User user;
-    private String name;
+public class TrainerApplicationResponseDto {
+    private String username;
     private LocalDate appliedDate;
-    private String approvalStatus;
+    private ApprovalStatus approvalStatus;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
