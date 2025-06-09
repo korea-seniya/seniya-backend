@@ -22,4 +22,8 @@ public class Allergy {
 
     @Column(name = "reaction", nullable = false, length = 100)
     private String reaction;
+
+    @ManyToOne
+    @JoinColumn(name = "healthdata_id")
+    private HealthData healthData;
 }

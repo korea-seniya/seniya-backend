@@ -22,4 +22,8 @@ public class Medication {
 
     @Column(name = "medication_name", nullable = false, length = 100)
     private String medicationName;
+
+    @ManyToOne
+    @JoinColumn(name = "healthdata_id")
+    private HealthData healthData;
 }
