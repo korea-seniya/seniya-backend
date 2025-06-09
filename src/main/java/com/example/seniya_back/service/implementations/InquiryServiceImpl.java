@@ -110,7 +110,7 @@ public class InquiryServiceImpl implements InquiryService {
         boolean isOwner = inquiry.getUser().getUserName().equals(username);
         boolean role = "ADMIN".equals(user.getRole().getRoleName()) || "TRAINER".equals(user.getRole().getRoleName());
 
-        if(!isOwner && !role) {
+        if (!isOwner && !role) {
             throw new AccessDeniedException(ResponseMessage.NO_PERMISSION);
         }
 
@@ -157,5 +157,22 @@ public class InquiryServiceImpl implements InquiryService {
                 .build();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
+    }
+
+    @Override
+    public ResponseDto<Void> deleteInquiry(String username, Long id) {
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
+
+        Inquiry inquiry = inquiryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("INQUIRY NOT FOUND"));
+
+        if (!inquiry.getUser().getUserName().equals(user.getUserName())) {
+            throw new AccessDeniedException(ResponseMessage.NO_PERMISSION);
+        }
+
+        inquiryRepository.delete(inquiry);
+
+        return null;
     }
 }

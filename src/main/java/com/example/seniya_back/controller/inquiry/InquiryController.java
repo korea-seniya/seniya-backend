@@ -71,6 +71,18 @@ public class InquiryController {
         return ResponseEntity.ok(inquiry);
     }
 
+    // 문의 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDto<Void>> deleteInquiry(
+            @AuthenticationPrincipal String username,
+            @PathVariable Long id
+    ) {
+        ResponseDto<Void> inquiry = inquiryService.deleteInquiry(username, id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
 
 
 }
