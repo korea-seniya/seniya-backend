@@ -1,7 +1,7 @@
 package com.example.seniya_back.controller.inquiry;
 
 import com.example.seniya_back.common.constants.ApiMappingPattern;
-import com.example.seniya_back.dto.Inquiry.requestDto.InquiryReqestDto;
+import com.example.seniya_back.dto.Inquiry.requestDto.InquiryRequestDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.AllInquiryResponseDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.InquiryByIdResponseDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.InquiryResponseDto;
@@ -28,7 +28,7 @@ public class InquiryController {
     @PutMapping
     public ResponseEntity<ResponseDto<InquiryResponseDto>> createInquiry(
             @AuthenticationPrincipal String username,
-            @Valid @RequestBody InquiryReqestDto dto
+            @Valid @RequestBody InquiryRequestDto dto
     ) {
         ResponseDto<InquiryResponseDto> inquiry = inquiryService.createInquiry(username, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(inquiry);
@@ -65,7 +65,7 @@ public class InquiryController {
     public ResponseEntity<ResponseDto<InquiryByIdResponseDto>> updateInquiry(
             @AuthenticationPrincipal String username,
             @PathVariable Long id,
-            @Valid @RequestBody InquiryReqestDto dto
+            @Valid @RequestBody InquiryRequestDto dto
     ) {
         ResponseDto<InquiryByIdResponseDto> inquiry = inquiryService.updateInquiry(username, id, dto);
         return ResponseEntity.ok(inquiry);

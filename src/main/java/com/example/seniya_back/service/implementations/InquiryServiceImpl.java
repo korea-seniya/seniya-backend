@@ -2,7 +2,7 @@ package com.example.seniya_back.service.implementations;
 
 import com.example.seniya_back.common.constants.ResponseCode;
 import com.example.seniya_back.common.constants.ResponseMessage;
-import com.example.seniya_back.dto.Inquiry.requestDto.InquiryReqestDto;
+import com.example.seniya_back.dto.Inquiry.requestDto.InquiryRequestDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.AllInquiryResponseDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.InquiryByIdResponseDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.InquiryResponseDto;
@@ -28,7 +28,7 @@ public class InquiryServiceImpl implements InquiryService {
     private final UserRepository userRepository;
 
     @Override
-    public ResponseDto<InquiryResponseDto> createInquiry(String username, InquiryReqestDto dto) {
+    public ResponseDto<InquiryResponseDto> createInquiry(String username, InquiryRequestDto dto) {
         InquiryResponseDto responseDto = null;
 
         User user = userRepository.findByUserName(username).orElse(null);
@@ -128,7 +128,7 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
-    public ResponseDto<InquiryByIdResponseDto> updateInquiry(String username, Long id, InquiryReqestDto dto) {
+    public ResponseDto<InquiryByIdResponseDto> updateInquiry(String username, Long id, InquiryRequestDto dto) {
         InquiryByIdResponseDto responseDto = null;
 
         User user = userRepository.findByUserName(username)
