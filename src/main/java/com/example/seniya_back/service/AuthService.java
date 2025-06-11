@@ -13,5 +13,5 @@ import org.springframework.http.ResponseEntity;
 public interface AuthService {
     ResponseDto<UserSignUpResponseDto> signup(@Valid UserSignUpRequestDto dto);
     ResponseDto<UserSignInResponseDto> login(@Valid UserSignInRequestDto dto);
-    Mono<ResponseEntity<String>> resetPassword(@Valid UserPasswordResetRequestDto dto);
+//    Mono<ResponseEntity<String>> resetPassword(@Valid UserPasswordResetRequestDto dto);
 }
