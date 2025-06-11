@@ -39,12 +39,6 @@ public class  AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseDto<UserSignUpResponseDto> signup(UserSignUpRequestDto dto) {
-               if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
-           throw new DuplicateFormatFlagsException(ResponseCode.FAIL);
-        }
-
-      Role userRole = roleRepository.findByRoleName("USER")
-             .orElseGet(() -> roleRepository.save(Role.builder().roleName("USER").build()));
 
         String username = dto.getUserName();
         String password = dto.getPassword();
@@ -58,15 +52,20 @@ public class  AuthServiceImpl implements AuthService {
             // 일치하지 않은 경우
             throw new IllegalArgumentException(ResponseCode.FAIL);
         }
+
+        if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
+            throw new DuplicateFormatFlagsException(ResponseCode.FAIL);
+        }
+
         // 패스워드 암호화
         String encodePassword = bCryptPasswordEncoder.encode(password);
 
         User user = User.builder()
-                .userName(dto.getUserName())
-                .password(dto.getPassword())
-                .email(dto.getEmail())
-                .name(dto.getName())
-                .phone(dto.getPhone())
+                .userName(username)
+                .password(encodePassword)
+                .email(email)
+                .name(name)
+                .phone(phone)
                 .build();
 
         userRepository.save(user);
