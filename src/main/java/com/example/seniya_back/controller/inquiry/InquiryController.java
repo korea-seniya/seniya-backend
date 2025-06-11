@@ -1,6 +1,7 @@
 package com.example.seniya_back.controller.inquiry;
 
 import com.example.seniya_back.common.constants.ApiMappingPattern;
+import com.example.seniya_back.dto.Inquiry.requestDto.InquiryAnswerRequestDto;
 import com.example.seniya_back.dto.Inquiry.requestDto.InquiryRequestDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.AllInquiryResponseDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.InquiryByIdResponseDto;
@@ -12,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,16 +75,23 @@ public class InquiryController {
 
     // 문의 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<Void>> deleteInquiry(
+    public ResponseEntity<ResponseDto<?>> deleteInquiry(
             @AuthenticationPrincipal String username,
             @PathVariable Long id
     ) {
-        ResponseDto<Void> inquiry = inquiryService.deleteInquiry(username, id);
+        ResponseDto<?> inquiry = inquiryService.deleteInquiry(username, id);
         return ResponseEntity.noContent().build();
     }
 
-
-
-
-
+    // 문의 답변
+    @PutMapping("/{id}/response")
+    @PreAuthorize("hasRole('TRAINER') or hasRole('ADMIN')")
+    public ResponseEntity<ResponseDto<InquiryByIdResponseDto>> inquiryAnswer(
+            @AuthenticationPrincipal String username,
+            @PathVariable Long id,
+            @Valid @RequestBody InquiryAnswerRequestDto dto
+    ) {
+        ResponseDto<InquiryByIdResponseDto> inquiry = inquiryService.inquiryAnswer(username, id, dto);
+        return ResponseEntity.ok(inquiry);
+    }
 }
