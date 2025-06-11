@@ -22,15 +22,15 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-    private final MailService mailService;
+//    private final MailService mailService;
 
     private static final String POST_SIGN_UP = "/signup";
     private static final String POST_SIGN_IN = "/login";
 
     // 1) 회원가입
+
     @PostMapping(POST_SIGN_UP)
     public ResponseEntity<ResponseDto<UserSignUpResponseDto>> signup(@Valid @RequestBody UserSignUpRequestDto dto) {
-        System.out.println("=== 회원가입 요청 도착 ===");
         ResponseDto<UserSignUpResponseDto> response = authService.signup(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -42,21 +42,21 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // 3) 이메일 전송
-    @PostMapping("/send-email")
-    public Mono<ResponseEntity<String>> sendEmail(@Valid @RequestBody EmailVerificationCodeRequestDto dto) {
-        return mailService.sendSimpleMessage(dto.getEmail());
-    }
-
-    // 4) 이메일 인증
-    @GetMapping("/verify")
-    public Mono<ResponseEntity<String>> verifyEmail(@RequestParam String token) {
-        return mailService.verifyEmail(token);
-    }
-
-    // 5) 비밀번호 재설정
-    @PutMapping("/reset-password")
-    public Mono<ResponseEntity<String>> resetPassword(@Valid @RequestBody UserPasswordResetRequestDto dto) {
-        return authService.resetPassword(dto);
-    }
+//    // 3) 이메일 전송
+//    @PostMapping("/send-email")
+//    public Mono<ResponseEntity<String>> sendEmail(@Valid @RequestBody EmailVerificationCodeRequestDto dto) {
+//        return mailService.sendSimpleMessage(dto.getEmail());
+//    }
+//
+//    // 4) 이메일 인증
+//    @GetMapping("/verify")
+//    public Mono<ResponseEntity<String>> verifyEmail(@RequestParam String token) {
+//        return mailService.verifyEmail(token);
+//    }
+//
+//    // 5) 비밀번호 재설정
+//    @PutMapping("/reset-password")
+//    public Mono<ResponseEntity<String>> resetPassword(@Valid @RequestBody UserPasswordResetRequestDto dto) {
+//        return authService.resetPassword(dto);
+//    }
 }
