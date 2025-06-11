@@ -17,13 +17,9 @@ public class User extends BaseTimeEntity{
     @Column(name = "user_id", updatable = false)
     private Long userId;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     @Column(name = "username", nullable = false, unique = true)
     private String userName;
