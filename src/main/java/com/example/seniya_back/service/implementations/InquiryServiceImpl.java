@@ -2,6 +2,7 @@ package com.example.seniya_back.service.implementations;
 
 import com.example.seniya_back.common.constants.ResponseCode;
 import com.example.seniya_back.common.constants.ResponseMessage;
+import com.example.seniya_back.dto.Inquiry.requestDto.InquiryAnswerRequestDto;
 import com.example.seniya_back.dto.Inquiry.requestDto.InquiryRequestDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.AllInquiryResponseDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.InquiryByIdResponseDto;
@@ -160,7 +161,7 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
-    public ResponseDto<Void> deleteInquiry(String username, Long id) {
+    public ResponseDto<?> deleteInquiry(String username, Long id) {
         User user = userRepository.findByUserName(username)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
@@ -173,6 +174,32 @@ public class InquiryServiceImpl implements InquiryService {
 
         inquiryRepository.delete(inquiry);
 
-        return null;
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS).getBody();
+    }
+
+    @Override
+    public ResponseDto<InquiryByIdResponseDto> inquiryAnswer(String username, Long id, InquiryAnswerRequestDto dto) {
+        InquiryByIdResponseDto responseDto = null;
+
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
+        Inquiry inquiry = inquiryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("INQUIRY NOT FOUND"));
+
+        inquiry.setResponse(dto.getResponse());
+
+        inquiryRepository.save(inquiry);
+
+        responseDto = InquiryByIdResponseDto.builder()
+                .title(inquiry.getTitle())
+                .userName(inquiry.getUser().getUserName())
+                .trainerName(user.getUserName())
+                .content(inquiry.getContent())
+                .response(inquiry.getResponse())
+                .createdAt(inquiry.getCreatedAt())
+                .updatedAt(inquiry.getUpdatedAt())
+                .build();
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
     }
 }

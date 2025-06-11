@@ -1,5 +1,6 @@
 package com.example.seniya_back.service;
 
+import com.example.seniya_back.dto.Inquiry.requestDto.InquiryAnswerRequestDto;
 import com.example.seniya_back.dto.Inquiry.requestDto.InquiryRequestDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.AllInquiryResponseDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.InquiryByIdResponseDto;
@@ -22,5 +23,7 @@ public interface InquiryService {
 
     ResponseDto<InquiryByIdResponseDto> updateInquiry(String username, Long id, @Valid InquiryRequestDto dto);
 
-    ResponseDto<Void> deleteInquiry(String username, Long id);
+    ResponseDto<?> deleteInquiry(String username, Long id);
+
+    ResponseDto<InquiryByIdResponseDto> inquiryAnswer(String username, Long id, @Valid InquiryAnswerRequestDto dto);
 }
