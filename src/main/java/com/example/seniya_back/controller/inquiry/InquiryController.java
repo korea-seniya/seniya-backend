@@ -27,7 +27,7 @@ public class InquiryController {
     private final InquiryService inquiryService;
 
     // 문의 생성
-    @PutMapping
+    @PostMapping
     public ResponseEntity<ResponseDto<InquiryResponseDto>> createInquiry(
             @AuthenticationPrincipal String username,
             @Valid @RequestBody InquiryRequestDto dto

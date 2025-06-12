@@ -39,6 +39,7 @@ public class InquiryServiceImpl implements InquiryService {
         }
 
         Inquiry newInquiry = Inquiry.builder()
+                .user(user)
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .build();
