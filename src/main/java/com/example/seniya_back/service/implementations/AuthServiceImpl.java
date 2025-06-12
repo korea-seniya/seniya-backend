@@ -16,8 +16,6 @@ import com.example.seniya_back.repository.UserRepository;
 import com.example.seniya_back.service.AuthService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,7 +25,6 @@ import reactor.core.scheduler.Schedulers;
 import java.util.DuplicateFormatFlagsException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -57,8 +54,16 @@ public class  AuthServiceImpl implements AuthService {
             throw new DuplicateFormatFlagsException(ResponseCode.FAIL);
         }
 
+        // 권한 정보 확인
+        Role userRole = roleRepository.findByRoleName("USER")
+                .orElseGet(() -> roleRepository.save(Role.builder().roleName("USER").build()));
+
+        Set<Role> roleSet = new HashSet<>();
+        roleSet.add(userRole);
+
         // 패스워드 암호화
         String encodePassword = bCryptPasswordEncoder.encode(password);
+
 
         User user = User.builder()
                 .userName(username)
@@ -100,13 +105,31 @@ public class  AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException(ResponseCode.FAIL);
         }
 
-        String role = user.getRole().getRoleName();
-
-        String token = jwtProvider.generateToken(userName, role);
+        String token = jwtProvider.generateToken(userName);
 
         data = new UserSignInResponseDto(token, user, exprTime);
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS,data).getBody();
     }
 
+    @Override
+    public Mono<ResponseEntity<String>> resetPassword(UserPasswordResetRequestDto dto) {
+        return Mono.fromCallable(() -> {
+            User user = (User) userRepository.findByEmail(dto.getEmail())
+                    .orElseThrow(() -> new IllegalArgumentException("가입된 이메일이 아닙니다."));
+
+//                if (!user.isEmailVerified()) {
+//                    return ResponseEntity.badRequest().body("이메일 인증이 필요합니다.");
+//                }
+
+            // 비밀번호, 비밀번호 확인 유효성 검사 필수! (일치 여부, 형식 여부)
+
+            user.setPassword(bCryptPasswordEncoder.encode(dto.getNewPassword()));
+            userRepository.save(user);
+
+            return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+        }).onErrorResume(e -> Mono.just(
+                ResponseEntity.badRequest().body("비밀번호 재설정 실패: " + e.getMessage())
+        )).subscribeOn(Schedulers.boundedElastic());
+    }
 
 }
