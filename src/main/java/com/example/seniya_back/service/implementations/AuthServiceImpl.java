@@ -74,7 +74,7 @@ public class  AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         UserSignUpResponseDto data = null;
-        return ResponseDto.<UserSignUpResponseDto>success(ResponseCode.SUCCESS, "회원 가입이 완료되었습니다.", null).getBody();
+        return ResponseDto.<UserSignUpResponseDto>success(ResponseCode.SUCCESS, "회원 가입이 완료되었습니다.").getBody();
 
     }
 
@@ -110,6 +110,13 @@ public class  AuthServiceImpl implements AuthService {
         data = new UserSignInResponseDto(token, responseDto, exprTime);
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS,data).getBody();
     }
+
+    @Override
+    public ResponseDto<?> logout(String username) {
+        return ResponseDto.success(ResponseCode.SUCCESS, "로그아웃 처리 완료").getBody();
+    }
+
+
 //
 //    @Override
 //    public Mono<ResponseEntity<String>> resetPassword(UserPasswordResetRequestDto dto) {

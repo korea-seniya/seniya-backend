@@ -14,5 +14,7 @@ public interface AuthService {
     ResponseDto<UserSignUpResponseDto> signup(@Valid UserSignUpRequestDto dto);
     ResponseDto<UserSignInResponseDto> login(@Valid UserSignInRequestDto dto);
 
+    ResponseDto<?> logout(String username);
+
 //    Mono<ResponseEntity<String>> resetPassword(@Valid UserPasswordResetRequestDto dto);
 }

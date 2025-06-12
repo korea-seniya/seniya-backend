@@ -2,8 +2,6 @@ package com.example.seniya_back.controller.user;
 
 import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.dto.ResponseDto;
-import com.example.seniya_back.dto.user.request.SendMailRequestDto;
-import com.example.seniya_back.dto.user.request.UserPasswordResetRequestDto;
 import com.example.seniya_back.dto.user.request.UserSignInRequestDto;
 import com.example.seniya_back.dto.user.request.UserSignUpRequestDto;
 import com.example.seniya_back.dto.user.response.UserSignInResponseDto;
@@ -14,8 +12,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping(ApiMappingPattern.AUTH_API)
@@ -26,6 +24,7 @@ public class AuthController {
 
     private static final String POST_SIGN_UP = "/signup";
     private static final String POST_SIGN_IN = "/login";
+    private static final String POST_LOG_OUT = "/logout";
 
     // 1) 회원가입
 
@@ -42,6 +41,12 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    // 3) 로그아웃
+    @PostMapping(POST_LOG_OUT)
+    public ResponseEntity<ResponseDto<?>> logout(@AuthenticationPrincipal String username) {
+        ResponseDto<?> response = authService.logout(username);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 //    // 3) 이메일 전송
 //    @PostMapping("/send-email")
 //    public Mono<ResponseEntity<String>> sendEmail(@Valid @RequestBody SendMailRequestDto dto) {
