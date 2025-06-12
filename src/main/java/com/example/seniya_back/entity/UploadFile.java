@@ -37,4 +37,8 @@ public class UploadFile {
     @Column
     private TargetType targetType;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+
 }

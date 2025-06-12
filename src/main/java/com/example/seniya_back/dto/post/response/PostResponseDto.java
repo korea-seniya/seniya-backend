@@ -1,19 +1,20 @@
 package com.example.seniya_back.dto.post.response;
 
-import com.example.seniya_back.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
-public class PostListResponseDto {
-    private User username;
+public class PostResponseDto {
+    private Long postId;
     private String title;
     private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
 }
