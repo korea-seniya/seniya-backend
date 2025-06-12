@@ -36,13 +36,14 @@ public class PostController {
     }
 
     // 게시글 수정
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseDto<PostDetailResponseDto>> updatePost(
-            @PathVariable Long id,
-            @Valid @RequestBody PostUpdateRequestDto dto
-    ){
-        ResponseDto<PostDetailResponseDto> response = postService.updatePost(id, dto);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+    @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseDto<PostResponseDto>> updatePost(
+            @PathVariable Long postId,
+            @RequestPart("data") @Valid PostUpdateRequestDto dto,
+            @RequestPart(value = "file", required = false) MultipartFile file
+    ) throws IOException {
+        ResponseDto<PostResponseDto> response = postService.updatePost(postId, dto, file);
+        return ResponseEntity.ok(response);
     }
 
     // 게시글 삭제
@@ -58,6 +59,14 @@ public class PostController {
         ResponseDto<List<PostListResponseDto>> posts = postService.getAllPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
+
+    // 게시글 단건 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDto<PostDetailResponseDto>> getPostById(@PathVariable Long id) {
+        ResponseDto<PostDetailResponseDto> response = postService.getPostById(id);
+        return ResponseEntity.ok(response);
+    }
+
 
     // 게시글 제목 검색
     @GetMapping
