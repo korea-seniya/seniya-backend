@@ -5,16 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-import java.util.List;
+
+@Getter
 @Builder
 @AllArgsConstructor
-public class NoticeListResponseDto { // 공지사항 전체 조회@Getter
+public class NoticeDetailResponseDto {
     private Long id;
     private User username;
     private String title;
     private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
 }
