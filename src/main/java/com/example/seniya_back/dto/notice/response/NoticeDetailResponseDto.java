@@ -9,9 +9,9 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class NoticeDetailResponseDto {
-    private Long id;
-    private User username;
+public class NoticeDetailResponseDto { // 단권조회
+    private Long noticeId;
     private String title;
     private String content;
 }
+
