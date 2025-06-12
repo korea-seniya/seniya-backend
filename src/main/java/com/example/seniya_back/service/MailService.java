@@ -9,8 +9,5 @@
 //    }
 //
 //    static Mono<ResponseEntity<String>> verifyEmail(String token) {
-//        return null;
 //    }
-//
-//    Mono<ResponseEntity<String>> verifyEmail(String token);
 //}
