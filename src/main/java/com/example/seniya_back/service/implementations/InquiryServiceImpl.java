@@ -32,7 +32,7 @@ public class InquiryServiceImpl implements InquiryService {
     public ResponseDto<InquiryResponseDto> createInquiry(String username, InquiryRequestDto dto) {
         InquiryResponseDto responseDto = null;
 
-        User user = userRepository.findByUserName(username).orElse(null);
+        User user = userRepository.findByUsername(username).orElse(null);
 
         if (user == null) {
             throw new IllegalArgumentException(ResponseMessage.USER_NOT_FOUND);
@@ -58,7 +58,7 @@ public class InquiryServiceImpl implements InquiryService {
     public ResponseDto<List<MyInquiryResponseDto>> getMyInquiry(String username) {
         List<MyInquiryResponseDto> resDtos = null;
 
-        User user = userRepository.findByUserName(username).orElse(null);
+        User user = userRepository.findByUsername(username).orElse(null);
 
         if (user == null) {
             throw new IllegalArgumentException(ResponseMessage.USER_NOT_FOUND);
@@ -87,7 +87,7 @@ public class InquiryServiceImpl implements InquiryService {
 
         responseDtos = inquiries.stream().map(
                 inquiry -> AllInquiryResponseDto.builder()
-                        .username(inquiry.getUser().getUserName())
+                        .username(inquiry.getUser().getUsername())
                         .title(inquiry.getTitle())
                         .content(inquiry.getContent())
                         .createdAt(inquiry.getCreatedAt())
@@ -102,13 +102,13 @@ public class InquiryServiceImpl implements InquiryService {
     public ResponseDto<InquiryByIdResponseDto> getInquiryDetail(String username, Long id) {
         InquiryByIdResponseDto responseDto = null;
 
-        User user = userRepository.findByUserName(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
         Inquiry inquiry = inquiryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("INQUIRY NOT FOUND"));
 
-        boolean isOwner = inquiry.getUser().getUserName().equals(username);
+        boolean isOwner = inquiry.getUser().getUsername().equals(username);
         boolean role = "ADMIN".equals(user.getRole().getRoleName()) || "TRAINER".equals(user.getRole().getRoleName());
 
         if (!isOwner && !role) {
@@ -117,7 +117,7 @@ public class InquiryServiceImpl implements InquiryService {
 
         responseDto = InquiryByIdResponseDto.builder()
                 .title(inquiry.getTitle())
-                .userName(inquiry.getUser().getName())
+                .username(inquiry.getUser().getName())
                 .trainerName(inquiry.getTrainer().getUser().getName())
                 .content(inquiry.getContent())
                 .response(inquiry.getResponse())
@@ -132,13 +132,13 @@ public class InquiryServiceImpl implements InquiryService {
     public ResponseDto<InquiryByIdResponseDto> updateInquiry(String username, Long id, InquiryRequestDto dto) {
         InquiryByIdResponseDto responseDto = null;
 
-        User user = userRepository.findByUserName(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
         Inquiry inquiry = inquiryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("INQUIRY NOT FOUND"));
 
-        if (!inquiry.getUser().getUserName().equals(user.getUserName())) {
+        if (!inquiry.getUser().getUsername().equals(user.getUsername())) {
             throw new AccessDeniedException(ResponseMessage.NO_PERMISSION);
         }
 
@@ -149,7 +149,7 @@ public class InquiryServiceImpl implements InquiryService {
 
         responseDto = InquiryByIdResponseDto.builder()
                 .title(savedInquiry.getTitle())
-                .userName(user.getUserName())
+                .username(user.getUsername())
                 .trainerName(savedInquiry.getTrainer().getUser().getName())
                 .content(savedInquiry.getContent())
                 .response(savedInquiry.getResponse())
@@ -162,13 +162,13 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     public ResponseDto<?> deleteInquiry(String username, Long id) {
-        User user = userRepository.findByUserName(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
         Inquiry inquiry = inquiryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("INQUIRY NOT FOUND"));
 
-        if (!inquiry.getUser().getUserName().equals(user.getUserName())) {
+        if (!inquiry.getUser().getUsername().equals(user.getUsername())) {
             throw new AccessDeniedException(ResponseMessage.NO_PERMISSION);
         }
 
@@ -181,7 +181,7 @@ public class InquiryServiceImpl implements InquiryService {
     public ResponseDto<InquiryByIdResponseDto> inquiryAnswer(String username, Long id, InquiryAnswerRequestDto dto) {
         InquiryByIdResponseDto responseDto = null;
 
-        User user = userRepository.findByUserName(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
         Inquiry inquiry = inquiryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("INQUIRY NOT FOUND"));
@@ -192,8 +192,8 @@ public class InquiryServiceImpl implements InquiryService {
 
         responseDto = InquiryByIdResponseDto.builder()
                 .title(inquiry.getTitle())
-                .userName(inquiry.getUser().getUserName())
-                .trainerName(user.getUserName())
+                .username(inquiry.getUser().getUsername())
+                .trainerName(user.getUsername())
                 .content(inquiry.getContent())
                 .response(inquiry.getResponse())
                 .createdAt(inquiry.getCreatedAt())

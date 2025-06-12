@@ -2,14 +2,14 @@ package com.example.seniya_back.controller.user;
 
 import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.dto.ResponseDto;
-import com.example.seniya_back.dto.user.request.EmailVerificationCodeRequestDto;
+import com.example.seniya_back.dto.user.request.SendMailRequestDto;
 import com.example.seniya_back.dto.user.request.UserPasswordResetRequestDto;
 import com.example.seniya_back.dto.user.request.UserSignInRequestDto;
 import com.example.seniya_back.dto.user.request.UserSignUpRequestDto;
 import com.example.seniya_back.dto.user.response.UserSignInResponseDto;
 import com.example.seniya_back.dto.user.response.UserSignUpResponseDto;
 import com.example.seniya_back.service.AuthService;
-import com.example.seniya_back.service.MailService;
+// import com.example.seniya_back.service.MailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,14 +44,14 @@ public class AuthController {
 
 //    // 3) 이메일 전송
 //    @PostMapping("/send-email")
-//    public Mono<ResponseEntity<String>> sendEmail(@Valid @RequestBody EmailVerificationCodeRequestDto dto) {
-//        return mailService.sendSimpleMessage(dto.getEmail());
+//    public Mono<ResponseEntity<String>> sendEmail(@Valid @RequestBody SendMailRequestDto dto) {
+//        return MailService.sendSimpleMessage(dto.getEmail());
 //    }
 //
 //    // 4) 이메일 인증
 //    @GetMapping("/verify")
 //    public Mono<ResponseEntity<String>> verifyEmail(@RequestParam String token) {
-//        return mailService.verifyEmail(token);
+//        return MailService.verifyEmail(token);
 //    }
 //
 //    // 5) 비밀번호 재설정

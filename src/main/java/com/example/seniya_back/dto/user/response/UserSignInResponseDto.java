@@ -6,10 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class UserSignInResponseDto {
-//    private String token; // jwt 토큰
-     User user;
-
-     public UserSignInResponseDto(String token, User user, int exprTime) {
-     }
-//    private int exprTime; // expire + time: (토큰) 만료 시간
+     private String token;
+     private UserResponseDto user;
+     private int exprTime;
+//private User user;
 }

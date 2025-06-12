@@ -1,16 +1,18 @@
 package com.example.seniya_back.dto.user.request;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class MyInfoUpdateRequestDto {
-    private String username;
+public class SendMailRequestDto {
+    @NotBlank
+    @Email // email 유효성 검사
     private String email;
-    private String phone;
 }

@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void signIn(UserSignInRequestDto requestDto) {
-        User user = userRepository.findByUserName(requestDto.getUserName())
+        User user = userRepository.findByUsername(requestDto.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."));
 
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {

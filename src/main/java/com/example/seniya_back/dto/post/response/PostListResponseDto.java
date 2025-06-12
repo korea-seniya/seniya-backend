@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PostListResponseDto {
     private Long id;
-    private User userName;
+    private User username;
     private String title;
     private String content;
     private LocalDateTime createdAt;

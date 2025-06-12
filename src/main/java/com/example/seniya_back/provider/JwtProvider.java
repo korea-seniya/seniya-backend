@@ -1,5 +1,6 @@
 package com.example.seniya_back.provider;
 
+import com.example.seniya_back.entity.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -70,4 +71,6 @@ public class JwtProvider {
         Claims claims = getClaims(token);
         return claims.get("role", String.class);
     }
+
+
 }
