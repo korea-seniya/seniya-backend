@@ -53,16 +53,16 @@ public class PostServiceImpl implements PostService {
                 .postId(post.getPostId())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .createdTime(post.getCreatedAt())
-                .updatedTime(post.getUpdatedAt())
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
                 .build();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, resposneDto).getBody();
     }
 
     @Override
-    public ResponseDto<PostDetailResponseDto> updatePost(Long id, PostUpdateRequestDto dto) {
-        PostDetailResponseDto responseDto = null;
+    public ResponseDto<PostResponseDto> updatePost(Long id, PostUpdateRequestDto dto, MultipartFile file) throws IOException {
+        PostResponseDto responseDto = null;
 
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.FILE_NOT_FOUND + id));
@@ -70,13 +70,23 @@ public class PostServiceImpl implements PostService {
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
 
-        Post updatedPost = postRepository.save(post);
+        if (file != null && !file.isEmpty()) {
+            List<UploadFile> oldFiles = uploadFileRepository.findByTargetIdAndTargetType(id, TargetType.POST);
+            for (UploadFile oldFile : oldFiles) {
+                File actualFile = new File(uploadDir + "/" + oldFile.getFileName());
+                if (actualFile.exists()) actualFile.delete();
+                uploadFileRepository.delete(oldFile);
+            }
+            saveFile(file, id, TargetType.POST);
+        }
 
-        responseDto = PostDetailResponseDto.builder()
-                .title(updatedPost.getTitle())
-                .content(updatedPost.getContent())
-                .username(updatedPost.getUser())
-                .build();
+        responseDto = PostResponseDto.builder()
+                    .postId(post.getPostId())
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .createdAt(post.getCreatedAt())
+                    .updatedAt(post.getUpdatedAt())
+                    .build();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
     }
@@ -105,6 +115,11 @@ public class PostServiceImpl implements PostService {
                 .collect(Collectors.toList());
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos).getBody();
+    }
+
+    @Override
+    public ResponseDto<PostDetailResponseDto> getPostById(Long id) {
+        return null;
     }
 
     @Override
@@ -140,6 +155,7 @@ public class PostServiceImpl implements PostService {
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos).getBody();
     }
+
 
     private void saveFile(MultipartFile file, Long targetId, TargetType type) throws IOException {
         File dir = new File(uploadDir);

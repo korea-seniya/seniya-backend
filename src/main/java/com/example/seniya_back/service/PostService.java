@@ -15,7 +15,7 @@ import java.util.List;
 public interface PostService {
    ResponseDto<PostResponseDto> createPost(@Valid PostCreateRequsetDto dto, MultipartFile file) throws IOException;
 
-    ResponseDto<PostDetailResponseDto> updatePost(Long id, @Valid PostUpdateRequestDto dto);
+    ResponseDto<PostResponseDto> updatePost(Long id, @Valid PostUpdateRequestDto dto, MultipartFile file) throws IOException;
 
     ResponseDto<?> deletePost(Long id);
 
@@ -24,4 +24,6 @@ public interface PostService {
     ResponseDto<List<PostListResponseDto>> searchPostsByTitle(String title);
 
     ResponseDto<List<PostListResponseDto>> searchPostsByRole(String roleName);
+
+ ResponseDto<PostDetailResponseDto> getPostById(Long id);
 }
