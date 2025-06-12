@@ -21,7 +21,7 @@ public class Inquiry extends BaseTimeEntity{
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trainer_id", nullable = false)
+    @JoinColumn(name = "trainer_id")
     private TrainerProfile trainer;
 
     @Column(nullable = false)
@@ -32,5 +32,6 @@ public class Inquiry extends BaseTimeEntity{
 
     private String response;
 
-    private LocalDateTime responseAt = LocalDateTime.now();
+
+    private LocalDateTime responsedAt = LocalDateTime.now();
 }
