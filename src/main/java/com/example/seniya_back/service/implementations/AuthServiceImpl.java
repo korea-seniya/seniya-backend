@@ -1,5 +1,6 @@
 package com.example.seniya_back.service.implementations;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.example.seniya_back.common.constants.ResponseCode;
 import com.example.seniya_back.common.constants.ResponseMessage;
 import com.example.seniya_back.dto.ResponseDto;
@@ -108,6 +109,7 @@ public class  AuthServiceImpl implements AuthService {
         String token = jwtProvider.generateToken(userName);
 
         data = new UserSignInResponseDto(token, user, exprTime);
+        System.out.println(token);
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS,data).getBody();
     }
 
