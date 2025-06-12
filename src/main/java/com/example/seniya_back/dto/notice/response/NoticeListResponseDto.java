@@ -13,7 +13,7 @@ public class NoticeListResponseDto { // 공지사항 전체 조회
     @Getter
     @AllArgsConstructor
     public static class NoticeInfo {
-        private String userName;
+        private String username;
         private String title;
         private String content;
         private LocalDateTime createdAt;

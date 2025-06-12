@@ -29,7 +29,7 @@ public class TrainerApplicationServiceImpl implements TrainerApplicationService 
     public ResponseDto<TrainerApplicationStatusResponseDto> applyTrainer(String username) {
         TrainerApplicationStatusResponseDto responseDto = null;
 
-        User user = userRepository.findByUserName(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
         TrainerApplication newTrainer = TrainerApplication.builder()
@@ -49,7 +49,7 @@ public class TrainerApplicationServiceImpl implements TrainerApplicationService 
     public ResponseDto<TrainerApplicationStatusResponseDto> getMyApplication(String username) {
         TrainerApplicationStatusResponseDto responseDto = null;
 
-        User user = userRepository.findByUserName(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
         TrainerApplication trainerApplication = trainerApplicationRepository.getTrainerApplicationByUser(user);
@@ -69,7 +69,7 @@ public class TrainerApplicationServiceImpl implements TrainerApplicationService 
 
         responseDtos = trainerApplications.stream().map(
                 trainerApplication -> TrainerApplicationResponseDto.builder()
-                        .username(trainerApplication.getUser().getUserName())
+                        .username(trainerApplication.getUser().getUsername())
                         .appliedDate(trainerApplication.getAppliedDate())
                         .approvalStatus(trainerApplication.getApprovalStatus())
                         .createdAt(trainerApplication.getCreatedAt())
@@ -88,7 +88,7 @@ public class TrainerApplicationServiceImpl implements TrainerApplicationService 
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND));
 
         responseDto = TrainerApplicationDetailResponseDto.builder()
-                .username(trainerApplication.getUser().getUserName())
+                .username(trainerApplication.getUser().getUsername())
                 .name(trainerApplication.getUser().getName())
                 .userEmail(trainerApplication.getUser().getEmail())
                 .appliedDate(trainerApplication.getAppliedDate())

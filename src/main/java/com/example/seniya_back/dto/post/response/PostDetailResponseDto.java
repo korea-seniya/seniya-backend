@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 public class PostDetailResponseDto {
     private Long id;
-    private User userName;
+    private User username;
     private String title;
     private String content;
 }

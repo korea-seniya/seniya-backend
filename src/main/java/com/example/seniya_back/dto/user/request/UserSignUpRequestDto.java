@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class UserSignUpRequestDto { // 회원가입
 
     @NotBlank(message = "아이디는 필수 입력 값 입니다.")
-    private String userName;
+    private String username;
 
     @NotBlank(message = "비밀번호는 필수 입력 값 입니다.")
     private String password;

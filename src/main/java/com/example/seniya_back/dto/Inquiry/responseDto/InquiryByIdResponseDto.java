@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class InquiryByIdResponseDto {
     private String title;
-    private String userName;
+    private String username;
     private String trainerName;
     private String content;
     private String response;

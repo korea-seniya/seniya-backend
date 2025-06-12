@@ -13,15 +13,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class GetMyInfoResponseDto {
     private Long id;
-    private String userName;
+    private String username;
     private String email;
     private String phone;
     private LocalDate createdAt;
     private LocalDate updatedAt;
 
-    public GetMyInfoResponseDto(Long id, String userName, String email, String phone) {
+    public GetMyInfoResponseDto(Long id, String username, String email, String phone) {
         this.id = id;
-        this.userName = userName;
+        this.username = username;
         this.email = email;
         this.phone = phone;
     }

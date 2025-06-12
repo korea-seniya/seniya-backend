@@ -1,5 +1,6 @@
 package com.example.seniya_back.provider;
 
+import com.example.seniya_back.entity.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -28,10 +29,10 @@ public class JwtProvider {
         this.jwtEmailExpirationMs = jwtEmailExpirationMs;
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username, String role) {
         return Jwts.builder()
                 .claim("username", username)
-//                .claim("role", role)
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -71,7 +72,5 @@ public class JwtProvider {
         return claims.get("role", String.class);
     }
 
-    public long getJwtEmailExpirationMs() {
-        return jwtEmailExpirationMs;
-    }
+
 }
