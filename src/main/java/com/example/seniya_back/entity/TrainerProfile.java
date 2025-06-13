@@ -27,7 +27,7 @@ public class TrainerProfile extends BaseTimeEntity{
     private Specialty specialty;
 
     private String certificate;
-    private LocalDate certificateDate;
-    private Integer experienceYear;
+    private LocalDate certificationDate;
+    private Integer experienceYears;
     private String description;
 }

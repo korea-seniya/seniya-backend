@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "trainer_applications")
@@ -25,7 +24,8 @@ public class TrainerApplication extends BaseTimeEntity{
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ApprovalStatus ApprovalStatus;
+    private ApprovalStatus approvalStatus = ApprovalStatus.PENDING;
 
     private LocalDate appliedDate;
+
 }

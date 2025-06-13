@@ -15,7 +15,7 @@ public class TrainerProfileCreateResponseDto {
     private String name;
     private Specialty specialty;
     private String certificate;
-    private LocalDate certificateDate;
+    private LocalDate certificationDate;
     private Integer experienceYears;
     private String description;
     private LocalDateTime createdAt;
