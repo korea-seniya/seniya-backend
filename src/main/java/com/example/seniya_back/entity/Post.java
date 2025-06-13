@@ -33,5 +33,5 @@ public class Post extends BaseTimeEntity{
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<UploadFile> images = new ArrayList<>();
+    private List<UploadFile> images;
 }

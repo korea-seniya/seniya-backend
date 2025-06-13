@@ -41,4 +41,7 @@ public class UploadFile {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    public String getUrl() {
+        return "/uploads/" + this.fileName;
+    }
 }

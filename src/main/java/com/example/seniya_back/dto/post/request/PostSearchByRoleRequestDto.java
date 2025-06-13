@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PostByTitleRequestDto {
-    private String title;
+public class PostSearchByRoleRequestDto {
+    private String roleName;
 }
