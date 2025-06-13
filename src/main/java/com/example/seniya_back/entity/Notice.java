@@ -3,18 +3,17 @@ package com.example.seniya_back.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "notices")
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Builder
 public class Notice extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "notice_id")
     private Long noticeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,4 +25,5 @@ public class Notice extends BaseTimeEntity{
 
     @Column(nullable = false)
     private String content;
+
 }

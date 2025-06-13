@@ -1,5 +1,6 @@
 package com.example.seniya_back.controller.payment;
 
+import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.payment.request.ConfirmPaymentRequestDto;
 import com.example.seniya_back.dto.payment.request.CreatePaymentRequestDto;
@@ -18,14 +19,14 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/payments")
+@RequestMapping(ApiMappingPattern.PAYMENT_API)
 public class PaymentController {
 
     private final PaymentService paymentService;
 
     @PostMapping("/request")
-    public ResponseEntity<ResponseDto<PaymentResponseDto>> createPayment(@AuthenticationPrincipal long id, @Valid @RequestBody CreatePaymentRequestDto dto) {
-        ResponseDto<PaymentResponseDto> response = paymentService.createPayment(id, dto);
+    public ResponseEntity<ResponseDto<PaymentResponseDto>> createPayment(@AuthenticationPrincipal String username, @Valid @RequestBody CreatePaymentRequestDto dto) {
+        ResponseDto<PaymentResponseDto> response = paymentService.createPayment(username, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -36,7 +37,7 @@ public class PaymentController {
     }
 
     @PutMapping("/confirm/{id}")
-    public ResponseEntity<ResponseDto<PaymentResponseDto>> confirmPayment(@PathVariable long id, @RequestBody ConfirmPaymentRequestDto dto) {
+    public ResponseEntity<ResponseDto<PaymentResponseDto>> confirmPayment(@PathVariable Long id, @RequestBody ConfirmPaymentRequestDto dto) {
         ResponseDto<PaymentResponseDto> response = paymentService.confirmPayment(id, dto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

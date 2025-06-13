@@ -4,6 +4,7 @@ import com.example.seniya_back.common.enums.payment.Method;
 import com.example.seniya_back.common.enums.payment.Status;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 
@@ -33,7 +34,6 @@ public class Payment extends BaseTimeEntity{
     private Method method;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Status status;
 
     @Column(nullable = false)

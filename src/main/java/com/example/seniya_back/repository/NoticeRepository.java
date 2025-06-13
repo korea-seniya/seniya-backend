@@ -6,4 +6,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
+
+//    List<Notice> findByTitleIgnoreCaseContaining(String title);
+//
+//    List<Notice> findByRoleIgnoreCaseContaining(String roleName);
+
 }

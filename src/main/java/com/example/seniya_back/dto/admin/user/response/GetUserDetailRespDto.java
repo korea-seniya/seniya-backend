@@ -15,8 +15,10 @@ public class GetUserDetailRespDto {
     private String name;
     private String phone;
     private String roleName;
-    private BigDecimal amount;
-    private int couponCount;
-    private int availablePasses;
+
+
+    private BigDecimal totalAmount;
+    private int totalCouponCount;
+    private int availableCouponCount;
     private List<CourseResponseDto> courses;
 }

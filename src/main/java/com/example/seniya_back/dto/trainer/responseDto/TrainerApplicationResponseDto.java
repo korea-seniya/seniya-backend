@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrainerApplicationResponseDto {
+    private Long id;
     private String username;
     private LocalDate appliedDate;
     private ApprovalStatus approvalStatus;

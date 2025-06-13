@@ -1,21 +1,22 @@
-package com.example.seniya_back.dto.admin.user.response;
+package com.example.seniya_back.dto.notice.response;
 
+import com.example.seniya_back.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
-public class GetAllUserResponseDto {
-    private Long id;
-    private String name;
+public class NoticeResponseDto {
     private String username;
-    private String email;
-    private String phone;
+    private Long noticeId;
+    private String title;
+    private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 }

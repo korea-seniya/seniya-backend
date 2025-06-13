@@ -39,7 +39,6 @@ public class ApplicationController {
         return ResponseEntity.ok(response);
     }
 
-
     // 관리자용
     // 신청 전체 목록 조회
     @GetMapping

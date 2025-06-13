@@ -1,16 +1,70 @@
 package com.example.seniya_back.controller.notice;
 
+import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.dto.ResponseDto;
-import com.example.seniya_back.dto.notice.response.NoticeCreateResponseDto;
-import com.example.seniya_back.dto.notice.response.NoticeDetailResponseDto;
+import com.example.seniya_back.dto.notice.request.NoticeCreateRequestDto;
+import com.example.seniya_back.dto.notice.request.NoticeUpdateRequestDto;
+import com.example.seniya_back.dto.notice.response.GetNoticeDetailResponseDto;
+import com.example.seniya_back.dto.notice.response.NoticeListResponseDto;
+import com.example.seniya_back.dto.notice.response.NoticeResponseDto;
+import com.example.seniya_back.service.NoticeService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@RestController
+@RequestMapping("api/v1/notices")
+@RequiredArgsConstructor
 public class NoticeController {
+    private final NoticeService noticeService;
+
+    // 공지사항 작성
     @PostMapping
-    public ResponseEntity<ResponseDto<NoticeDetailResponseDto>> createNotice(@Valid @RequestBody NoticeCreateResponseDto dto){
-        return null;
+    public ResponseEntity<ResponseDto<NoticeResponseDto>> createNotice(
+            @AuthenticationPrincipal String username,
+            @Valid @RequestBody NoticeCreateRequestDto dto
+    ) {
+        ResponseDto<NoticeResponseDto> response = noticeService.createNotice(username, dto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // 공지사항 수정
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDto<GetNoticeDetailResponseDto>> updateNotice(
+            @AuthenticationPrincipal String username,
+            @PathVariable Long id,
+            @Valid @RequestBody NoticeUpdateRequestDto dto
+    ){
+        ResponseDto<GetNoticeDetailResponseDto> response = noticeService.updateNotice(username, id, dto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // 공지사항 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDto<?>> deleteNotice(
+            @AuthenticationPrincipal String username,
+            @PathVariable Long id
+    ) {
+        ResponseDto<?> response = noticeService.deleteNotice(username, id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // 공지사항 전체 조회
+    @GetMapping
+    public ResponseEntity<ResponseDto<List<NoticeListResponseDto>>> getAllNotices() {
+        ResponseDto<List<NoticeListResponseDto>> response = noticeService.getAllNotices();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // 공지사항 단권 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDto<GetNoticeDetailResponseDto>> getNoticeById(@PathVariable Long id) {
+       ResponseDto<GetNoticeDetailResponseDto> response = noticeService.getNoticeById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

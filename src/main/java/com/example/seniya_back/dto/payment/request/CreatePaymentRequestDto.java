@@ -15,5 +15,5 @@ import java.time.LocalDateTime;
 public class CreatePaymentRequestDto {
     private Method method;
     private int couponCount;
-    private LocalDateTime createdAt;
+//    private LocalDateTime createdAt;
 }
