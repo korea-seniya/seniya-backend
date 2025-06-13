@@ -41,8 +41,8 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
                 .user(user)
                 .specialty(dto.getSpecialty())
                 .certificate(dto.getCertificate())
-                .certificateDate(dto.getCertificateDate())
-                .experienceYear(dto.getExperienceYears())
+                .certificationDate(dto.getCertificationDate())
+                .experienceYears(dto.getExperienceYears())
                 .description(dto.getDescription())
                 .build();
 
@@ -52,8 +52,8 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
                 .name(newTrainerProfile.getUser().getName())
                 .specialty(newTrainerProfile.getSpecialty())
                 .certificate(newTrainerProfile.getCertificate())
-                .certificateDate(newTrainerProfile.getCertificateDate())
-                .experienceYears(newTrainerProfile.getExperienceYear())
+                .certificationDate(newTrainerProfile.getCertificationDate())
+                .experienceYears(newTrainerProfile.getExperienceYears())
                 .description(newTrainerProfile.getDescription())
                 .createdAt(newTrainerProfile.getCreatedAt())
                 .build();
@@ -80,8 +80,8 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
                 .name(trainer.getUser().getName())
                 .specialty(trainer.getSpecialty())
                 .certificate(trainer.getCertificate())
-                .certificateDate(trainer.getCertificateDate())
-                .experienceYears(trainer.getExperienceYear())
+                .certificationDate(trainer.getCertificationDate())
+                .experienceYears(trainer.getExperienceYears())
                 .description(trainer.getDescription())
                 .createdAt(trainer.getCreatedAt())
                 .updatedAt(trainer.getUpdatedAt())
@@ -107,8 +107,8 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
 
         trainer.setSpecialty(dto.getSpecialty());
         trainer.setCertificate(dto.getCertificate());
-        trainer.setCertificateDate(dto.getCertificateDate());
-        trainer.setExperienceYear(dto.getExperienceYears());
+        trainer.setCertificationDate(dto.getCertificationDate());
+        trainer.setExperienceYears(dto.getExperienceYears());
         trainer.setDescription(dto.getDescription());
 
         trainerProfileRepository.save(trainer);
@@ -117,8 +117,8 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
                 .name(trainer.getUser().getName())
                 .specialty(trainer.getSpecialty())
                 .certificate(trainer.getCertificate())
-                .certificateDate(trainer.getCertificateDate())
-                .experienceYears(trainer.getExperienceYear())
+                .certificationDate(trainer.getCertificationDate())
+                .experienceYears(trainer.getExperienceYears())
                 .description(trainer.getDescription())
                 .createdAt(trainer.getCreatedAt())
                 .updatedAt(trainer.getUpdatedAt())

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class TrainerProfileRequestDto {
     private Specialty specialty;
     private String certificate;
-    private LocalDate certificateDate;
+    private LocalDate certificationDate;
     private Integer experienceYears;
     private String description;
 }
