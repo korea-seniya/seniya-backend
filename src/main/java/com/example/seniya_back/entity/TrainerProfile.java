@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "trainer_profiles")
@@ -29,4 +28,7 @@ public class TrainerProfile extends BaseTimeEntity{
 
     private String certificate;
     private LocalDate certificationDate;
+
+    private Integer experienceYears;
+    private String description;
 }

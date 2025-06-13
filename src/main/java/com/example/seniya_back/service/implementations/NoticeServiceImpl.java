@@ -2,54 +2,52 @@ package com.example.seniya_back.service.implementations;
 
 import com.example.seniya_back.common.constants.ResponseCode;
 import com.example.seniya_back.common.constants.ResponseMessage;
-import com.example.seniya_back.common.enums.uploadFile.TargetType;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.notice.request.NoticeCreateRequestDto;
 import com.example.seniya_back.dto.notice.request.NoticeUpdateRequestDto;
-import com.example.seniya_back.dto.notice.response.NoticeDetailResponseDto;
+import com.example.seniya_back.dto.notice.response.GetNoticeDetailResponseDto;
 import com.example.seniya_back.dto.notice.response.NoticeListResponseDto;
 import com.example.seniya_back.dto.notice.response.NoticeResponseDto;
 import com.example.seniya_back.entity.Notice;
-import com.example.seniya_back.entity.UploadFile;
+import com.example.seniya_back.entity.User;
 import com.example.seniya_back.repository.NoticeRepository;
-import com.example.seniya_back.repository.UploadFileRepository;
+import com.example.seniya_back.repository.UserRepository;
 import com.example.seniya_back.service.NoticeService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class NoticeServiceImpl implements NoticeService {
-    private NoticeService noticeService;
-    private NoticeRepository noticeRepository;
-    private UploadFileRepository uploadFileRepository;
-
-    @Value("${file.upload-dir}")
-    private String uploadDir;
-
+    private final NoticeRepository noticeRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public ResponseDto<NoticeResponseDto> createNotice(NoticeCreateRequestDto dto, MultipartFile file) throws IOException {
+    public ResponseDto<NoticeResponseDto> createNotice(String username, NoticeCreateRequestDto dto) {
         NoticeResponseDto responseDto = null;
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
-        Notice notice = new Notice();
-        notice.setTitle(dto.getTitle());
-        notice.setContent(dto.getContent());
+        String roleName = user.getRole().getRoleName();
 
-        notice = noticeRepository.save(notice);
-
-        if(file != null && !file.isEmpty()){
-            saveFile(file, notice.getNoticeId(), TargetType.NOTICE);
+        if(!roleName.equals("ADMIN")) {
+            throw new IllegalArgumentException(ResponseMessage.NO_PERMISSION);
         }
 
+        Notice notice = Notice.builder()
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .user(user)
+                .build();
+
+        noticeRepository.save(notice);
+
         responseDto = NoticeResponseDto.builder()
+                .username(notice.getUser().getName())
                 .noticeId(notice.getNoticeId())
                 .title(notice.getTitle())
                 .content(notice.getContent())
@@ -61,38 +59,62 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
 
-    @Override
-    public ResponseDto<NoticeDetailResponseDto> updateNotice(Long noticeId, NoticeUpdateRequestDto dto) {
-        NoticeDetailResponseDto responseDto = null;
+    @Override // 수정
+    public ResponseDto<GetNoticeDetailResponseDto> updateNotice(String username, Long id, NoticeUpdateRequestDto dto) {
+        GetNoticeDetailResponseDto responseDto = null;
 
-        Notice notice = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.FILE_NOT_FOUND + noticeId));
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
-        notice.setTitle(dto.getTitle());
-        notice.setContent(dto.getContent());
+        String roleName = user.getRole().getRoleName();
+
+        if(!roleName.equals("ADMIN")) {
+            throw new IllegalArgumentException(ResponseMessage.NO_PERMISSION);
+        }
+
+        Notice notice = noticeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("NOTICE NOT FOUND"));
+
+        if (dto.getTitle() != null) {
+            notice.setTitle(dto.getTitle());
+        }
+        if (dto.getContent() != null) {
+            notice.setContent(dto.getContent());
+        }
 
         Notice updatedNotice = noticeRepository.save(notice);
 
-        responseDto = NoticeDetailResponseDto.builder()
+        responseDto = GetNoticeDetailResponseDto.builder()
+                .username(notice.getUser().getName())
                 .noticeId(updatedNotice.getNoticeId())
                 .title(updatedNotice.getTitle())
                 .content(updatedNotice.getContent())
+                .createdAt(updatedNotice.getCreatedAt())
+                .updatedAt(updatedNotice.getUpdatedAt())
                 .build();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
     }
 
-    @Override
-    public ResponseDto<?> deleteNotice(Long id) {
+    @Override // 삭제
+    public ResponseDto<?> deleteNotice(String username, Long id) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
+
+        String roleName = user.getRole().getRoleName();
+
+        if(!roleName.equals("ADMIN")) {
+            throw new IllegalArgumentException(ResponseMessage.NO_PERMISSION);
+        }
         Notice notice = noticeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.FILE_NOT_FOUND + id));
+                .orElseThrow(() -> new EntityNotFoundException("NOTICE NOT FOUND"));
 
         noticeRepository.delete(notice);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS).getBody();
     }
-    
-    @Override
+
+    @Override // 전체 조회
     public ResponseDto<List<NoticeListResponseDto>> getAllNotices() {
         List<NoticeListResponseDto> responseDtos = null;
 
@@ -100,6 +122,7 @@ public class NoticeServiceImpl implements NoticeService {
 
         responseDtos = notices.stream()
                 .map(notice -> NoticeListResponseDto.builder()
+                        .username(notice.getUser().getName())
                         .noticeId(notice.getNoticeId())
                         .title(notice.getTitle())
                         .createdAt(notice.getCreatedAt())
@@ -109,26 +132,23 @@ public class NoticeServiceImpl implements NoticeService {
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos).getBody();
     }
 
+    @Override
+    public ResponseDto<GetNoticeDetailResponseDto> getNoticeById(Long id){
+        GetNoticeDetailResponseDto responseDto = null;
 
+        Notice notice = noticeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.FILE_NOT_FOUND + id));
 
-    private void saveFile(MultipartFile file, Long targetId, TargetType type) throws IOException {
-        File dir = new File(uploadDir);
-        if (!dir.exists()) dir.mkdirs();
+        responseDto = GetNoticeDetailResponseDto.builder()
+                .username(notice.getUser().getName())
+                .noticeId(notice.getNoticeId())
+                .title(notice.getTitle())
+                .content(notice.getContent())
+                .createdAt(notice.getCreatedAt())
+                .updatedAt(notice.getUpdatedAt())
+                .build();
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
 
-        String original = file.getOriginalFilename();
-        String uuidName = UUID.randomUUID() + "_" + original;
-        String fullPath = uploadDir + "/" + uuidName;
-        file.transferTo(new File(fullPath));
-
-        UploadFile uf = new UploadFile();
-        uf.setOriginalName(original);
-        uf.setFileName(uuidName);
-        uf.setFilePath("/files/" + uuidName);
-        uf.setFileSize(file.getSize());
-        uf.setFileType(file.getContentType());
-        uf.setTargetId(targetId);
-        uf.setTargetType(type);
-
-        uploadFileRepository.save(uf);
     }
+
 }
