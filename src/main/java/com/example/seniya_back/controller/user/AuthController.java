@@ -9,7 +9,7 @@ import com.example.seniya_back.dto.user.response.UserSignInResponseDto;
 import com.example.seniya_back.dto.user.response.UserSignUpResponseDto;
 import com.example.seniya_back.service.AuthService;
 // import com.example.seniya_back.service.MailService;
-import com.example.seniya_back.service.MailService;
+//import com.example.seniya_back.service.MailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

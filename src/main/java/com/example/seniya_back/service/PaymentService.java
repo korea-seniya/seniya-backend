@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface PaymentService {
 
-    ResponseDto<PaymentResponseDto> createPayment(long id, @Valid CreatePaymentRequestDto dto);
+    ResponseDto<PaymentResponseDto> createPayment(String username, @Valid CreatePaymentRequestDto dto);
 
     ResponseDto<List<GetAllPaymentResponseDto>> getAllPayments();
 
