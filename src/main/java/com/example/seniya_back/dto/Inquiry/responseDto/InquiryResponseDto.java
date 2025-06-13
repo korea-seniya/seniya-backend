@@ -15,6 +15,7 @@ public class InquiryResponseDto {
     private Long inquiryId;
     private String title;
     private String content;
+    private Boolean isPrivate;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

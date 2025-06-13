@@ -32,6 +32,9 @@ public class Inquiry extends BaseTimeEntity{
 
     private String response;
 
+    @Column(nullable = false)
+    private Boolean isPrivated;
 
     private LocalDateTime responsedAt = LocalDateTime.now();
+
 }
