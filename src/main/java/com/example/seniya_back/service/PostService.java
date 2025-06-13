@@ -23,7 +23,5 @@ public interface PostService {
 
     ResponseDto<List<PostListResponseDto>> searchPostsByTitle(String title);
 
-    ResponseDto<List<PostListResponseDto>> searchPostsByRole(String roleName);
-
  ResponseDto<PostDetailResponseDto> getPostById(Long id);
 }

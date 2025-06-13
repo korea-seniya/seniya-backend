@@ -69,16 +69,9 @@ public class PostController {
 
 
     // 게시글 제목 검색
-    @GetMapping
+    @GetMapping("/{title}")
     public ResponseEntity<ResponseDto<List<PostListResponseDto>>> searchPostsByTitle(@RequestParam String title) {
         ResponseDto<List<PostListResponseDto>> response = postService.searchPostsByTitle(title);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    // 작성자 권한 별 검색
-    @GetMapping
-    public ResponseEntity<ResponseDto<List<PostListResponseDto>>> searchPostsByUserRole(@RequestParam String roleName) {
-        ResponseDto<List<PostListResponseDto>> response = postService.searchPostsByRole(roleName);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
