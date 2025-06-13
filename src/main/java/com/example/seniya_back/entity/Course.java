@@ -21,11 +21,11 @@ public class Course extends BaseTimeEntity{
     private Long courseId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "categry", nullable = false)
+    @Column(name = "category", nullable = false)
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "tariner_id")
+    @JoinColumn(name = "trainer_id")
     private TrainerProfile trainerProfile;
 
     @Column(nullable = false)
@@ -34,15 +34,15 @@ public class Course extends BaseTimeEntity{
     @Column(nullable = false)
     private String description;
 
-    @Column(name = "class_date", nullable = false)
+    @Column(name = "course_date", nullable = false)
     private LocalDateTime date;
 
-    @Column(name = "class_start_time", nullable = false)
+    @Column(name = "course_start_time", nullable = false)
     private LocalTime startTime;
 
-    @Column(name = "class_end_time", nullable = false)
+    @Column(name = "course_end_time", nullable = false)
     private LocalTime endTime;
 
-    @Column(name = "class_room", nullable = false)
+    @Column(name = "course_room", nullable = false)
     private String room;
 }

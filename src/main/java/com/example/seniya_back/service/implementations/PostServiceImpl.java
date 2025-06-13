@@ -160,3 +160,4 @@ public class PostServiceImpl implements PostService {
         uploadFileRepository.save(uf);
     }
 }
+

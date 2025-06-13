@@ -2,13 +2,16 @@ package com.example.seniya_back.service.implementations;
 
 import com.example.seniya_back.common.constants.ResponseCode;
 import com.example.seniya_back.common.constants.ResponseMessage;
+import com.example.seniya_back.common.enums.payment.Status;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.payment.request.ConfirmPaymentRequestDto;
 import com.example.seniya_back.dto.payment.request.CreatePaymentRequestDto;
 import com.example.seniya_back.dto.payment.response.GetAllPaymentResponseDto;
 import com.example.seniya_back.dto.payment.response.PaymentResponseDto;
+import com.example.seniya_back.entity.Pass;
 import com.example.seniya_back.entity.Payment;
 import com.example.seniya_back.entity.User;
+import com.example.seniya_back.repository.PassRepository;
 import com.example.seniya_back.repository.PaymentRepository;
 import com.example.seniya_back.repository.UserRepository;
 import com.example.seniya_back.service.PaymentService;
@@ -16,6 +19,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,14 +29,18 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final UserRepository userRepository;
+    private final PassRepository passRepository;
 
     @Override
-    public ResponseDto<PaymentResponseDto> createPayment(long id, CreatePaymentRequestDto dto) {
-        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
+    public ResponseDto<PaymentResponseDto> createPayment(String username, CreatePaymentRequestDto dto) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
         Payment payment = Payment.builder()
+                .user(user)
                 .method(dto.getMethod())
                 .couponCount(dto.getCouponCount())
+                .amount(BigDecimal.valueOf(dto.getCouponCount() * 1000L))
+                .status(Status.PENDING)
                 .build();
 
         Payment savedPayment = paymentRepository.save(payment);
