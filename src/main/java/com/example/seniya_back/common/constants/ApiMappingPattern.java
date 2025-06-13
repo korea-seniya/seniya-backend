@@ -11,4 +11,5 @@ public interface ApiMappingPattern {
     String ADMIN_API = "api/v1/admin";
     String PARTICIPATION_API = "api/v1/participations";
     String COURSE_API = "api/v1/courses";
+    String TRAINER_PROFILE_API = "/api/v1/trainer-profile";
 }

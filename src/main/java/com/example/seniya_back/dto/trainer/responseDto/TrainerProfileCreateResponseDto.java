@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrainerProfileResponseDto{
+public class TrainerProfileCreateResponseDto {
     private String name;
     private Specialty specialty;
     private String certificate;
@@ -19,5 +19,4 @@ public class TrainerProfileResponseDto{
     private Integer experienceYears;
     private String description;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }
