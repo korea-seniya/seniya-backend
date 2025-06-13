@@ -16,6 +16,7 @@ import java.util.List;
 public interface NoticeService {
 
 
+    ResponseDto<NoticeResponseDto> createNotice(NoticeCreateRequestDto dto, MultipartFile file) throws IOException;
 
     ResponseDto<NoticeDetailResponseDto> updateNotice(Long noticeId, @Valid NoticeUpdateRequestDto dto);
 
@@ -23,5 +24,4 @@ public interface NoticeService {
 
     ResponseDto<List<NoticeListResponseDto>> getAllNotices();
 
-    ResponseDto<NoticeResponseDto> createNotice(@Valid NoticeCreateRequestDto dto, MultipartFile file) throws IOException;
 }

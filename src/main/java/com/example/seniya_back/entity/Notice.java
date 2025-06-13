@@ -28,9 +28,4 @@ public class Notice extends BaseTimeEntity{
     @Column(nullable = false)
     private String content;
 
-    @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL)
-    private List<Comment> comments;
-
-    @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL)
-    private List<UploadFile> images = new ArrayList<>();
 }
