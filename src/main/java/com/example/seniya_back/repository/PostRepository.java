@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-    List<Post> findByTitleIgnoreCaseContaining(String title);
-
+    List<Post> findByTitleContaining(String title);
+    List<Post> findByUserRoleRoleName(String roleName);
 }

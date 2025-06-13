@@ -13,10 +13,11 @@ public class PostDetailResponseDto {
     private Long postId;
     private String title;
     private String content;
-    private String authorName;
+    private String username;
     private List<String> imageUrls;
     private List<CommentDto> comments;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private LocalDateTime modifiedAt;
 
     @Getter
@@ -24,9 +25,8 @@ public class PostDetailResponseDto {
     @AllArgsConstructor
     public static class CommentDto {
         private Long commentId;
-        private String authorName;
+        private String username;
         private String content;
         private LocalDateTime createdAt;
-        private LocalDateTime modifiedAt;
     }
 }

@@ -3,6 +3,8 @@ package com.example.seniya_back.controller.post;
 import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.post.request.PostCreateRequsetDto;
+import com.example.seniya_back.dto.post.request.PostSearchByRoleRequestDto;
+import com.example.seniya_back.dto.post.request.PostSearchByTitleRequestDto;
 import com.example.seniya_back.dto.post.request.PostUpdateRequestDto;
 import com.example.seniya_back.dto.post.response.PostDetailResponseDto;
 import com.example.seniya_back.dto.post.response.PostListResponseDto;
@@ -29,20 +31,20 @@ public class PostController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDto<PostResponseDto>> createPost(
             @RequestPart("data") @Valid PostCreateRequsetDto dto,
-            @RequestPart(value = "file", required = false) MultipartFile file
+            @RequestPart(value = "file", required = false) List<MultipartFile> files
     ) throws IOException {
-        ResponseDto<PostResponseDto> response = postService.createPost(dto, file);
+        ResponseDto<PostResponseDto> response = postService.createPost(dto, files);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // 게시글 수정
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ResponseDto<PostResponseDto>> updatePost(
+    public ResponseEntity<ResponseDto<PostDetailResponseDto>> updatePost(
             @PathVariable Long postId,
             @RequestPart("data") @Valid PostUpdateRequestDto dto,
-            @RequestPart(value = "file", required = false) MultipartFile file
+            @RequestPart(value = "file", required = false) List<MultipartFile> files
     ) throws IOException {
-        ResponseDto<PostResponseDto> response = postService.updatePost(postId, dto, file);
+        ResponseDto<PostDetailResponseDto> response = postService.updatePost(postId, dto, files);
         return ResponseEntity.ok(response);
     }
 
@@ -64,15 +66,21 @@ public class PostController {
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDto<PostDetailResponseDto>> getPostById(@PathVariable Long id) {
         ResponseDto<PostDetailResponseDto> response = postService.getPostById(id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
     // 게시글 제목 검색
     @GetMapping("/{title}")
-    public ResponseEntity<ResponseDto<List<PostListResponseDto>>> searchPostsByTitle(@RequestParam String title) {
-        ResponseDto<List<PostListResponseDto>> response = postService.searchPostsByTitle(title);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+    public ResponseEntity<ResponseDto<List<PostListResponseDto>>> searchByTitle(@RequestBody PostSearchByTitleRequestDto dto) {
+        ResponseDto<List<PostListResponseDto>> posts = postService.searchByTitle(dto.getTitle());
+        return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
+    // 작성자 권한 별 검색
+    @GetMapping("/{role}")
+    public ResponseEntity<ResponseDto<List<PostListResponseDto>>> searchByRole(@PathVariable PostSearchByRoleRequestDto dto) {
+        ResponseDto<List<PostListResponseDto>> posts = postService.searchByRole(dto.getRoleName());
+        return ResponseEntity.status(HttpStatus.OK).body(posts);
+    }
 }

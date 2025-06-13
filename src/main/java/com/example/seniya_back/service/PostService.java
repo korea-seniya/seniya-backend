@@ -13,15 +13,17 @@ import java.io.IOException;
 import java.util.List;
 
 public interface PostService {
-   ResponseDto<PostResponseDto> createPost(@Valid PostCreateRequsetDto dto, MultipartFile file) throws IOException;
+   ResponseDto<PostResponseDto> createPost(@Valid PostCreateRequsetDto dto, List<MultipartFile> files) throws IOException;
 
-    ResponseDto<PostResponseDto> updatePost(Long id, @Valid PostUpdateRequestDto dto, MultipartFile file) throws IOException;
+    ResponseDto<PostDetailResponseDto> updatePost(Long id, @Valid PostUpdateRequestDto dto, List<MultipartFile> files) throws IOException;
 
     ResponseDto<?> deletePost(Long id);
 
     ResponseDto<List<PostListResponseDto>> getAllPosts();
 
-    ResponseDto<List<PostListResponseDto>> searchPostsByTitle(String title);
+    ResponseDto<PostDetailResponseDto> getPostById(Long id);
 
- ResponseDto<PostDetailResponseDto> getPostById(Long id);
+    ResponseDto<List<PostListResponseDto>> searchByTitle(String title);
+
+ ResponseDto<List<PostListResponseDto>> searchByRole(String roleName);
 }
