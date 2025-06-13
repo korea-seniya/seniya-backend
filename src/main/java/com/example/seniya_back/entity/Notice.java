@@ -3,9 +3,6 @@ package com.example.seniya_back.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Table(name = "notices")
 @Getter
@@ -16,6 +13,7 @@ import java.util.List;
 public class Notice extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "notice_id")
     private Long noticeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,5 +25,7 @@ public class Notice extends BaseTimeEntity{
 
     @Column(nullable = false)
     private String content;
+
+
 
 }
