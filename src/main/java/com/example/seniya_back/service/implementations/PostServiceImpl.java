@@ -139,24 +139,6 @@ public class PostServiceImpl implements PostService {
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos).getBody();
     }
 
-    @Override
-    public ResponseDto<List<PostListResponseDto>> searchPostsByRole(String roleName) {
-        List<PostListResponseDto> responseDtos = null;
-
-        List<Post> posts = postRepository.findByRoleIgnoreCaseContaining(roleName);
-
-        responseDtos = posts.stream()
-                .map(post -> PostListResponseDto.builder()
-                        .title(post.getTitle())
-                        .content(post.getContent())
-                        .username(post.getUser())
-                        .build())
-                .collect(Collectors.toList());
-
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos).getBody();
-    }
-
-
     private void saveFile(MultipartFile file, Long targetId, TargetType type) throws IOException {
         File dir = new File(uploadDir);
         if (!dir.exists()) dir.mkdirs();

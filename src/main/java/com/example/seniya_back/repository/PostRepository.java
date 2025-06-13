@@ -10,5 +10,4 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByTitleIgnoreCaseContaining(String title);
 
-    List<Post> findByRoleIgnoreCaseContaining(String roleName);
 }
