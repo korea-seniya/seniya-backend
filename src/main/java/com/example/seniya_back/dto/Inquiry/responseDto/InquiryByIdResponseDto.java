@@ -12,9 +12,11 @@ import java.time.LocalDateTime;
 public class InquiryByIdResponseDto {
     private String title;
     private String username;
+
     private String trainerName;
     private String content;
     private String response;
+    private Boolean isPrivated;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
