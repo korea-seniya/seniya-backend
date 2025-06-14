@@ -13,6 +13,7 @@ public class MyInquiryResponseDto {
     private String title;
     private String content;
     private String response;
+    private Boolean isPrivated;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

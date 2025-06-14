@@ -10,8 +10,11 @@ import com.example.seniya_back.dto.Inquiry.responseDto.InquiryResponseDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.MyInquiryResponseDto;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.entity.Inquiry;
+import com.example.seniya_back.entity.TrainerApplication;
+import com.example.seniya_back.entity.TrainerProfile;
 import com.example.seniya_back.entity.User;
 import com.example.seniya_back.repository.InquiryRepository;
+import com.example.seniya_back.repository.TrainerProfileRepository;
 import com.example.seniya_back.repository.UserRepository;
 import com.example.seniya_back.service.InquiryService;
 import jakarta.persistence.EntityNotFoundException;
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
 public class InquiryServiceImpl implements InquiryService {
     private final InquiryRepository inquiryRepository;
     private final UserRepository userRepository;
+    private final TrainerProfileRepository trainerProfileRepository;
 
     @Override
     public ResponseDto<InquiryResponseDto> createInquiry(String username, InquiryRequestDto dto) {
@@ -39,7 +43,7 @@ public class InquiryServiceImpl implements InquiryService {
                 .user(user)
                 .title(dto.getTitle())
                 .content(dto.getContent())
-                .isPrivated(dto.getIsPrivated())
+                .isPrivated(dto.getIsPrivated() != null ? dto.getIsPrivated() : false)
                 .build();
 
         Inquiry saved = inquiryRepository.save(newInquiry);
@@ -67,7 +71,9 @@ public class InquiryServiceImpl implements InquiryService {
         resDtos = inquiries.stream()
                 .map(inquiry -> MyInquiryResponseDto.builder()
                         .title(inquiry.getTitle())
-                        .content(inquiry.getContent()).response(inquiry.getResponse())
+                        .content(inquiry.getContent())
+                        .response(inquiry.getResponse())
+                        .isPrivated(inquiry.getIsPrivated())
                         .createdAt(inquiry.getCreatedAt())
                         .updatedAt(inquiry.getUpdatedAt())
                         .build()
@@ -89,6 +95,7 @@ public class InquiryServiceImpl implements InquiryService {
                         .username(inquiry.getUser().getUsername())
                         .title(inquiry.getTitle())
                         .content(inquiry.getContent())
+                        .isPrivated(inquiry.getIsPrivated())
                         .createdAt(inquiry.getCreatedAt())
                         .updatedAt(inquiry.getUpdatedAt())
                         .build()
@@ -119,9 +126,10 @@ public class InquiryServiceImpl implements InquiryService {
         responseDto = InquiryByIdResponseDto.builder()
                 .title(inquiry.getTitle())
                 .username(inquiry.getUser().getName())
-                .trainerName(inquiry.getTrainer().getUser().getName())
+                .trainerName(inquiry.getTrainer() != null ? inquiry.getTrainer().getUser().getName() : null)
                 .content(inquiry.getContent())
                 .response(inquiry.getResponse())
+                .isPrivated(inquiry.getIsPrivated())
                 .createdAt(inquiry.getCreatedAt())
                 .updatedAt(inquiry.getUpdatedAt())
                 .build();
@@ -145,6 +153,7 @@ public class InquiryServiceImpl implements InquiryService {
 
         inquiry.setTitle(dto.getTitle());
         inquiry.setContent(dto.getContent());
+        inquiry.setIsPrivated(dto.getIsPrivated());
 
         Inquiry savedInquiry = inquiryRepository.save(inquiry);
 
@@ -154,6 +163,7 @@ public class InquiryServiceImpl implements InquiryService {
                 .trainerName(savedInquiry.getTrainer().getUser().getName())
                 .content(savedInquiry.getContent())
                 .response(savedInquiry.getResponse())
+                .isPrivated(savedInquiry.getIsPrivated())
                 .createdAt(savedInquiry.getCreatedAt())
                 .updatedAt(savedInquiry.getUpdatedAt())
                 .build();
@@ -169,7 +179,9 @@ public class InquiryServiceImpl implements InquiryService {
         Inquiry inquiry = inquiryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("INQUIRY NOT FOUND"));
 
-        if (!inquiry.getUser().getUsername().equals(user.getUsername())) {
+        boolean isAdmin = user.getRole().getRoleName().equals("ADMIN");
+
+        if (!inquiry.getUser().getUsername().equals(user.getUsername()) && !isAdmin) {
             throw new AccessDeniedException(ResponseMessage.NO_PERMISSION);
         }
 
@@ -187,6 +199,13 @@ public class InquiryServiceImpl implements InquiryService {
         Inquiry inquiry = inquiryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("INQUIRY NOT FOUND"));
 
+        boolean isAdmin = user.getRole().getRoleName().equals("ADMIN");
+        boolean isTrainer = user.getRole().getRoleName().equals("TRAINER");
+
+        if (!isTrainer && !isAdmin) {
+            throw new AccessDeniedException(ResponseMessage.NO_PERMISSION);
+        }
+
         inquiry.setResponse(dto.getResponse());
 
         inquiryRepository.save(inquiry);
@@ -197,6 +216,7 @@ public class InquiryServiceImpl implements InquiryService {
                 .trainerName(user.getUsername())
                 .content(inquiry.getContent())
                 .response(inquiry.getResponse())
+                .isPrivated(inquiry.getIsPrivated())
                 .createdAt(inquiry.getCreatedAt())
                 .updatedAt(inquiry.getUpdatedAt())
                 .build();
