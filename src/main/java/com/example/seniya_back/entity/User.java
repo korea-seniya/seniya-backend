@@ -36,6 +36,10 @@ public class User extends BaseTimeEntity{
     @Column(name = "phone", nullable = false, unique = true)
     private String phone;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, optional = false)
+    private HealthData healthData;
+
+
     @Builder
     public User(String username, String name,String email, String password, String phone, Role role) {
         this.username = username;

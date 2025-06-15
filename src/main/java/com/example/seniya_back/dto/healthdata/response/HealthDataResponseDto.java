@@ -1,13 +1,16 @@
 package com.example.seniya_back.dto.healthdata.response;
 
 import com.example.seniya_back.common.enums.BloodPressure;
-import com.example.seniya_back.common.enums.DiseaseStatus;
+import com.example.seniya_back.dto.healthdata.allergy.response.AllergyResponseDto;
+import com.example.seniya_back.dto.healthdata.disease.response.DiseaseResponseDto;
+import com.example.seniya_back.dto.healthdata.medication.response.MedicationResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -18,19 +21,14 @@ public class HealthDataResponseDto {
     private Float weight;
     private Float bodyFatPercentage;
     private BloodPressure bloodPressure;
+    private Boolean smoking;
+    private Boolean drinking;
 
-    private Long diseaseId;
-    private String diseaseName;
-    private LocalDate diseaseDate;
-    private DiseaseStatus diseaseStatus;
-
-    private Long allergyId;
-    private String allergyName;
-    private String reaction;
-
-    private Long medicineId;
-    private String medicationName;
+    private List<DiseaseResponseDto> diseases;
+    private List<MedicationResponseDto> medications;
+    private List<AllergyResponseDto> allergies;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
 }

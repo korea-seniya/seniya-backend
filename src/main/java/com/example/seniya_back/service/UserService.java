@@ -9,10 +9,11 @@ import jakarta.validation.Valid;
 
 
 public interface UserService {
-    ResponseDto<GetMyInfoResponseDto> getUserInfo(String email);
-    ResponseDto<Void> deleteUser(String userEmail);
-    ResponseDto<GetMyInfoResponseDto> updateUserInfo(String email, @Valid MyInfoUpdateRequestDto dto);
+    ResponseDto<GetMyInfoResponseDto> getUserInfo(String username);
+    ResponseDto<GetMyInfoResponseDto> updateUserInfo(String username, @Valid MyInfoUpdateRequestDto dto);
+    ResponseDto<?> deleteUser(String username);
 
     @Transactional
     void signIn(UserSignInRequestDto requestDto);
+
 }

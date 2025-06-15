@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class AllergyResposneDto {
+public class AllergyResponseDto {
     private Long allergyId;
     private String allergyName;
     private String reaction;
