@@ -12,7 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping
+@RequestMapping(ApiMappingPattern.USER_API)
 @RequiredArgsConstructor
 public class UserController {
 
@@ -26,29 +26,29 @@ public class UserController {
     // 1) 회원 정보 조회
     @GetMapping(GET_USER_INFO)
     public ResponseEntity<ResponseDto<GetMyInfoResponseDto>> getUserInfo(
-            @AuthenticationPrincipal String email
+            @AuthenticationPrincipal String username
     ) {
-        ResponseDto<GetMyInfoResponseDto> response = userService.getUserInfo(email);
+        ResponseDto<GetMyInfoResponseDto> response = userService.getUserInfo(username);
         return ResponseEntity.ok(response);
     }
 
     // 2) 회원 정보 수정
     @PutMapping(PUT_USER_INFO)
     public ResponseEntity<ResponseDto<GetMyInfoResponseDto>> updateUserInfo(
-            @AuthenticationPrincipal String email,
+            @AuthenticationPrincipal String username,
             @Valid @RequestBody MyInfoUpdateRequestDto dto
     ) {
-        ResponseDto<GetMyInfoResponseDto> response = userService.updateUserInfo(email, dto);
+        ResponseDto<GetMyInfoResponseDto> response = userService.updateUserInfo(username, dto);
         return ResponseEntity.ok(response);
     }
 
     // 3) 회원 탈퇴
-    @DeleteMapping(DELETE_USER)
-    public ResponseEntity<ResponseDto<Void>> deleteUser(
-            @AuthenticationPrincipal String userEmail
-    ){
-        ResponseDto<Void> response = userService.deleteUser(userEmail);
-        return ResponseEntity.noContent().build();
-    }
+   @DeleteMapping
+    public ResponseEntity<ResponseDto<?>> deleteUser(
+            @AuthenticationPrincipal String username
+   ){
+        ResponseDto<?> response = userService.deleteUser(username);
+        return ResponseEntity.ok(response);
+   }
 }
 

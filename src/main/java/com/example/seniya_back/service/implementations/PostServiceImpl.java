@@ -72,6 +72,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public ResponseDto<PostDetailResponseDto> updatePost(Long id, PostUpdateRequestDto dto, List<MultipartFile> files) throws IOException {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.FILE_NOT_FOUND + id));
