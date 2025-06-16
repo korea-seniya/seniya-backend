@@ -3,17 +3,19 @@ package com.example.seniya_back.service.implementations;
 import com.example.seniya_back.common.constants.ResponseCode;
 import com.example.seniya_back.common.constants.ResponseMessage;
 import com.example.seniya_back.common.enums.uploadFile.TargetType;
+import com.example.seniya_back.dto.Inquiry.responseDto.InquiryResponseDto;
 import com.example.seniya_back.dto.ResponseDto;
-import com.example.seniya_back.dto.post.request.PostCreateRequsetDto;
+import com.example.seniya_back.dto.post.request.PostCreateRequestDto;
 import com.example.seniya_back.dto.post.request.PostUpdateRequestDto;
-import com.example.seniya_back.dto.post.response.CommentResponseDto;
 import com.example.seniya_back.dto.post.response.PostDetailResponseDto;
 import com.example.seniya_back.dto.post.response.PostListResponseDto;
 import com.example.seniya_back.dto.post.response.PostResponseDto;
 import com.example.seniya_back.entity.Post;
 import com.example.seniya_back.entity.UploadFile;
+import com.example.seniya_back.entity.User;
 import com.example.seniya_back.repository.PostRepository;
 import com.example.seniya_back.repository.UploadFileRepository;
+import com.example.seniya_back.repository.UserRepository;
 import com.example.seniya_back.service.PostService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final UploadFileRepository uploadFileRepository;
 
@@ -38,8 +41,12 @@ public class PostServiceImpl implements PostService {
     private String uploadDir;
 
     @Override
-    public ResponseDto<PostResponseDto> createPost(PostCreateRequsetDto dto, List<MultipartFile> files) throws IOException{
+    public ResponseDto<PostResponseDto> createPost(String username, PostCreateRequestDto dto, List<MultipartFile> files) throws IOException{
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
+
         Post post = Post.builder()
+                .user(user)
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .build();
@@ -49,7 +56,7 @@ public class PostServiceImpl implements PostService {
         if (files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
                 if (!file.isEmpty()) {
-                    saveFile(file, post.getPostId(), TargetType.POST); // 내부에서 UploadFile에 post 연결 필수
+                    saveFile(file, post.getPostId(), TargetType.POST);
                 }
             }
         }
@@ -220,6 +227,32 @@ public class PostServiceImpl implements PostService {
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos).getBody();
     }
+
+//    @Override
+//    public ResponseDto<PostResponseDto> createPost(String username, PostCreateRequestDto dto) {
+//        PostResponseDto responseDto = null;
+//
+//        User user = userRepository.findByUsername(username)
+//                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
+//
+//        Post newPost = Post.builder()
+//                .user(user)
+//                .title(dto.getTitle())
+//                .content(dto.getContent())
+//                .build();
+//
+//        Post savedPost = postRepository.save(newPost);
+//
+//        responseDto = PostResponseDto.builder()
+//                .postId(savedPost.getPostId())
+//                .title(savedPost.getTitle())
+//                .content(savedPost.getContent())
+//                .createdAt(savedPost.getCreatedAt())
+//                .updatedAt(savedPost.getUpdatedAt())
+//                .build();
+//
+//        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
+//    }
 
     private void saveFile(MultipartFile file, Long targetId, TargetType type) throws IOException {
         File dir = new File(uploadDir);

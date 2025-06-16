@@ -1,16 +1,14 @@
 package com.example.seniya_back.dto.post.request;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PostCreateRequsetDto {
+public class PostCreateRequestDto {
     @NotBlank(message = "제목 입력은 필수 입니다.")
     private String title;
 
