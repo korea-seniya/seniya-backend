@@ -53,12 +53,12 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                new AntPathRequestMatcher("/api/v1/**")
-//                                new AntPathRequestMatcher("/api/v1/auth/**")
-                        ).permitAll()
-//                        .requestMatchers("/api/v1/trainer-profiles/**").hasRole("TRAINER")
-//                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                                // 이메일 인증 API와 api/v1/** 경로 모두 인증 없이 허용
+                                .requestMatchers(
+                                        new AntPathRequestMatcher("/auth/verification-codes/email"),
+                                        new AntPathRequestMatcher("/api/v1/**")
+                                ).permitAll()
+                        // 필요하다면 다른 경로는 권한 설정 추가 가능
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

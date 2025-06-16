@@ -2,14 +2,17 @@ package com.example.seniya_back.controller.user;
 
 import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.dto.ResponseDto;
-import com.example.seniya_back.dto.user.request.SendMailRequestDto;
+;
+import com.example.seniya_back.dto.user.request.EmailSendRequestDto;
+import com.example.seniya_back.dto.user.request.UserPasswordResetRequestDto;
 import com.example.seniya_back.dto.user.request.UserSignInRequestDto;
 import com.example.seniya_back.dto.user.request.UserSignUpRequestDto;
 import com.example.seniya_back.dto.user.response.UserSignInResponseDto;
 import com.example.seniya_back.dto.user.response.UserSignUpResponseDto;
 import com.example.seniya_back.service.AuthService;
-// import com.example.seniya_back.service.MailService;
-//import com.example.seniya_back.service.MailService;
+ import com.example.seniya_back.service.MailService;
+import com.example.seniya_back.service.MailService;
+import com.example.seniya_back.service.MailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,16 +21,18 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+
 @RestController
 @RequestMapping(ApiMappingPattern.AUTH_API)
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-//    private final MailService mailService;
+    private final MailService mailService;
 
     private static final String POST_SIGN_UP = "/signup";
     private static final String POST_SIGN_IN = "/login";
     private static final String POST_LOG_OUT = "/logout";
+    private static final String EMAIL_API = "/email";
 
     // 1) 회원가입
 
@@ -51,21 +56,16 @@ public class AuthController {
        return ResponseEntity.status(HttpStatus.OK).body(response);
     } // 안됨 이거ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ이거 기능이 없음.
 
-//    // 3) 이메일 전송
-//    @PostMapping("/send-email")
-//    public Mono<ResponseEntity<String>> sendEmail(@Valid @RequestBody SendMailRequestDto dto) {
-//        return MailService.sendSimpleMessage(dto.getEmail());
-//    }
-//
-//    // 4) 이메일 인증
-//    @GetMapping("/verify")
-//    public Mono<ResponseEntity<String>> verifyEmail(@RequestParam String token) {
-//        return MailService.verifyEmail(token);
-//    }
-//
-//    // 5) 비밀번호 재설정
-//    @PutMapping("/reset-password")
-//    public Mono<ResponseEntity<String>> resetPassword(@Valid @RequestBody UserPasswordResetRequestDto dto) {
-//        return authService.resetPassword(dto);
-//    }
+    // 4) 이메일 인증
+    @PostMapping(EMAIL_API)
+    public Mono<ResponseEntity<String>> sendEmail(@Valid @RequestBody EmailSendRequestDto dto) {
+        return mailService.sendSimpleMessage(dto.getEmail());
+    }
+
+
+    // 5) 비밀번호 재설정
+    @PutMapping("/reset-password")
+    public Mono<ResponseEntity<String>> resetPassword(@Valid @RequestBody UserPasswordResetRequestDto dto) {
+        return authService.resetPassword(dto);
+    }
 }
