@@ -1,6 +1,5 @@
 package com.example.seniya_back.service.implementations;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.example.seniya_back.common.constants.ResponseCode;
 import com.example.seniya_back.common.constants.ResponseMessage;
 import com.example.seniya_back.dto.ResponseDto;
@@ -117,24 +116,25 @@ public class  AuthServiceImpl implements AuthService {
     }
 
 
-//
-//    @Override
-//    public Mono<ResponseEntity<String>> resetPassword(UserPasswordResetRequestDto dto) {
-//        return Mono.fromCallable(() -> {
-//            User user = (User) userRepository.findByEmail(dto.getEmail())
-//                    .orElseThrow(() -> new IllegalArgumentException("가입된 이메일이 아닙니다."));
-//
-////                if (!user.isEmailVerified()) {
-////                    return ResponseEntity.badRequest().body("이메일 인증이 필요합니다.");
-////                }
-//
-//            // 비밀번호, 비밀번호 확인 유효성 검사 필수! (일치 여부, 형식 여부)
-//
-//            user.setPassword(bCryptPasswordEncoder.encode(dto.getNewPassword()));
-//            userRepository.save(user);
-//
-//            return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
-//        }).onErrorResume(e -> Mono.just(
-//                ResponseEntity.badRequest().body("비밀번호 재설정 실패: " + e.getMessage())
-//        )).subscribeOn(Schedulers.boundedElastic());
+
+    @Override
+    public Mono<ResponseEntity<String>> resetPassword(UserPasswordResetRequestDto dto) {
+        return Mono.fromCallable(() -> {
+            User user = (User) userRepository.findByEmail(dto.getEmail())
+                    .orElseThrow(() -> new IllegalArgumentException("가입된 이메일이 아닙니다."));
+
+            if (!user.isEmailVerified()) {
+                return ResponseEntity.badRequest().body("이메일 인증이 필요합니다.");
+            }
+
+            // 비밀번호, 비밀번호 확인 유효성 검사 필수! (일치 여부, 형식 여부)
+
+            user.setPassword(bCryptPasswordEncoder.encode(dto.getNewPassword()));
+            userRepository.save(user);
+
+            return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+        }).onErrorResume(e -> Mono.just(
+                ResponseEntity.badRequest().body("비밀번호 재설정 실패: " + e.getMessage())
+        )).subscribeOn(Schedulers.boundedElastic());
+        }
     }
