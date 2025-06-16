@@ -14,7 +14,7 @@ public class RouterConfig {
     @Bean
     public RouterFunction<ServerResponse> routes(EmailHandler handler) {
         return RouterFunctions
-                .route(RequestPredicates.GET("/verify-email"), handler::verifyEmail);
+                .route(RequestPredicates.GET("/auth/verification-codes/email"), handler::verifyEmail);
         // 정확한 하위 경로 추가
         // +) 쿼리 파라미터는 포함 X
     }
