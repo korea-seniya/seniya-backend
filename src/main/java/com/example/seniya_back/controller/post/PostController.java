@@ -1,8 +1,10 @@
 package com.example.seniya_back.controller.post;
 
 import com.example.seniya_back.common.constants.ApiMappingPattern;
+import com.example.seniya_back.dto.Inquiry.requestDto.InquiryRequestDto;
+import com.example.seniya_back.dto.Inquiry.responseDto.InquiryResponseDto;
 import com.example.seniya_back.dto.ResponseDto;
-import com.example.seniya_back.dto.post.request.PostCreateRequsetDto;
+import com.example.seniya_back.dto.post.request.PostCreateRequestDto;
 import com.example.seniya_back.dto.post.request.PostSearchByRoleRequestDto;
 import com.example.seniya_back.dto.post.request.PostSearchByTitleRequestDto;
 import com.example.seniya_back.dto.post.request.PostUpdateRequestDto;
@@ -15,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,13 +30,29 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
+//    @PostMapping
+//    public ResponseEntity<ResponseDto<PostResponseDto>> createPost(
+//            @AuthenticationPrincipal String username,
+//            @Valid @RequestBody PostCreateRequestDto dto
+//    ) {
+//        ResponseDto<PostResponseDto> inquiry = postService.createPost(username, dto);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(inquiry);
+//    }
+
+//    @PostMapping("/test-upload")
+//    public ResponseEntity<String> testUpload(@RequestPart("file") MultipartFile file) {
+//        System.out.println("파일 이름: " + file.getOriginalFilename());
+//        return ResponseEntity.ok("업로드 성공");
+//    }
+
     // 게시글 생성
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDto<PostResponseDto>> createPost(
-            @RequestPart("data") @Valid PostCreateRequsetDto dto,
+            @AuthenticationPrincipal String username,
+            @RequestPart(name = "data", required = false) PostCreateRequestDto dto,
             @RequestPart(value = "file", required = false) List<MultipartFile> files
     ) throws IOException {
-        ResponseDto<PostResponseDto> response = postService.createPost(dto, files);
+        ResponseDto<PostResponseDto> response = postService.createPost(username, dto, files);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

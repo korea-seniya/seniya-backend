@@ -6,7 +6,7 @@ public interface ApiMappingPattern {
     String PAYMENT_API = "/api/v1/payments";
     String TRAINER_APPLY_API = "api/v1/trainer-applications";
     String INQUIRY_API = "/api/v1/inquiries";
-    String POST_API = "api/v1/posts";
+    String POST_API = "/api/v1/posts";
     String NOTICE_API = "api/v1/notices";
     String ADMIN_API = "api/v1/admin";
     String PARTICIPATION_API = "api/v1/participations";
