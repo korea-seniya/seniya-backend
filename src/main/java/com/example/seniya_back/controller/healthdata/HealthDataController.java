@@ -1,5 +1,6 @@
 package com.example.seniya_back.controller.healthdata;
 
+import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.healthdata.request.HealthDataRequestDto;
 import com.example.seniya_back.dto.healthdata.request.HealthDataUpdRequestDto;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(ApiMappingPattern.HEALTH_DATA_API)
 @RequiredArgsConstructor
 public class HealthDataController {
     private final HealthDataService healthDataService;

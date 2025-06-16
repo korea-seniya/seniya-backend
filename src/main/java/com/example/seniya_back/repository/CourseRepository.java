@@ -1,5 +1,6 @@
 package com.example.seniya_back.repository;
 
+import com.example.seniya_back.common.enums.Category;
 import com.example.seniya_back.dto.admin.course.response.CourseResponseDto;
 import com.example.seniya_back.entity.Course;
 import com.example.seniya_back.entity.User;
@@ -10,4 +11,5 @@ import java.util.List;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
+    List<Course> findByCategory(Category category);
 }
