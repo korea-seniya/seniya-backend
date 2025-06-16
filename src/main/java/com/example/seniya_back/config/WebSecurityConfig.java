@@ -53,10 +53,10 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                new AntPathRequestMatcher("/api/v1/**")
+                                .requestMatchers(
+                                        new AntPathRequestMatcher("/api/v1/**")
 //                                new AntPathRequestMatcher("/api/v1/auth/**")
-                        ).permitAll()
+                                ).permitAll()
 //                        .requestMatchers("/api/v1/trainer-profiles/**").hasRole("TRAINER")
 //                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 )

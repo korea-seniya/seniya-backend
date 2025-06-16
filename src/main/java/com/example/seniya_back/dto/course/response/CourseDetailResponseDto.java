@@ -13,6 +13,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class CourseDetailResponseDto {
     private Long trainerId;
+    private String trainerName;
     private String title;
     private String description;
     private LocalDateTime classDate;
