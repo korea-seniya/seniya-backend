@@ -1,78 +1,78 @@
-package com.example.seniya_back.config;
+    package com.example.seniya_back.config;
 
-import com.example.seniya_back.filter.JwtAuthenticationFilter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
+    import com.example.seniya_back.filter.JwtAuthenticationFilter;
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.context.annotation.Bean;
+    import org.springframework.context.annotation.Configuration;
+    import org.springframework.context.annotation.Lazy;
+    import org.springframework.security.authentication.AuthenticationManager;
+    import org.springframework.security.authentication.ProviderManager;
+    import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+    import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+    import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+    import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+    import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+    import org.springframework.security.web.SecurityFilterChain;
+    import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+    import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+    import org.springframework.web.cors.CorsConfiguration;
+    import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+    import org.springframework.web.filter.CorsFilter;
 
-import java.util.List;
+    import java.util.List;
 
-import static org.springframework.security.config.Customizer.withDefaults;
+    import static org.springframework.security.config.Customizer.withDefaults;
 
-@Configuration
-@EnableWebSecurity
-public class WebSecurityConfig {
+    @Configuration
+    @EnableWebSecurity
+    public class WebSecurityConfig {
 
-    @Lazy
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+        @Lazy
+        @Autowired
+        private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        @Bean
+        public CorsFilter corsFilter() {
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
-        CorsConfiguration config = new CorsConfiguration();
+            CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
+            config.setAllowCredentials(true);
+            config.addAllowedOriginPattern("*");
+            config.addAllowedHeader("*");
+            config.addAllowedMethod("*");
 
-        source.registerCorsConfiguration("/**", config);
+            source.registerCorsConfiguration("/**", config);
 
-        return new CorsFilter(source);
+            return new CorsFilter(source);
+        }
+
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+            return http
+                    .csrf(AbstractHttpConfigurer::disable)
+                    .cors(withDefaults())
+                    .authorizeHttpRequests(auth -> auth
+                                    // 이메일 인증 API와 api/v1/** 경로 모두 인증 없이 허용
+                                    .requestMatchers(
+                                            new AntPathRequestMatcher("/auth/verification-codes/email"),
+                                            new AntPathRequestMatcher("/api/v1/**")
+                                    ).permitAll()
+                            // 필요하다면 다른 경로는 권한 설정 추가 가능
+                    )
+                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                    .build();
+        }
+
+        @Bean
+        public AuthenticationManager authenticationManager(BCryptPasswordEncoder bCryptPasswordEncoder) throws Exception {
+            DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+            authProvider.setPasswordEncoder(bCryptPasswordEncoder);
+            return new ProviderManager(List.of(authProvider));
+        }
+
+        @Bean
+        public BCryptPasswordEncoder bCryptPasswordEncoder() {
+            return new BCryptPasswordEncoder();
+        }
     }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(withDefaults())
-                .authorizeHttpRequests(auth -> auth
-                                // 이메일 인증 API와 api/v1/** 경로 모두 인증 없이 허용
-                                .requestMatchers(
-                                        new AntPathRequestMatcher("/auth/verification-codes/email"),
-                                        new AntPathRequestMatcher("/api/v1/**")
-                                ).permitAll()
-                        // 필요하다면 다른 경로는 권한 설정 추가 가능
-                )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(BCryptPasswordEncoder bCryptPasswordEncoder) throws Exception {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setPasswordEncoder(bCryptPasswordEncoder);
-        return new ProviderManager(List.of(authProvider));
-    }
-
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-}

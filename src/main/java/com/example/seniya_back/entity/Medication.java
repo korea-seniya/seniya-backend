@@ -24,6 +24,6 @@ public class Medication {
     private String medicationName;
 
     @ManyToOne
-    @JoinColumn(name = "healthdata_id")
+    @JoinColumn(name = "health_data_id")
     private HealthData healthData;
 }

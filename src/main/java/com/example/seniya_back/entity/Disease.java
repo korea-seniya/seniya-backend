@@ -27,7 +27,7 @@ public class Disease {
     private LocalDate diseaseDate;
 
     @ManyToOne
-    @JoinColumn(name = "healthdata_id")
+    @JoinColumn(name = "health_data_id")
     private HealthData healthData;
 
     @OneToMany(mappedBy = "disease", cascade = CascadeType.ALL)

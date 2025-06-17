@@ -16,7 +16,7 @@ import java.util.List;
 public interface PostService {
    ResponseDto<PostResponseDto> createPost(String username, @Valid PostCreateRequestDto dto, List<MultipartFile> files) throws IOException;
 
-    ResponseDto<PostDetailResponseDto> updatePost(Long id, @Valid PostUpdateRequestDto dto, List<MultipartFile> files) throws IOException;
+    ResponseDto<PostDetailResponseDto> updatePost(String username, Long id, @Valid PostUpdateRequestDto dto, List<MultipartFile> files) throws IOException;
 
     ResponseDto<?> deletePost(Long id);
 
