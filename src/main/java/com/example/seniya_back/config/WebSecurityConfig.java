@@ -55,9 +55,9 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/auth/verification-codes/email",
-                                "/api/v1/auth/**"
+                                "/api/v1/auth/**"   // 여기 /api/v1/auth/** 경로만 인증 없이 허용
                         ).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().authenticated()  // 나머지 요청은 인증 필요
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
