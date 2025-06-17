@@ -72,8 +72,8 @@ public class  AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
 
-        UserSignUpResponseDto data = null;
-        return ResponseDto.<UserSignUpResponseDto>success(ResponseCode.SUCCESS, "회원 가입이 완료되었습니다.").getBody();
+        UserSignUpResponseDto data = new UserSignUpResponseDto();
+        return ResponseDto.success(ResponseCode.SUCCESS, "회원 가입이 완료되었습니다.",data).getBody();
 
     }
 
