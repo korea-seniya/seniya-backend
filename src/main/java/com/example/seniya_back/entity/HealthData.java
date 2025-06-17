@@ -21,7 +21,7 @@ public class HealthData extends BaseTimeEntity{
     private Long healthDataId;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @JoinColumn(name = "user_id", unique = true)
     private User user;
 
     @Column(name = "height", nullable = false)
@@ -51,7 +51,4 @@ public class HealthData extends BaseTimeEntity{
 
     @Column(name = "drinking", nullable = false)
     private Boolean drinking  = false;
-
-
-
 }

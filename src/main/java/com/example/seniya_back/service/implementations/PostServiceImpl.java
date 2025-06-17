@@ -80,9 +80,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public ResponseDto<PostDetailResponseDto> updatePost(Long id, PostUpdateRequestDto dto, List<MultipartFile> files) throws IOException {
+    public ResponseDto<PostDetailResponseDto> updatePost(String username, Long id, PostUpdateRequestDto dto, List<MultipartFile> files) throws IOException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
+
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.FILE_NOT_FOUND + id));
+
+        if (!post.getUser().getUsername().equals(user.getUsername())) {
+            throw new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND);
+        }
 
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
