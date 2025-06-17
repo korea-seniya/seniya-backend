@@ -47,22 +47,23 @@
             return new CorsFilter(source);
         }
 
-        @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            return http
-                    .csrf(AbstractHttpConfigurer::disable)
-                    .cors(withDefaults())
-                    .authorizeHttpRequests(auth -> auth
-                                    // 이메일 인증 API와 api/v1/** 경로 모두 인증 없이 허용
-                                    .requestMatchers(
-                                            new AntPathRequestMatcher("/auth/verification-codes/email"),
-                                            new AntPathRequestMatcher("/api/v1/**")
-                                    ).permitAll()
-                            // 필요하다면 다른 경로는 권한 설정 추가 가능
-                    )
-                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                    .build();
-        }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(withDefaults())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/auth/verification-codes/email",
+                                "/api/v1/auth/**"   // 여기 /api/v1/auth/** 경로만 인증 없이 허용
+                        ).permitAll()
+                        .anyRequest().authenticated()  // 나머지 요청은 인증 필요
+                )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
 
         @Bean
         public AuthenticationManager authenticationManager(BCryptPasswordEncoder bCryptPasswordEncoder) throws Exception {

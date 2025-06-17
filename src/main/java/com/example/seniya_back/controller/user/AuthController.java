@@ -30,7 +30,7 @@ public class AuthController {
     private final MailService mailService;
 
     private static final String POST_SIGN_UP = "/signup";
-    private static final String POST_SIGN_IN = "/login";
+    private static final String POST_SIGN_IN = "/signIn";
     private static final String POST_LOG_OUT = "/logout";
     private static final String EMAIL_API = "/email";
 
