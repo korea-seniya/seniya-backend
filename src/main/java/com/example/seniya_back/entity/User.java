@@ -39,9 +39,6 @@ public class User extends BaseTimeEntity {
     @Column(name = "email_verified", nullable = false)
     private boolean emailVerified = false;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, optional = false)
-    private HealthData healthData;
-
     // 이메일 인증 확인 메서드
     public void verifyEmail() {
         this.emailVerified = true;
