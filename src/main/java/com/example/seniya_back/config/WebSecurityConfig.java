@@ -14,6 +14,7 @@
     import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
     import org.springframework.security.web.SecurityFilterChain;
     import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+    import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
     import org.springframework.web.cors.CorsConfiguration;
     import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
     import org.springframework.web.filter.CorsFilter;
@@ -53,7 +54,11 @@
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/**").permitAll()
+                        .requestMatchers(
+//                                "/auth/verification-codes/email",
+//                                "/api/v1/auth/**",
+                                new AntPathRequestMatcher("/api/v1/**")
+                        ).permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
