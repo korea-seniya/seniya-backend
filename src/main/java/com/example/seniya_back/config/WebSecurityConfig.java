@@ -54,11 +54,10 @@ public class WebSecurityConfig {
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                ApiMappingPattern.EMAIL_VERIFY_API,
-                                ApiMappingPattern.AUTH_API + "/**",
-                                "/api/v1/auth/verification-codes/email"
+//                                "/auth/verification-codes/email",
+//                                "/api/v1/auth/**",
+                                new AntPathRequestMatcher("/api/v1/**")
                         ).permitAll()
-                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
