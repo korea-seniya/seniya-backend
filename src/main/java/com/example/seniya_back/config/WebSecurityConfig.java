@@ -14,7 +14,6 @@
     import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
     import org.springframework.security.web.SecurityFilterChain;
     import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-    import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
     import org.springframework.web.cors.CorsConfiguration;
     import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
     import org.springframework.web.filter.CorsFilter;
@@ -54,11 +53,7 @@
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/auth/verification-codes/email",
-                                "/api/v1/auth/**"   // 여기 /api/v1/auth/** 경로만 인증 없이 허용
-                        ).permitAll()
-                        .anyRequest().authenticated()  // 나머지 요청은 인증 필요
+                        .requestMatchers("/api/v1/**").permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
