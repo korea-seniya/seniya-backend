@@ -54,7 +54,7 @@ public class AuthController {
     public ResponseEntity<ResponseDto<?>> logout(@AuthenticationPrincipal String username) {
         ResponseDto<?> response = authService.logout(username);
        return ResponseEntity.status(HttpStatus.OK).body(response);
-    } // 안됨 이거ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ이거 기능이 없음.
+    }
 
     // 4) 이메일 인증
     @PostMapping(EMAIL_API)
