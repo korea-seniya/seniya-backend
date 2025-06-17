@@ -1,8 +1,6 @@
 package com.example.seniya_back.controller.post;
 
 import com.example.seniya_back.common.constants.ApiMappingPattern;
-import com.example.seniya_back.dto.Inquiry.requestDto.InquiryRequestDto;
-import com.example.seniya_back.dto.Inquiry.responseDto.InquiryResponseDto;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.post.request.PostCreateRequestDto;
 import com.example.seniya_back.dto.post.request.PostSearchByRoleRequestDto;
@@ -61,7 +59,7 @@ public class PostController {
     public ResponseEntity<ResponseDto<PostDetailResponseDto>> updatePost(
             @AuthenticationPrincipal String username,
             @PathVariable Long postId,
-            @RequestPart("data") @Valid PostUpdateRequestDto dto,
+            @RequestPart("data") PostUpdateRequestDto dto,
             @RequestPart(value = "file", required = false) List<MultipartFile> files
     ) throws IOException {
         ResponseDto<PostDetailResponseDto> response = postService.updatePost(username, postId, dto, files);
@@ -91,15 +89,15 @@ public class PostController {
 
 
     // 게시글 제목 검색
-    @GetMapping("/{title}")
+    @GetMapping("/search-by-title")
     public ResponseEntity<ResponseDto<List<PostListResponseDto>>> searchByTitle(@RequestBody PostSearchByTitleRequestDto dto) {
         ResponseDto<List<PostListResponseDto>> posts = postService.searchByTitle(dto.getTitle());
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
     // 작성자 권한 별 검색
-    @GetMapping("/{role}")
-    public ResponseEntity<ResponseDto<List<PostListResponseDto>>> searchByRole(@PathVariable PostSearchByRoleRequestDto dto) {
+    @GetMapping("/search-by-role")
+    public ResponseEntity<ResponseDto<List<PostListResponseDto>>> searchByRole(@RequestBody PostSearchByRoleRequestDto dto) {
         ResponseDto<List<PostListResponseDto>> posts = postService.searchByRole(dto.getRoleName());
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }

@@ -54,12 +54,18 @@ public class PostServiceImpl implements PostService {
         post = postRepository.save(post);
 
         if (files != null && !files.isEmpty()) {
+            System.out.println("files.size() = " + files.size());
             for (MultipartFile file : files) {
+                System.out.println("file.isEmpty() = " + file.isEmpty());
+                System.out.println("file.getOriginalFilename() = " + file.getOriginalFilename());
                 if (!file.isEmpty()) {
                     saveFile(file, post.getPostId(), TargetType.POST);
                 }
             }
+        } else {
+            System.out.println("files is null or empty");
         }
+
 
         List<UploadFile> uploadFiles = uploadFileRepository.findByTargetIdAndTargetType(post.getPostId(), TargetType.POST);
         List<String> imageUrls = uploadFiles.stream()
@@ -81,6 +87,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public ResponseDto<PostDetailResponseDto> updatePost(String username, Long id, PostUpdateRequestDto dto, List<MultipartFile> files) throws IOException {
+        System.out.println("username = [" + username + "]");
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
@@ -91,15 +98,21 @@ public class PostServiceImpl implements PostService {
             throw new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND);
         }
 
-        post.setTitle(dto.getTitle());
-        post.setContent(dto.getContent());
-        post = postRepository.save(post);
+        if (dto.getTitle() != null && !dto.getTitle().isBlank()) {
+            post.setTitle(dto.getTitle());
+        }
+
+        if (dto.getContent() != null && !dto.getContent().isBlank()) {
+            post.setContent(dto.getContent());
+        }
 
         List<UploadFile> existing = uploadFileRepository.findByTargetIdAndTargetType(id, TargetType.POST);
         for (UploadFile uf : existing) {
             new File(uploadDir + "/" + uf.getFileName()).delete();
             uploadFileRepository.delete(uf);
         }
+
+        post = postRepository.save(post);
 
         if (files != null && !files.isEmpty()) {
             for (MultipartFile file : files) {
@@ -168,12 +181,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseDto<PostDetailResponseDto> getPostById(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.FILE_NOT_FOUND + id));
 
-        List<String> imageUrls = post.getImages().stream()
-                .map(UploadFile::getUrl) // 실제 경로 반환하는 메서드로 변경 가능
+        List<UploadFile> uploadFiles = uploadFileRepository.findByTargetIdAndTargetType(post.getPostId(), TargetType.POST);
+
+        List<String> imageUrls = uploadFiles.stream()
+                .map(UploadFile::getUrl)
                 .collect(Collectors.toList());
 
         List<PostDetailResponseDto.CommentDto> commentDtos = post.getComments().stream()
@@ -263,12 +279,22 @@ public class PostServiceImpl implements PostService {
 
     private void saveFile(MultipartFile file, Long targetId, TargetType type) throws IOException {
         File dir = new File(uploadDir);
-        if (!dir.exists()) dir.mkdirs();
+        if (!dir.exists()) {
+            boolean created = dir.mkdirs();
+            System.out.println("디렉토리 생성 여부: " + created);
+        }
 
         String original = file.getOriginalFilename();
         String uuidName = UUID.randomUUID() + "_" + original;
         String fullPath = uploadDir + "/" + uuidName;
-        file.transferTo(new File(fullPath));
+
+        try {
+            file.transferTo(new File(fullPath));
+            System.out.println("파일 저장 성공: " + fullPath);
+        } catch (IOException e) {
+            System.err.println("파일 저장 실패: " + e.getMessage());
+            throw e;
+        }
 
         UploadFile uf = new UploadFile();
         uf.setOriginalName(original);
@@ -280,6 +306,8 @@ public class PostServiceImpl implements PostService {
         uf.setTargetType(type);
 
         uploadFileRepository.save(uf);
+        System.out.println("UploadFile 저장 완료: " + uf.getFileName());
     }
+
 }
 
