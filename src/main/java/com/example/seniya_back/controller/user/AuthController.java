@@ -62,7 +62,6 @@ public class AuthController {
         return mailService.sendSimpleMessage(dto.getEmail());
     }
 
-
     // 5) 비밀번호 재설정
     @PutMapping("/reset-password")
     public Mono<ResponseEntity<String>> resetPassword(@Valid @RequestBody UserPasswordResetRequestDto dto) {
