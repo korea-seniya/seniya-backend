@@ -19,4 +19,3 @@ public class GetNoticeDetailResponseDto { // 단권조회
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
-

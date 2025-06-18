@@ -12,21 +12,23 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
     private final JwtProvider jwtProvider;
 
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         try {
             String authorizationHeader = request.getHeader("Authorization");
 
@@ -40,28 +42,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             String username = jwtProvider.getUsernameFromJwt(token);
-            String roles = jwtProvider.getRoleFromJwt(token);
+            String role = jwtProvider.getRoleFromJwt(token);
+            Optional<Long> userIdOpt = jwtProvider.getUserIdFromJwt(token);
 
-            setAuthenticationContext(request, username, roles);
+            if (userIdOpt.isPresent()) {
+                setAuthenticationContext(request, username, role, userIdOpt.get());
+            }
+            // userId 없으면 인증 세팅 없이 그냥 진행
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         filterChain.doFilter(request, response);
     }
 
-    private void setAuthenticationContext(HttpServletRequest request,  String username, String role) {
+    private void setAuthenticationContext(HttpServletRequest request,
+                                          String username,
+                                          String role,
+                                          Long userId) {
 
         GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
 
-        AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(authority));
+        AbstractAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(userId.toString(), null, Collections.singletonList(authority));
 
-        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        authenticationToken.setDetails(userId);
 
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authenticationToken);
 
         SecurityContextHolder.setContext(securityContext);
-
     }
-
 }

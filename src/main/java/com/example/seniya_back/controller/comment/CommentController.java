@@ -9,12 +9,11 @@ import com.example.seniya_back.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import static com.example.seniya_back.common.constants.ApiMappingPattern.COMMENT_API;
-
 @RestController
-@RequestMapping(COMMENT_API)
+@RequestMapping("/api/v1/posts/{postId}/comments")
 @RequiredArgsConstructor
 public class CommentController {
 
@@ -24,12 +23,22 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<ResponseDto<CommentCreateResponseDto>> createComment(
             @PathVariable Long postId,
-            @RequestParam Long userId,
-            @Valid @RequestBody CommentCreateRequestDto dto
+            @Valid @RequestBody CommentCreateRequestDto dto,
+            Authentication authentication
     ) {
+        // 보통 authentication.getName() 은 String 타입의 username(userId가 아닐 수도 있음)
+        // 만약 userId가 문자열이라면 Long.parseLong() 으로 변환 시도
+        Long userId;
+        try {
+            userId = Long.parseLong(authentication.getName());
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Authentication 정보에서 userId를 가져올 수 없습니다.");
+        }
+
         CommentCreateResponseDto responseDto = commentService.createComment(postId, userId, dto);
         return ResponseDto.success("SUCCESS", "댓글이 성공적으로 등록되었습니다.", responseDto);
     }
+
 
     // 댓글 수정
     @PutMapping("/{commentId}")

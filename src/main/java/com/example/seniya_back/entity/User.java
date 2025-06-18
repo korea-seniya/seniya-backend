@@ -60,5 +60,9 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    public Long getId() {
+        return this.userId;
+    }
+
 }
 
