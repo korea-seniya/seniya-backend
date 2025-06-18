@@ -1,8 +1,6 @@
 package com.example.seniya_back.controller.post;
 
 import com.example.seniya_back.common.constants.ApiMappingPattern;
-import com.example.seniya_back.dto.Inquiry.requestDto.InquiryRequestDto;
-import com.example.seniya_back.dto.Inquiry.responseDto.InquiryResponseDto;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.post.request.PostCreateRequestDto;
 import com.example.seniya_back.dto.post.request.PostSearchByRoleRequestDto;
@@ -12,7 +10,6 @@ import com.example.seniya_back.dto.post.response.PostDetailResponseDto;
 import com.example.seniya_back.dto.post.response.PostListResponseDto;
 import com.example.seniya_back.dto.post.response.PostResponseDto;
 import com.example.seniya_back.service.PostService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -59,18 +56,21 @@ public class PostController {
     // 게시글 수정
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDto<PostDetailResponseDto>> updatePost(
+            @AuthenticationPrincipal String username,
             @PathVariable Long postId,
-            @RequestPart("data") @Valid PostUpdateRequestDto dto,
+            @RequestPart("data") PostUpdateRequestDto dto,
             @RequestPart(value = "file", required = false) List<MultipartFile> files
     ) throws IOException {
-        ResponseDto<PostDetailResponseDto> response = postService.updatePost(postId, dto, files);
+        ResponseDto<PostDetailResponseDto> response = postService.updatePost(username, postId, dto, files);
         return ResponseEntity.ok(response);
     }
 
     // 게시글 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<?>> deletePost(@PathVariable Long id) {
-        ResponseDto<?> response = postService.deletePost(id);
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<ResponseDto<?>> deletePost(
+            @AuthenticationPrincipal String username,
+            @PathVariable("postId") Long postId) {
+        ResponseDto<?> response = postService.deletePost(username, postId);
         return ResponseEntity.noContent().build();
     }
 
@@ -90,15 +90,15 @@ public class PostController {
 
 
     // 게시글 제목 검색
-    @GetMapping("/{title}")
+    @GetMapping("/search-by-title")
     public ResponseEntity<ResponseDto<List<PostListResponseDto>>> searchByTitle(@RequestBody PostSearchByTitleRequestDto dto) {
         ResponseDto<List<PostListResponseDto>> posts = postService.searchByTitle(dto.getTitle());
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
     // 작성자 권한 별 검색
-    @GetMapping("/{role}")
-    public ResponseEntity<ResponseDto<List<PostListResponseDto>>> searchByRole(@PathVariable PostSearchByRoleRequestDto dto) {
+    @GetMapping("/search-by-role")
+    public ResponseEntity<ResponseDto<List<PostListResponseDto>>> searchByRole(@RequestBody PostSearchByRoleRequestDto dto) {
         ResponseDto<List<PostListResponseDto>> posts = postService.searchByRole(dto.getRoleName());
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }

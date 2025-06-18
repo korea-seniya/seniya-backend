@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,22 +21,22 @@ public class HealthDataController {
 
     // 건강 데이터 생성
     @PostMapping
-    public ResponseEntity<ResponseDto<HealthDataResponseDto>> createHealthData(@Valid @RequestBody HealthDataRequestDto dto) {
-        ResponseDto<HealthDataResponseDto> healthdata = healthDataService.createHealthData(dto);
+    public ResponseEntity<ResponseDto<HealthDataResponseDto>> createHealthData(@AuthenticationPrincipal String username, @Valid @RequestBody HealthDataRequestDto dto) {
+        ResponseDto<HealthDataResponseDto> healthdata = healthDataService.createHealthData(username, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(healthdata);
     }
 
     // 건강 데이터 수정
-    @PutMapping
-    public ResponseEntity<ResponseDto<HealthDataResponseDto>> updateHealthData(@PathVariable Long id, @Valid @RequestBody HealthDataUpdRequestDto dto) {
-        ResponseDto<HealthDataResponseDto> response = healthDataService.updateHealthData(id, dto);
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDto<HealthDataResponseDto>> updateHealthData(@AuthenticationPrincipal String username, @PathVariable Long id, @Valid @RequestBody HealthDataUpdRequestDto dto) {
+        ResponseDto<HealthDataResponseDto> response = healthDataService.updateHealthData(username, id, dto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 건강 데이터 조회
-    @GetMapping
-    public ResponseEntity<ResponseDto<HealthDataResponseDto>> getHealthData(@PathVariable Long id) {
-        ResponseDto<HealthDataResponseDto> healthdata = healthDataService.getHealthDataById(id);
+    @GetMapping("/me/{id}")
+    public ResponseEntity<ResponseDto<HealthDataResponseDto>> getHealthData(@AuthenticationPrincipal String username, @PathVariable Long id) {
+        ResponseDto<HealthDataResponseDto> healthdata = healthDataService.getHealthDataById(username, id);
         return ResponseEntity.status(HttpStatus.OK).body(healthdata);
     }
 }

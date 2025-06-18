@@ -1,6 +1,5 @@
 package com.example.seniya_back.controller.notice;
 
-import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.notice.request.NoticeCreateRequestDto;
 import com.example.seniya_back.dto.notice.request.NoticeUpdateRequestDto;
@@ -17,8 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.example.seniya_back.common.constants.ApiMappingPattern.NOTICE_API;
+
 @RestController
-@RequestMapping("api/v1/notices")
+@RequestMapping(NOTICE_API)
 @RequiredArgsConstructor
 public class NoticeController {
     private final NoticeService noticeService;

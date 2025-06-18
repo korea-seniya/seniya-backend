@@ -50,16 +50,34 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException(ResponseMessage.USER_NOT_FOUND));
 
-        if (!user.getUsername().equals(dto.getUsername())) {
-            userRepository.findByUsername(dto.getUsername()).ifPresent(existingUser -> {
-                throw new IllegalArgumentException("이미 사용 중인 사용자명입니다.");
-            });
+        // username 수정 검증 및 변경
+        if (dto.getUsername() != null && !user.getUsername().equals(dto.getUsername())) {
+            userRepository.findByUsername(dto.getUsername())
+                    .ifPresent(existingUser -> {
+                        throw new IllegalArgumentException("이미 사용 중인 사용자명입니다.");
+                    });
             user.setUsername(dto.getUsername());
         }
 
-        user.setPhone(dto.getPhone());
-        user.setEmail(dto.getEmail());
+        // phone 수정 검증 및 변경
+        if (dto.getPhone() != null && !dto.getPhone().equals(user.getPhone())) {
+            userRepository.findByPhone(dto.getPhone())
+                    .ifPresent(existingUser -> {
+                        throw new IllegalArgumentException("이미 사용 중인 전화번호입니다.");
+                    });
+            user.setPhone(dto.getPhone());
+        }
 
+        // email 수정 검증 및 변경
+        if (dto.getEmail() != null && !dto.getEmail().equals(user.getEmail())) {
+            userRepository.findByEmail(dto.getEmail())
+                    .ifPresent(existingUser -> {
+                        throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+                    });
+            user.setEmail(dto.getEmail());
+        }
+
+        // 변경 후 응답 DTO 생성
         GetMyInfoResponseDto responseDto = GetMyInfoResponseDto.builder()
                 .id(user.getUserId())
                 .username(user.getUsername())

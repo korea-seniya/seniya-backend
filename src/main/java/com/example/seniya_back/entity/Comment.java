@@ -3,15 +3,11 @@ package com.example.seniya_back.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "comments")
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,5 +22,17 @@ public class Comment extends BaseTimeEntity{
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Lob
     private String content;
+
+    @Builder
+    public Comment(Post post, User user, String content) {
+        this.post = post;
+        this.user = user;
+        this.content = content;
+    }
+
+    public void updateContent(String newContent) {
+        this.content = newContent;
+    }
 }
