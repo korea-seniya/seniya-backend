@@ -9,6 +9,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,7 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class MailServiceImpl implements MailService {
     private final JavaMailSender mailSender;
-    private final Map<String, String> verificationTokens = new ConcurrentHashMap<>();
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
 
@@ -24,8 +25,6 @@ public class MailServiceImpl implements MailService {
     public Mono<ResponseEntity<String>> sendSimpleMessage(String email) {
         return Mono.fromSupplier(() -> {
             String token = jwtProvider.generateToken(email, "ROLE_USER");
-            verificationTokens.put(token, email);
-
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
             message.setSubject("이메일 인증 요청");
@@ -42,10 +41,10 @@ public class MailServiceImpl implements MailService {
     public Mono<Void> completeEmailVerification(String email) {
         return Mono.fromRunnable(() -> {
             userRepository.findByEmail(email).ifPresent(user -> {
-                user.setEmailVerified(true);  // email_verified 컬럼 true로 설정
+                user.setEmailVerified(true);
                 userRepository.save(user);
             });
             System.out.println("이메일 인증 처리 완료: " + email);
-        });
+        }).subscribeOn(Schedulers.boundedElastic()).then();
     }
 }
