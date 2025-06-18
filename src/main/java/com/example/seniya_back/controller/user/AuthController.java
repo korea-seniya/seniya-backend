@@ -29,26 +29,26 @@ public class AuthController {
     private final MailService mailService;
     private final JwtProvider jwtProvider;
 
-    private static final String POST_SIGN_UP = "/signup";
-    private static final String POST_SIGN_IN = "/signIn";
-    private static final String POST_LOG_OUT = "/logout";
+    private static final String SIGN_UP = "/signup";
+    private static final String SIGN_IN = "/signin";
+    private static final String LOG_OUT = "/logout";
 
     // 1) 회원가입
-    @PostMapping(POST_SIGN_UP)
+    @PostMapping(SIGN_UP)
     public ResponseEntity<ResponseDto<UserSignUpResponseDto>> signup(@Valid @RequestBody UserSignUpRequestDto dto) {
         ResponseDto<UserSignUpResponseDto> response = authService.signup(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // 2) 로그인
-    @PostMapping(POST_SIGN_IN)
+    @PostMapping(SIGN_IN)
     public ResponseEntity<ResponseDto<UserSignInResponseDto>> login(@Valid @RequestBody UserSignInRequestDto dto) {
         ResponseDto<UserSignInResponseDto> response = authService.login(dto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 3) 로그아웃
-    @PostMapping(POST_LOG_OUT)
+    @PostMapping(LOG_OUT)
     public ResponseEntity<ResponseDto<?>> logout(@AuthenticationPrincipal String username) {
         ResponseDto<?> response = authService.logout(username);
         return ResponseEntity.status(HttpStatus.OK).body(response);

@@ -1,6 +1,5 @@
 package com.example.seniya_back.provider;
 
-import com.example.seniya_back.entity.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class JwtProvider {
@@ -23,16 +23,23 @@ public class JwtProvider {
         return jwtExpirationMs;
     }
 
-    public JwtProvider(@Value("${jwt.secret}") String secret, @Value("${jwt.expiration}") int jwtExpirationMs, @Value("${jwt.email-expiration-ms}") long jwtEmailExpirationMs) {
+    public JwtProvider(@Value("${jwt.secret}") String secret,
+                       @Value("${jwt.expiration}") int jwtExpirationMs,
+                       @Value("${jwt.email-expiration-ms}") long jwtEmailExpirationMs) {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
         this.jwtExpirationMs = jwtExpirationMs;
         this.jwtEmailExpirationMs = jwtEmailExpirationMs;
     }
 
-    public String generateToken(String username, String role) {
+    public String generateToken(String username, String role, Long userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("userId cannot be null when generating token");
+        }
+
         return Jwts.builder()
                 .claim("username", username)
                 .claim("role", role)
+                .claim("userId", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -51,6 +58,7 @@ public class JwtProvider {
             getClaims(token);
             return true;
         } catch (Exception e) {
+            // 예외를 로깅하거나 원하는 처리 가능
             return false;
         }
     }
@@ -73,4 +81,16 @@ public class JwtProvider {
     }
 
 
+    public Optional<Long> getUserIdFromJwt(String token) {
+        Claims claims = getClaims(token);
+        Object userIdObj = claims.get("userId");
+        if (userIdObj == null) {
+            return Optional.empty();
+        }
+        try {
+            return Optional.of(Long.valueOf(userIdObj.toString()));
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
+    }
 }

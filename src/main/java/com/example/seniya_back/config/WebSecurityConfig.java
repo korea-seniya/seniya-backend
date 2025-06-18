@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -48,17 +49,27 @@ public class WebSecurityConfig {
         return new CorsFilter(source);
     }
 
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-//                                "/auth/verification-codes/email",
-//                                "/api/v1/auth/**",
-                                new AntPathRequestMatcher("/api/v1/**")
-                        ).permitAll()
+                                .requestMatchers(
+                                        "/api/v1/auth/**"                              // 회원가입, 로그인, 이메일 인증
+                                ).permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/notices/**").permitAll() // 공지 조회
+                                .requestMatchers(
+                                        "/api/v1/user/**",
+                                        "/api/v1/posts/**",                             // 게시물 관련 요청
+                                        "/api/v1/posts/*/comments",                     // 댓글 생성
+                                        "/api/v1/posts/*/comments/*"                    // 댓글 수정/삭제
+                                ).hasRole("USER")
+//                        .requestMatchers(
+//                                "/api/v1/notices/**"                            //공지
+//                        ).hasRole("ADMIN").anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

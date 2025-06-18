@@ -65,7 +65,7 @@ public class NoticeController {
     // 공지사항 단권 조회
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDto<GetNoticeDetailResponseDto>> getNoticeById(@PathVariable Long id) {
-       ResponseDto<GetNoticeDetailResponseDto> response = noticeService.getNoticeById(id);
+        ResponseDto<GetNoticeDetailResponseDto> response = noticeService.getNoticeById(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

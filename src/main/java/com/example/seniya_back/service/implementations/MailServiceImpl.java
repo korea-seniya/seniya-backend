@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +22,12 @@ public class MailServiceImpl implements MailService {
     @Override
     public Mono<ResponseEntity<String>> sendSimpleMessage(String email) {
         return Mono.fromSupplier(() -> {
-            String token = jwtProvider.generateToken(email, "ROLE_USER");
+            Long userId = userRepository.findByEmail(email)
+                    .map(user -> user.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+
+            String token = jwtProvider.generateToken(email, "ROLE_USER", userId);
+
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
             message.setSubject("이메일 인증 요청");
