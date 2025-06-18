@@ -22,7 +22,6 @@ public class UserController {
     // === UserController mapping pattern === //
     private static final String GET_USER_INFO = "/me";
     private static final String PUT_USER_INFO = "/me";
-    private static final String DELETE_USER = "/me";
 
     // 1) 회원 정보 조회
     @GetMapping(GET_USER_INFO)
