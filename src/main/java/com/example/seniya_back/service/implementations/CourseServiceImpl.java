@@ -119,9 +119,12 @@ public class CourseServiceImpl implements CourseService {
         List<CourseResponseDto> respDtos = null;
 
         List<Course> courses = courseRepository.findAll();
+        System.out.println(courses);
 
         respDtos = courses.stream()
                 .map(course -> CourseResponseDto.builder()
+                        .id(course.getCourseId())
+                        .trainerId(course.getTrainerProfile().getTrainerId())
                         .name(course.getTrainerProfile().getUser().getName())
                         .title(course.getTitle())
                         .description(course.getDescription())
@@ -130,6 +133,8 @@ public class CourseServiceImpl implements CourseService {
                         .classEndTime(course.getEndTime())
                         .category(course.getCategory())
                         .classroom(course.getRoom())
+                        .createdAt(course.getCreatedAt())
+                        .updatedAt(course.getUpdatedAt())
                         .build())
                 .collect(Collectors.toList());
 
@@ -143,6 +148,7 @@ public class CourseServiceImpl implements CourseService {
         Course course = courseRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Course not found"));
 
         respDto = GetCourseDetailResponseDto.builder()
+                .courseId(course.getCourseId())
                 .trainerId(course.getTrainerProfile().getTrainerId())
                 .trainerName(course.getTrainerProfile().getUser().getName())
                 .title(course.getTitle())

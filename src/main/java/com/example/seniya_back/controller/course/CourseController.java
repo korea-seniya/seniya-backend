@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(ApiMappingPattern.COURSE_API)
+@RequestMapping(ApiMappingPattern.ADMIN_COURSE_API)
 @RequiredArgsConstructor
 public class CourseController {
 
     private final CourseService courseService;
 
     // 수업 생성
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ResponseDto<CourseResponseDto>> createCourse(@RequestBody CreateCourseRequestDto dto) {
         ResponseDto<CourseResponseDto> response = courseService.createCourse(dto);
@@ -33,7 +33,7 @@ public class CourseController {
     }
 
     // 수업 수정
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDto<UpdateCourseResponseDto>> updateCourse(@PathVariable Long id, @RequestBody UpdateCourseRequestDto dto) {
         ResponseDto<UpdateCourseResponseDto> response = courseService.updateCourse(id, dto);
@@ -41,7 +41,7 @@ public class CourseController {
     }
 
     // 수업 전체 조회
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<ResponseDto<List<CourseResponseDto>>> getAllCourses() {
         ResponseDto<List<CourseResponseDto>> response = courseService.getAllCourses();
@@ -49,7 +49,7 @@ public class CourseController {
     }
 
     // 수업 단건 조회
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDto<GetCourseDetailResponseDto>> getCourseById(@PathVariable Long id) {
         ResponseDto<GetCourseDetailResponseDto> response = courseService.getCourseById(id);
@@ -57,7 +57,7 @@ public class CourseController {
     }
 
     // 수업 삭제
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDto<?>> deleteCourse(@PathVariable Long id) {
         ResponseDto<?> response = courseService.deleteCourse(id);
