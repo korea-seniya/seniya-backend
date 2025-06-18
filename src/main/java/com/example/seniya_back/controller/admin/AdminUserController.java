@@ -1,5 +1,6 @@
 package com.example.seniya_back.controller.admin;
 
+import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.admin.user.response.GetAllUserResponseDto;
 import com.example.seniya_back.dto.admin.user.response.GetUserDetailRespDto;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/admin/users")
+@RequestMapping(ApiMappingPattern.ADMIN_USER_API)
 public class AdminUserController {
 
     private final AdminUserService adminUserService;
