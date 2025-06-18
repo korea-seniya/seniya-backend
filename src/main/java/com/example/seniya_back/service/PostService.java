@@ -18,7 +18,7 @@ public interface PostService {
 
     ResponseDto<PostDetailResponseDto> updatePost(String username, Long id, @Valid PostUpdateRequestDto dto, List<MultipartFile> files) throws IOException;
 
-    ResponseDto<?> deletePost(Long id);
+    ResponseDto<?> deletePost(String username, Long id);
 
     ResponseDto<List<PostListResponseDto>> getAllPosts();
 
