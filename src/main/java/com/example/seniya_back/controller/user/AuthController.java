@@ -68,7 +68,7 @@ public class AuthController {
             String email = claims.get("username", String.class);
 
             return mailService.completeEmailVerification(email)
-                    .map(result -> ResponseEntity.ok("이메일 인증이 완료되었습니다."))
+                    .then(Mono.fromCallable(() -> ResponseEntity.ok("이메일 인증이 완료되었습니다.")))
                     .onErrorReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                             .body("이메일 인증 처리 중 오류가 발생했습니다."));
 

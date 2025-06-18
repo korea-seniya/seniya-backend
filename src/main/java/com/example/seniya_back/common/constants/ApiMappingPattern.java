@@ -16,4 +16,5 @@ public interface ApiMappingPattern {
     String TRAINER_PROFILE_API = "/api/v1/trainer-profiles";
     String EMAIL_API = "/email";
     String EMAIL_VERIFY_API = AUTH_API + "/emailVerify";
+    String COMMENT_API = POST_API + "/{postId}/comments";
 }
