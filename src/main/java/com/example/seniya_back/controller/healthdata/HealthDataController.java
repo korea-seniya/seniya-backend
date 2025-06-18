@@ -27,7 +27,7 @@ public class HealthDataController {
     }
 
     // 건강 데이터 수정
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<ResponseDto<HealthDataResponseDto>> updateHealthData(@AuthenticationPrincipal String username, @PathVariable Long id, @Valid @RequestBody HealthDataUpdRequestDto dto) {
         ResponseDto<HealthDataResponseDto> response = healthDataService.updateHealthData(username, id, dto);
         return ResponseEntity.status(HttpStatus.OK).body(response);

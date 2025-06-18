@@ -10,7 +10,6 @@ import com.example.seniya_back.dto.post.response.PostDetailResponseDto;
 import com.example.seniya_back.dto.post.response.PostListResponseDto;
 import com.example.seniya_back.dto.post.response.PostResponseDto;
 import com.example.seniya_back.service.PostService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -67,9 +66,11 @@ public class PostController {
     }
 
     // 게시글 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<?>> deletePost(@PathVariable Long id) {
-        ResponseDto<?> response = postService.deletePost(id);
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<ResponseDto<?>> deletePost(
+            @AuthenticationPrincipal String username,
+            @PathVariable("postId") Long postId) {
+        ResponseDto<?> response = postService.deletePost(username, postId);
         return ResponseEntity.noContent().build();
     }
 

@@ -119,49 +119,89 @@ public class HealthDataServiceImpl implements HealthDataService {
             throw new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND);
         }
 
-        healthData.setHeight(dto.getHeight());
-        healthData.setWeight(dto.getWeight());
-        healthData.setBloodPressure(dto.getBloodPressure());
-        healthData.setBodyFatPercentage(dto.getBodyFatPercentage());
-        healthData.setDrinking(dto.getDrinking());
-        healthData.setSmoking(dto.getSmoking());
+        if (dto.getHeight() != null) {
+            healthData.setHeight(dto.getHeight());
+        }
+        if (dto.getWeight() != null) {
+            healthData.setWeight(dto.getWeight());
+        }
+        if (dto.getBloodPressure() != null) {
+            healthData.setBloodPressure(dto.getBloodPressure());
+        }
+        if (dto.getBodyFatPercentage() != null) {
+            healthData.setBodyFatPercentage(dto.getBodyFatPercentage());
+        }
+        if (dto.getDrinking() != null) {
+            healthData.setDrinking(dto.getDrinking());
+        }
+        if (dto.getSmoking() != null) {
+            healthData.setSmoking(dto.getSmoking());
+        }
 
-        diseaseRepository.deleteAllByHealthData(healthData);
-        medicationRepository.deleteAllByHealthData(healthData);
-        allergyRepository.deleteAllByHealthData(healthData);
+        List<Disease> existingDiseases = diseaseRepository.findAllByHealthData(healthData);
+        List<Medication> existingMedications = medicationRepository.findAllByHealthData(healthData);
+        List<Allergy> existingAllergies = allergyRepository.findAllByHealthData(healthData);
 
-        List<Disease> diseases = Optional.ofNullable(dto.getDiseases())
-                .orElse(Collections.emptyList())
-                .stream()
-                .map(d -> Disease.builder()
-                        .diseaseName(d.getDiseaseName())
-                        .diseaseDate(d.getDiseaseDate())
-                        .diseaseStatus(d.getDiseaseStatus())
-                        .healthData(healthData)
-                        .build())
-                .collect(Collectors.toList());
-        diseaseRepository.saveAll(diseases);
+        if (dto.getDiseases() != null) {
+            existingDiseases.stream()
+                    .filter(ed -> dto.getDiseases().stream()
+                            .noneMatch(d -> d.getDiseaseName().equals(ed.getDiseaseName())
+                                    && d.getDiseaseDate().equals(ed.getDiseaseDate())
+                                    && d.getDiseaseStatus().equals(ed.getDiseaseStatus())))
+                    .forEach(diseaseRepository::delete);
 
-        List<Medication> medications = Optional.ofNullable(dto.getMedications())
-                .orElse(Collections.emptyList())
-                .stream()
-                .map(m -> Medication.builder()
-                        .medicationName(m.getMedicationName())
-                        .healthData(healthData)
-                        .build())
-                .collect(Collectors.toList());
-        medicationRepository.saveAll(medications);
+            List<Disease> newDiseases = dto.getDiseases().stream()
+                    .filter(d -> existingDiseases.stream().noneMatch(ed ->
+                            ed.getDiseaseName().equals(d.getDiseaseName()) &&
+                                    ed.getDiseaseDate().equals(d.getDiseaseDate()) &&
+                                    ed.getDiseaseStatus().equals(d.getDiseaseStatus())
+                    ))
+                    .map(d -> Disease.builder()
+                            .diseaseName(d.getDiseaseName())
+                            .diseaseDate(d.getDiseaseDate())
+                            .diseaseStatus(d.getDiseaseStatus())
+                            .healthData(healthData)
+                            .build())
+                    .collect(Collectors.toList());
+            diseaseRepository.saveAll(newDiseases);
+        }
 
-        List<Allergy> allergies = Optional.ofNullable(dto.getAllergies())
-                .orElse(Collections.emptyList())
-                .stream()
-                .map(a -> Allergy.builder()
-                        .allergyName(a.getAllergyName())
-                        .reaction(a.getReaction())
-                        .healthData(healthData)
-                        .build())
-                .collect(Collectors.toList());
-        allergyRepository.saveAll(allergies);
+        if (dto.getMedications() != null) {
+            existingMedications.stream()
+                    .filter(em -> dto.getMedications().stream()
+                            .noneMatch(m -> m.getMedicationName().equals(em.getMedicationName())))
+                    .forEach(medicationRepository::delete);
+
+            List<Medication> newMedications = dto.getMedications().stream()
+                    .filter(m -> existingMedications.stream().noneMatch(em ->
+                            em.getMedicationName().equals(m.getMedicationName())))
+                    .map(m -> Medication.builder()
+                            .medicationName(m.getMedicationName())
+                            .healthData(healthData)
+                            .build())
+                    .collect(Collectors.toList());
+            medicationRepository.saveAll(newMedications);
+        }
+
+        if (dto.getAllergies() != null) {
+            existingAllergies.stream()
+                    .filter(ea -> dto.getAllergies().stream()
+                            .noneMatch(a -> a.getAllergyName().equals(ea.getAllergyName())
+                                    && a.getReaction().equals(ea.getReaction())))
+                    .forEach(allergyRepository::delete);
+
+            List<Allergy> newAllergies = dto.getAllergies().stream()
+                    .filter(a -> existingAllergies.stream().noneMatch(ea ->
+                            ea.getAllergyName().equals(a.getAllergyName()) &&
+                                    ea.getReaction().equals(a.getReaction())))
+                    .map(a -> Allergy.builder()
+                            .allergyName(a.getAllergyName())
+                            .reaction(a.getReaction())
+                            .healthData(healthData)
+                            .build())
+                    .collect(Collectors.toList());
+            allergyRepository.saveAll(newAllergies);
+        }
 
         healthDateRepository.save(healthData);
 
@@ -173,15 +213,16 @@ public class HealthDataServiceImpl implements HealthDataService {
                 .bloodPressure(healthData.getBloodPressure())
                 .smoking(healthData.getSmoking())
                 .drinking(healthData.getDrinking())
-                .diseases(diseases.stream().map(DiseaseResponseDto::from).toList())
-                .medications(medications.stream().map(MedicationResponseDto::from).toList())
-                .allergies(allergies.stream().map(AllergyResponseDto::from).toList())
+                .diseases(diseaseRepository.findAllByHealthData(healthData).stream().map(DiseaseResponseDto::from).toList())
+                .medications(medicationRepository.findAllByHealthData(healthData).stream().map(MedicationResponseDto::from).toList())
+                .allergies(allergyRepository.findAllByHealthData(healthData).stream().map(AllergyResponseDto::from).toList())
                 .createdAt(healthData.getCreatedAt())
                 .updatedAt(healthData.getUpdatedAt())
                 .build();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
     }
+
 
 
     @Override

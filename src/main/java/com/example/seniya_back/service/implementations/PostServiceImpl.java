@@ -88,6 +88,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public ResponseDto<PostDetailResponseDto> updatePost(String username, Long id, PostUpdateRequestDto dto, List<MultipartFile> files) throws IOException {
         System.out.println("username = [" + username + "]");
+
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
@@ -106,21 +107,23 @@ public class PostServiceImpl implements PostService {
             post.setContent(dto.getContent());
         }
 
-        List<UploadFile> existing = uploadFileRepository.findByTargetIdAndTargetType(id, TargetType.POST);
-        for (UploadFile uf : existing) {
-            new File(uploadDir + "/" + uf.getFileName()).delete();
-            uploadFileRepository.delete(uf);
-        }
+        if (files != null) {
+            List<UploadFile> existing = uploadFileRepository.findByTargetIdAndTargetType(id, TargetType.POST);
+            for (UploadFile uf : existing) {
+                new File(uploadDir + "/" + uf.getFileName()).delete();
+                uploadFileRepository.delete(uf);
+            }
 
-        post = postRepository.save(post);
-
-        if (files != null && !files.isEmpty()) {
-            for (MultipartFile file : files) {
-                if (!file.isEmpty()) {
-                    saveFile(file, id, TargetType.POST);
+            if (!files.isEmpty()) {
+                for (MultipartFile file : files) {
+                    if (!file.isEmpty()) {
+                        saveFile(file, id, TargetType.POST);
+                    }
                 }
             }
         }
+
+        post = postRepository.save(post);
 
         List<UploadFile> uploadFiles = uploadFileRepository.findByTargetIdAndTargetType(post.getPostId(), TargetType.POST);
         List<String> imageUrls = uploadFiles.stream()
@@ -148,11 +151,23 @@ public class PostServiceImpl implements PostService {
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
     }
 
+
     @Override
-    public ResponseDto<?> deletePost(Long id) {
+    @Transactional
+    public ResponseDto<?> deletePost(String username, Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.FILE_NOT_FOUND + id));
+
+        if (!post.getUser().getUsername().equals(username)) {
+            throw new IllegalArgumentException(ResponseMessage.USER_NOT_FOUND);
+        }
+
         List<UploadFile> existing = uploadFileRepository.findByTargetIdAndTargetType(id, TargetType.POST);
         for (UploadFile uf : existing) {
-            new File(uploadDir + "/" + uf.getFileName()).delete();
+            File file = new File(uploadDir + "/" + uf.getFileName());
+            if (file.exists() && !file.delete()) {
+                System.err.println("Failed to delete file: " + file.getAbsolutePath());
+            }
             uploadFileRepository.delete(uf);
         }
 
