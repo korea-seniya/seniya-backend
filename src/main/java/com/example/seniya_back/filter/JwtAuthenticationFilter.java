@@ -48,7 +48,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (userIdOpt.isPresent()) {
                 setAuthenticationContext(request, username, role, userIdOpt.get());
             }
-            // userId 없으면 인증 세팅 없이 그냥 진행
 
         } catch (Exception e) {
             e.printStackTrace();
