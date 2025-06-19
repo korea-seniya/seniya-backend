@@ -10,8 +10,6 @@ import com.example.seniya_back.dto.Inquiry.responseDto.InquiryResponseDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.MyInquiryResponseDto;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.entity.Inquiry;
-import com.example.seniya_back.entity.TrainerApplication;
-import com.example.seniya_back.entity.TrainerProfile;
 import com.example.seniya_back.entity.User;
 import com.example.seniya_back.repository.InquiryRepository;
 import com.example.seniya_back.repository.TrainerProfileRepository;
@@ -43,7 +41,7 @@ public class InquiryServiceImpl implements InquiryService {
                 .user(user)
                 .title(dto.getTitle())
                 .content(dto.getContent())
-                .isPrivated(dto.getIsPrivated() != null ? dto.getIsPrivated() : false)
+                .isPrivated(dto.getIsPrivated())
                 .build();
 
         Inquiry saved = inquiryRepository.save(newInquiry);
@@ -149,6 +147,10 @@ public class InquiryServiceImpl implements InquiryService {
 
         if (!inquiry.getUser().getUsername().equals(user.getUsername())) {
             throw new AccessDeniedException(ResponseMessage.NO_PERMISSION);
+        }
+
+        if (inquiry.getResponse() != null) {
+            throw new IllegalArgumentException(ResponseMessage.FAILED);
         }
 
         inquiry.setTitle(dto.getTitle());
