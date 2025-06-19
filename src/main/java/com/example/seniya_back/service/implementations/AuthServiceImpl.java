@@ -104,7 +104,7 @@ public class  AuthServiceImpl implements AuthService {
                 user.getUserId(), user.getRole().getRoleName(), user.getName()
         );
 
-        String token = jwtProvider.generateToken(user.getUsername(), user.getRole().getRoleName(), user.getId());
+        String token = jwtProvider.generateToken(user.getUsername(), user.getRole().getRoleName());
 
 
         data = new UserSignInResponseDto(token, responseDto, exprTime);

@@ -2,7 +2,6 @@ package com.example.seniya_back.controller.user;
 
 import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.dto.ResponseDto;
-import com.example.seniya_back.dto.user.request.EmailSendRequestDto;
 import com.example.seniya_back.dto.user.request.UserPasswordResetRequestDto;
 import com.example.seniya_back.dto.user.request.UserSignInRequestDto;
 import com.example.seniya_back.dto.user.request.UserSignUpRequestDto;
@@ -10,8 +9,6 @@ import com.example.seniya_back.dto.user.response.UserSignInResponseDto;
 import com.example.seniya_back.dto.user.response.UserSignUpResponseDto;
 import com.example.seniya_back.provider.JwtProvider;
 import com.example.seniya_back.service.AuthService;
-import com.example.seniya_back.service.MailService;
-import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +23,7 @@ import reactor.core.publisher.Mono;
 public class AuthController {
 
     private final AuthService authService;
-    private final MailService mailService;
+//    private final MailService mailService;
     private final JwtProvider jwtProvider;
 
     private static final String SIGN_UP = "/signup";
@@ -54,29 +51,29 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // 4) 이메일 전송
-    @PostMapping(ApiMappingPattern.EMAIL_API)
-    public Mono<ResponseEntity<String>> sendEmail(@Valid @RequestBody EmailSendRequestDto dto) {
-        return mailService.sendSimpleMessage(dto.getEmail());
-    }
-
-    // 5) 이메일 인증 처리
-    @GetMapping(("/verification-codes/email"))
-    public Mono<ResponseEntity<String>> verifyEmailAlt(@RequestParam String token) {
-        try {
-            Claims claims = jwtProvider.getClaims(token);
-            String email = claims.get("username", String.class);
-
-            return mailService.completeEmailVerification(email)
-                    .then(Mono.fromCallable(() -> ResponseEntity.ok("이메일 인증이 완료되었습니다.")))
-                    .onErrorReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body("이메일 인증 처리 중 오류가 발생했습니다."));
-
-        } catch (Exception e) {
-            return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유효하지 않은 토큰입니다."));
-        }
-    }
-
+//    // 4) 이메일 전송
+//    @PostMapping(ApiMappingPattern.EMAIL_API)
+//    public Mono<ResponseEntity<String>> sendEmail(@Valid @RequestBody EmailSendRequestDto dto) {
+//        return mailService.sendSimpleMessage(dto.getEmail());
+//    }
+//
+//    // 5) 이메일 인증 처리
+//    @GetMapping(("/verification-codes/email"))
+//    public Mono<ResponseEntity<String>> verifyEmailAlt(@RequestParam String token) {
+//        try {
+//            Claims claims = jwtProvider.getClaims(token);
+//            String email = claims.get("username", String.class);
+//
+//            return mailService.completeEmailVerification(email)
+//                    .then(Mono.fromCallable(() -> ResponseEntity.ok("이메일 인증이 완료되었습니다.")))
+//                    .onErrorReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                            .body("이메일 인증 처리 중 오류가 발생했습니다."));
+//
+//        } catch (Exception e) {
+//            return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유효하지 않은 토큰입니다."));
+//        }
+//    }
+//
 
     // 6) 비밀번호 재설정
     @PutMapping("/reset-password")
