@@ -116,7 +116,15 @@ public class  AuthServiceImpl implements AuthService {
         return ResponseDto.success(ResponseCode.SUCCESS, "로그아웃 처리 완료").getBody();
     }
 
+    @Override
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
 
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
 
     @Override
     public Mono<ResponseEntity<String>> resetPassword(UserPasswordResetRequestDto dto) {
@@ -139,3 +147,4 @@ public class  AuthServiceImpl implements AuthService {
         )).subscribeOn(Schedulers.boundedElastic());
         }
     }
+

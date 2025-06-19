@@ -18,5 +18,9 @@ public interface AuthService {
 
     Mono<ResponseEntity<String>> resetPassword(UserPasswordResetRequestDto dto);
 
+    boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
+
 //    Mono<ResponseEntity<String>> resetPassword(@Valid UserPasswordResetRequestDto dto);
 }
