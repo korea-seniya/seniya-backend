@@ -10,6 +10,7 @@ import com.example.seniya_back.dto.Inquiry.responseDto.InquiryResponseDto;
 import com.example.seniya_back.dto.Inquiry.responseDto.MyInquiryResponseDto;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.entity.Inquiry;
+import com.example.seniya_back.entity.TrainerProfile;
 import com.example.seniya_back.entity.User;
 import com.example.seniya_back.repository.InquiryRepository;
 import com.example.seniya_back.repository.TrainerProfileRepository;
@@ -124,7 +125,7 @@ public class InquiryServiceImpl implements InquiryService {
         responseDto = InquiryByIdResponseDto.builder()
                 .title(inquiry.getTitle())
                 .username(inquiry.getUser().getName())
-                .trainerName(inquiry.getTrainer() != null ? inquiry.getTrainer().getUser().getName() : null)
+                .trainerName(inquiry.getTrainer().getUser().getName())
                 .content(inquiry.getContent())
                 .response(inquiry.getResponse())
                 .isPrivated(inquiry.getIsPrivated())
@@ -208,6 +209,11 @@ public class InquiryServiceImpl implements InquiryService {
             throw new AccessDeniedException(ResponseMessage.NO_PERMISSION);
         }
 
+        TrainerProfile trainer = trainerProfileRepository.findByUser(user);
+        if(trainer == null) {
+            throw new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND);
+        }
+        inquiry.setTrainer(trainer);
         inquiry.setResponse(dto.getResponse());
 
         inquiryRepository.save(inquiry);
@@ -215,7 +221,7 @@ public class InquiryServiceImpl implements InquiryService {
         responseDto = InquiryByIdResponseDto.builder()
                 .title(inquiry.getTitle())
                 .username(inquiry.getUser().getUsername())
-                .trainerName(user.getUsername())
+                .trainerName(inquiry.getTrainer().getUser().getName())
                 .content(inquiry.getContent())
                 .response(inquiry.getResponse())
                 .isPrivated(inquiry.getIsPrivated())
