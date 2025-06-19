@@ -1,6 +1,5 @@
 package com.example.seniya_back.config;
 
-import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.filter.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +15,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -67,9 +65,9 @@ public class WebSecurityConfig {
                                         "/api/v1/posts/*/comments",                     // 댓글 생성
                                         "/api/v1/posts/*/comments/*"                    // 댓글 수정/삭제
                                 ).hasRole("USER")
-//                        .requestMatchers(
-//                                "/api/v1/notices/**"                            //공지
-//                        ).hasRole("ADMIN").anyRequest().authenticated()
+                        .requestMatchers(
+                                "/api/v1/notices/**"                            //공지
+                        ).hasRole("ADMIN").anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

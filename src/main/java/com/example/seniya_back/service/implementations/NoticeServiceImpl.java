@@ -27,26 +27,19 @@ public class NoticeServiceImpl implements NoticeService {
     private final UserRepository userRepository;
 
     @Override
-    public ResponseDto<NoticeResponseDto> createNotice(String username, NoticeCreateRequestDto dto) {
-        NoticeResponseDto responseDto = null;
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
-
-        String roleName = user.getRole().getRoleName();
-
-        if(!roleName.equals("ADMIN")) {
-            throw new IllegalArgumentException(ResponseMessage.NO_PERMISSION);
-        }
+    public ResponseDto<NoticeResponseDto> createNotice(NoticeCreateRequestDto dto) {
+        User adminUser = userRepository.findByRole_RoleName("ADMIN")
+                .orElseThrow(() -> new EntityNotFoundException("Admin user not found"));
 
         Notice notice = Notice.builder()
                 .title(dto.getTitle())
                 .content(dto.getContent())
-                .user(user)
+                .user(adminUser)
                 .build();
 
         noticeRepository.save(notice);
 
-        responseDto = NoticeResponseDto.builder()
+        NoticeResponseDto responseDto = NoticeResponseDto.builder()
                 .username(notice.getUser().getName())
                 .noticeId(notice.getNoticeId())
                 .title(notice.getTitle())
@@ -59,19 +52,8 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
 
-    @Override // 수정
-    public ResponseDto<GetNoticeDetailResponseDto> updateNotice(String username, Long id, NoticeUpdateRequestDto dto) {
-        GetNoticeDetailResponseDto responseDto = null;
-
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
-
-        String roleName = user.getRole().getRoleName();
-
-        if(!roleName.equals("ADMIN")) {
-            throw new IllegalArgumentException(ResponseMessage.NO_PERMISSION);
-        }
-
+    @Override
+    public ResponseDto<GetNoticeDetailResponseDto> updateNotice(Long id, NoticeUpdateRequestDto dto) {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("NOTICE NOT FOUND"));
 
@@ -84,8 +66,8 @@ public class NoticeServiceImpl implements NoticeService {
 
         Notice updatedNotice = noticeRepository.save(notice);
 
-        responseDto = GetNoticeDetailResponseDto.builder()
-                .username(notice.getUser().getName())
+        GetNoticeDetailResponseDto responseDto = GetNoticeDetailResponseDto.builder()
+                .username(updatedNotice.getUser().getName())
                 .noticeId(updatedNotice.getNoticeId())
                 .title(updatedNotice.getTitle())
                 .content(updatedNotice.getContent())
@@ -96,16 +78,9 @@ public class NoticeServiceImpl implements NoticeService {
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
     }
 
-    @Override // 삭제
-    public ResponseDto<?> deleteNotice(String username, Long id) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
-        String roleName = user.getRole().getRoleName();
-
-        if(!roleName.equals("ADMIN")) {
-            throw new IllegalArgumentException(ResponseMessage.NO_PERMISSION);
-        }
+    @Override
+    public ResponseDto<?> deleteNotice(Long id) {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("NOTICE NOT FOUND"));
 
@@ -113,7 +88,6 @@ public class NoticeServiceImpl implements NoticeService {
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS).getBody();
     }
-
     @Override // 전체 조회
     public ResponseDto<List<NoticeListResponseDto>> getAllNotices() {
         List<NoticeListResponseDto> responseDtos = null;
