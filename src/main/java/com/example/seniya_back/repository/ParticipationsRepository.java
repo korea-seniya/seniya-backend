@@ -8,8 +8,8 @@ import java.util.Optional;
 
 @Repository
 public interface ParticipationsRepository extends JpaRepository<Participations, Long> {
-    List<Participations> findAllByUser_UserId(Long userId);
+    List<Participations> findAllByUser_Username(String username);
 
-    Optional<Participations> findByParticipationIdAndUser_UserId(Long participationId, Long userId);
+    Optional<Participations> findByParticipationIdAndUser_Username(Long participationId, String username);
 
 }

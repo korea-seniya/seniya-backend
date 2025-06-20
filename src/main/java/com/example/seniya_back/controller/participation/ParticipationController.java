@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestControllergitg
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/participations")
 public class ParticipationController {
@@ -19,26 +19,26 @@ public class ParticipationController {
 
     // 사용자가 신청한 수업 목록 조회
     @GetMapping("/me")
-    public List<ParticipationResponseDto> getMyParticipations(@AuthenticationPrincipal(expression = "userId") Long userId) {
-        return participationService.getMyParticipations(userId);
+    public List<ParticipationResponseDto> getMyParticipations(@AuthenticationPrincipal(expression = "username") String username) {
+        return participationService.getMyParticipations(username);
     }
 
     // 단일 수업 신청 정보 조회
     @GetMapping("/{participationId}")
     public ParticipationInfoResponseDto getParticipationInfo(
-            @AuthenticationPrincipal(expression = "userId") Long userId,
+            @AuthenticationPrincipal(expression = "username") String username,
             @PathVariable Long participationId
     ) {
-        return participationService.getParticipationInfo(userId, participationId);
+        return participationService.getParticipationInfo(username, participationId);
     }
 
 
     //수업 신청 취소
     @DeleteMapping("/{participationId}")
     public ParticipationCancelResponseDto cancelParticipation(
-            @AuthenticationPrincipal(expression = "userId") Long userId,
+            @AuthenticationPrincipal(expression = "username") String username,
             @PathVariable Long participationId
     ) {
-        return participationService.cancelParticipation(userId, participationId);
+        return participationService.cancelParticipation(username, participationId);
     }
 }
