@@ -129,14 +129,12 @@ public class  AuthServiceImpl implements AuthService {
     @Override
     public Mono<ResponseEntity<String>> resetPassword(UserPasswordResetRequestDto dto) {
         return Mono.fromCallable(() -> {
-            User user = (User) userRepository.findByEmail(dto.getEmail())
+            User user = userRepository.findByEmail(dto.getEmail())
                     .orElseThrow(() -> new IllegalArgumentException("가입된 이메일이 아닙니다."));
 
             if (!user.isEmailVerified()) {
                 return ResponseEntity.badRequest().body("이메일 인증이 필요합니다.");
             }
-
-            // 비밀번호, 비밀번호 확인 유효성 검사 필수! (일치 여부, 형식 여부)
 
             user.setPassword(bCryptPasswordEncoder.encode(dto.getNewPassword()));
             userRepository.save(user);

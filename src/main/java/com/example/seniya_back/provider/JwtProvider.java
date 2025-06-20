@@ -38,6 +38,15 @@ public class JwtProvider {
                 .compact();
     }
 
+    public String generateEmailToken(String email) {
+        return Jwts.builder()
+                .claim("email", email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     public String removeBearer(String bearerToken) {
         if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
             throw new RuntimeException("Invalid JWT token format");
@@ -69,5 +78,10 @@ public class JwtProvider {
     public String getRoleFromJwt(String token) {
         Claims claims = getClaims(token);
         return claims.get("role", String.class);
+    }
+
+    public String getEmailFromJwt(String token) {
+        Claims claims = getClaims(token);
+        return claims.get("email", String.class);
     }
 }
