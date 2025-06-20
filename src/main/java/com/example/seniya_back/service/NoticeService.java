@@ -12,11 +12,11 @@ import java.util.List;
 public interface NoticeService {
 
 
-    ResponseDto<NoticeResponseDto> createNotice(String username,NoticeCreateRequestDto dto);
+    ResponseDto<NoticeResponseDto> createNotice(NoticeCreateRequestDto dto);
 
-    ResponseDto<GetNoticeDetailResponseDto> updateNotice(String username, Long id, @Valid NoticeUpdateRequestDto dto);
+    ResponseDto<GetNoticeDetailResponseDto> updateNotice(Long id, @Valid NoticeUpdateRequestDto dto);
 
-    ResponseDto<?> deleteNotice(String username, Long id);
+    ResponseDto<?> deleteNotice(Long id);
 
     ResponseDto<List<NoticeListResponseDto>> getAllNotices();
 

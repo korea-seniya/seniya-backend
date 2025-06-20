@@ -1,5 +1,6 @@
 package com.example.seniya_back.service.implementations;
 
+import com.example.seniya_back.entity.User;
 import com.example.seniya_back.provider.JwtProvider;
 import com.example.seniya_back.repository.UserRepository;
 import com.example.seniya_back.service.MailService;
@@ -23,10 +24,10 @@ public class MailServiceImpl implements MailService {
     public Mono<ResponseEntity<String>> sendSimpleMessage(String email) {
         return Mono.fromSupplier(() -> {
             Long userId = userRepository.findByEmail(email)
-                    .map(user -> user.getUserId())
+                    .map(User::getUserId)
                     .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
 
-            String token = jwtProvider.generateToken(email, "ROLE_USER", userId);
+            String token = jwtProvider.generateEmailToken(email);
 
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
@@ -37,6 +38,7 @@ public class MailServiceImpl implements MailService {
             mailSender.send(message);
 
             return ResponseEntity.ok("인증 메일 전송 완료");
+
         });
     }
 

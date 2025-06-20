@@ -104,7 +104,7 @@ public class  AuthServiceImpl implements AuthService {
                 user.getUserId(), user.getRole().getRoleName(), user.getName()
         );
 
-        String token = jwtProvider.generateToken(user.getUsername(), user.getRole().getRoleName(), user.getId());
+        String token = jwtProvider.generateToken(user.getUsername(), user.getRole().getRoleName());
 
 
         data = new UserSignInResponseDto(token, responseDto, exprTime);
@@ -116,19 +116,25 @@ public class  AuthServiceImpl implements AuthService {
         return ResponseDto.success(ResponseCode.SUCCESS, "로그아웃 처리 완료").getBody();
     }
 
+    @Override
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
 
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
 
     @Override
     public Mono<ResponseEntity<String>> resetPassword(UserPasswordResetRequestDto dto) {
         return Mono.fromCallable(() -> {
-            User user = (User) userRepository.findByEmail(dto.getEmail())
+            User user = userRepository.findByEmail(dto.getEmail())
                     .orElseThrow(() -> new IllegalArgumentException("가입된 이메일이 아닙니다."));
 
             if (!user.isEmailVerified()) {
                 return ResponseEntity.badRequest().body("이메일 인증이 필요합니다.");
             }
-
-            // 비밀번호, 비밀번호 확인 유효성 검사 필수! (일치 여부, 형식 여부)
 
             user.setPassword(bCryptPasswordEncoder.encode(dto.getNewPassword()));
             userRepository.save(user);
@@ -139,3 +145,4 @@ public class  AuthServiceImpl implements AuthService {
         )).subscribeOn(Schedulers.boundedElastic());
         }
     }
+

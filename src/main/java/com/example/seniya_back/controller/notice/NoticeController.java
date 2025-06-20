@@ -27,31 +27,28 @@ public class NoticeController {
     // 공지사항 작성
     @PostMapping
     public ResponseEntity<ResponseDto<NoticeResponseDto>> createNotice(
-            @AuthenticationPrincipal String username,
             @Valid @RequestBody NoticeCreateRequestDto dto
     ) {
-        ResponseDto<NoticeResponseDto> response = noticeService.createNotice(username, dto);
+        ResponseDto<NoticeResponseDto> response = noticeService.createNotice( dto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 공지사항 수정
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDto<GetNoticeDetailResponseDto>> updateNotice(
-            @AuthenticationPrincipal String username,
             @PathVariable Long id,
             @Valid @RequestBody NoticeUpdateRequestDto dto
     ){
-        ResponseDto<GetNoticeDetailResponseDto> response = noticeService.updateNotice(username, id, dto);
+        ResponseDto<GetNoticeDetailResponseDto> response = noticeService.updateNotice(id, dto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 공지사항 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDto<?>> deleteNotice(
-            @AuthenticationPrincipal String username,
             @PathVariable Long id
     ) {
-        ResponseDto<?> response = noticeService.deleteNotice(username, id);
+        ResponseDto<?> response = noticeService.deleteNotice(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
