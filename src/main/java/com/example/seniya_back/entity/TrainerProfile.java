@@ -21,9 +21,6 @@ public class TrainerProfile extends BaseTimeEntity{
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    @Column(nullable = false)
-    private String name;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
