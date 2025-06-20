@@ -11,8 +11,6 @@ import com.example.seniya_back.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping(ApiMappingPattern.ADMIN_COURSE_API)
 @RequiredArgsConstructor
-public class CourseController {
+public class AdminCourseController {
 
     private final CourseService courseService;
 
