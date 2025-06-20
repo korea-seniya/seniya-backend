@@ -7,8 +7,8 @@ import com.example.seniya_back.dto.participation.response.ParticipationResponseD
 import java.util.List;
 
 public interface ParticipationService {
-    List<ParticipationResponseDto> getMyParticipations(Long userId);
-    ParticipationCancelResponseDto cancelParticipation(Long userId, Long participationId);
+    List<ParticipationResponseDto> getMyParticipations(String username);
+    ParticipationCancelResponseDto cancelParticipation(String username, Long participationId);
 
-    ParticipationInfoResponseDto getParticipationInfo(Long userId, Long participationId);
+    ParticipationInfoResponseDto getParticipationInfo(String username, Long participationId);
 }

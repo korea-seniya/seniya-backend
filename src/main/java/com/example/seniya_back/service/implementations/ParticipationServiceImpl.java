@@ -22,8 +22,8 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ParticipationResponseDto> getMyParticipations(Long userId) {
-        List<Participations> participations = participationsRepository.findAllByUser_UserId(userId);
+    public List<ParticipationResponseDto> getMyParticipations(String username) {
+        List<Participations> participations = participationsRepository.findAllByUser_Username(username);
 
         return participations.stream()
                 .map(p -> new ParticipationResponseDto(
@@ -41,8 +41,8 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     @Transactional(readOnly = true)
-    public ParticipationInfoResponseDto getParticipationInfo(Long userId, Long participationId) {
-        Participations participation = participationsRepository.findByParticipationIdAndUser_UserId(participationId, userId)
+    public ParticipationInfoResponseDto getParticipationInfo(String username, Long participationId) {
+        Participations participation = participationsRepository.findByParticipationIdAndUser_Username(participationId, username)
                 .orElseThrow(() -> new IllegalArgumentException("해당 수업 신청 정보를 찾을 수 없습니다."));
 
         return new ParticipationInfoResponseDto(
@@ -57,8 +57,8 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
-    public ParticipationCancelResponseDto cancelParticipation(Long userId, Long participationId) {
-        Participations participation = participationsRepository.findByParticipationIdAndUser_UserId(participationId, userId)
+    public ParticipationCancelResponseDto cancelParticipation(String username, Long participationId) {
+        Participations participation = participationsRepository.findByParticipationIdAndUser_Username(participationId, username)
                 .orElseThrow(() -> new IllegalArgumentException("해당 수업 신청 정보를 찾을 수 없습니다."));
 
         ParticipationInfoResponseDto info = new ParticipationInfoResponseDto(
