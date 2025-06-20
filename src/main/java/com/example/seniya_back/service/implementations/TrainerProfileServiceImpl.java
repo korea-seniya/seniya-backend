@@ -6,8 +6,10 @@ import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.trainer.requestDto.TrainerProfileRequestDto;
 import com.example.seniya_back.dto.trainer.responseDto.TrainerProfileCreateResponseDto;
 import com.example.seniya_back.dto.trainer.responseDto.TrainerProfileResponseDto;
+import com.example.seniya_back.entity.Certificate;
 import com.example.seniya_back.entity.TrainerProfile;
 import com.example.seniya_back.entity.User;
+import com.example.seniya_back.repository.CertificateRepository;
 import com.example.seniya_back.repository.TrainerProfileRepository;
 import com.example.seniya_back.repository.UserRepository;
 import com.example.seniya_back.service.TrainerProfileService;
@@ -16,12 +18,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.naming.NoPermissionException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class TrainerProfileServiceImpl implements TrainerProfileService {
     private final UserRepository userRepository;
     private final TrainerProfileRepository trainerProfileRepository;
+    private final CertificateRepository certificateRepository;
 
     @Override
     public ResponseDto<TrainerProfileCreateResponseDto> createProfile(String username, TrainerProfileRequestDto dto)
@@ -37,22 +42,35 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
             throw new NoPermissionException(ResponseMessage.NO_PERMISSION);
         }
 
+        TrainerProfile trainer = trainerProfileRepository.findByUser(user);
+
+        if (!(trainer == null)) {
+            throw new IllegalArgumentException(ResponseMessage.FAILED);
+        }
+
         TrainerProfile newTrainerProfile = TrainerProfile.builder()
                 .user(user)
                 .specialty(dto.getSpecialty())
-                .certificate(dto.getCertificate())
-                .certificationDate(dto.getCertificationDate())
                 .experienceYears(dto.getExperienceYears())
                 .description(dto.getDescription())
                 .build();
+
+        List<Certificate> certificates = dto.getCertificates().stream()
+                .map(certification -> Certificate.builder()
+                        .certificate(certification.getCertificate())
+                        .certificationDate(certification.getCertificationDate())
+                        .build()
+                )
+                .collect(Collectors.toList());
+
+        newTrainerProfile.setCertificates(certificates);
 
         trainerProfileRepository.save(newTrainerProfile);
 
         responseDto = TrainerProfileCreateResponseDto.builder()
                 .name(newTrainerProfile.getUser().getName())
                 .specialty(newTrainerProfile.getSpecialty())
-                .certificate(newTrainerProfile.getCertificate())
-                .certificationDate(newTrainerProfile.getCertificationDate())
+                .certificates(newTrainerProfile.getCertificates())
                 .experienceYears(newTrainerProfile.getExperienceYears())
                 .description(newTrainerProfile.getDescription())
                 .createdAt(newTrainerProfile.getCreatedAt())
@@ -79,8 +97,7 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
         responseDto = TrainerProfileResponseDto.builder()
                 .name(trainer.getUser().getName())
                 .specialty(trainer.getSpecialty())
-                .certificate(trainer.getCertificate())
-                .certificationDate(trainer.getCertificationDate())
+                .certificates(trainer.getCertificates())
                 .experienceYears(trainer.getExperienceYears())
                 .description(trainer.getDescription())
                 .createdAt(trainer.getCreatedAt())
@@ -106,8 +123,7 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
         TrainerProfile trainer = trainerProfileRepository.findByUser(user);
 
         trainer.setSpecialty(dto.getSpecialty());
-        trainer.setCertificate(dto.getCertificate());
-        trainer.setCertificationDate(dto.getCertificationDate());
+
         trainer.setExperienceYears(dto.getExperienceYears());
         trainer.setDescription(dto.getDescription());
 
@@ -116,8 +132,7 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
         responseDto = TrainerProfileResponseDto.builder()
                 .name(trainer.getUser().getName())
                 .specialty(trainer.getSpecialty())
-                .certificate(trainer.getCertificate())
-                .certificationDate(trainer.getCertificationDate())
+                .certificates(trainer.getCertificates())
                 .experienceYears(trainer.getExperienceYears())
                 .description(trainer.getDescription())
                 .createdAt(trainer.getCreatedAt())

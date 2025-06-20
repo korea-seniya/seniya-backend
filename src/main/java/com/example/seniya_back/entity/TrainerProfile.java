@@ -4,7 +4,7 @@ import com.example.seniya_back.common.enums.Specialty;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "trainer_profiles")
@@ -26,8 +26,8 @@ public class TrainerProfile extends BaseTimeEntity{
     @Column(nullable = false)
     private Specialty specialty;
 
-    private String certificate;
-    private LocalDate certificationDate;
+    @OneToMany(mappedBy = "trainerProfile", cascade =  CascadeType.ALL, orphanRemoval = true)
+    private List<Certificate> certificates;
 
     private Integer experienceYears;
     private String description;

@@ -17,5 +17,4 @@ public class TrainerApplicationStatusResponseDto {
     private LocalDate appliedDate;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 }
