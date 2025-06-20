@@ -51,15 +51,18 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/api/v1/auth/**", "api/v1/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/notices/**","/api/v1/posts/**").permitAll()
-
+                                .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/courses/public/**").permitAll()
+                                       
                                 .requestMatchers("/api/v1/user/**").hasRole("USER")
-
+                                       
                                 .requestMatchers(HttpMethod.POST,"/api/v1/posts/**").hasRole("USER")
                                 .requestMatchers(HttpMethod.POST,"/api/v1/notices/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
@@ -67,6 +70,8 @@ public class WebSecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
+
 
 
     @Bean
