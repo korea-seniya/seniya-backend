@@ -89,6 +89,7 @@ public class TrainerApplicationServiceImpl implements TrainerApplicationService 
                 trainerApplication -> TrainerApplicationResponseDto.builder()
                         .id(trainerApplication.getApplicationId())
                         .username(trainerApplication.getUser().getUsername())
+                        .name(trainerApplication.getUser().getName())
                         .appliedDate(trainerApplication.getAppliedDate())
                         .approvalStatus(trainerApplication.getApprovalStatus())
                         .createdAt(trainerApplication.getCreatedAt())
