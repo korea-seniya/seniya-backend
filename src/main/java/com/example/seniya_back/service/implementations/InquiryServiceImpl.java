@@ -51,7 +51,7 @@ public class InquiryServiceImpl implements InquiryService {
                 .inquiryId(saved.getInquiryId())
                 .title(saved.getTitle())
                 .content(saved.getContent())
-                .isPrivate(saved.getIsPrivated())
+                .isPrivated(saved.getIsPrivated())
                 .createdAt(saved.getCreatedAt())
                 .build();
 
@@ -91,7 +91,7 @@ public class InquiryServiceImpl implements InquiryService {
         responseDtos = inquiries.stream().map(
                 inquiry -> AllInquiryResponseDto.builder()
                         .id(inquiry.getInquiryId())
-                        .username(inquiry.getUser().getUsername())
+                        .username(inquiry.getUser().getName())
                         .title(inquiry.getTitle())
                         .content(inquiry.getContent())
                         .isPrivated(inquiry.getIsPrivated())
@@ -113,7 +113,6 @@ public class InquiryServiceImpl implements InquiryService {
                 .orElseThrow(() -> new EntityNotFoundException("INQUIRY NOT FOUND"));
 
         String roleName = user.getRole().getRoleName();
-
         if (inquiry.getIsPrivated()) {
             if (!roleName.equals("TRAINER") && !roleName.equals("ADMIN")) {
                 if(!inquiry.getUser().equals(user)){
@@ -125,7 +124,7 @@ public class InquiryServiceImpl implements InquiryService {
         responseDto = InquiryByIdResponseDto.builder()
                 .title(inquiry.getTitle())
                 .username(inquiry.getUser().getName())
-                .trainerName(inquiry.getTrainer().getUser().getName())
+                .trainerName(inquiry.getTrainer() != null ? inquiry.getTrainer().getUser().getName() : null)
                 .content(inquiry.getContent())
                 .response(inquiry.getResponse())
                 .isPrivated(inquiry.getIsPrivated())
@@ -137,8 +136,8 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
-    public ResponseDto<InquiryByIdResponseDto> updateInquiry(String username, Long id, InquiryRequestDto dto) {
-        InquiryByIdResponseDto responseDto = null;
+    public ResponseDto<InquiryResponseDto> updateInquiry(String username, Long id, InquiryRequestDto dto) {
+        InquiryResponseDto responseDto = null;
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
@@ -160,12 +159,9 @@ public class InquiryServiceImpl implements InquiryService {
 
         Inquiry savedInquiry = inquiryRepository.save(inquiry);
 
-        responseDto = InquiryByIdResponseDto.builder()
+        responseDto = InquiryResponseDto.builder()
                 .title(savedInquiry.getTitle())
-                .username(user.getUsername())
-                .trainerName(savedInquiry.getTrainer().getUser().getName())
                 .content(savedInquiry.getContent())
-                .response(savedInquiry.getResponse())
                 .isPrivated(savedInquiry.getIsPrivated())
                 .createdAt(savedInquiry.getCreatedAt())
                 .updatedAt(savedInquiry.getUpdatedAt())
@@ -220,7 +216,7 @@ public class InquiryServiceImpl implements InquiryService {
 
         responseDto = InquiryByIdResponseDto.builder()
                 .title(inquiry.getTitle())
-                .username(inquiry.getUser().getUsername())
+                .username(inquiry.getUser().getName())
                 .trainerName(inquiry.getTrainer().getUser().getName())
                 .content(inquiry.getContent())
                 .response(inquiry.getResponse())
