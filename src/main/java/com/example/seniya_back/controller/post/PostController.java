@@ -27,21 +27,6 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-//    @PostMapping
-//    public ResponseEntity<ResponseDto<PostResponseDto>> createPost(
-//            @AuthenticationPrincipal String username,
-//            @Valid @RequestBody PostCreateRequestDto dto
-//    ) {
-//        ResponseDto<PostResponseDto> inquiry = postService.createPost(username, dto);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(inquiry);
-//    }
-
-//    @PostMapping("/test-upload")
-//    public ResponseEntity<String> testUpload(@RequestPart("file") MultipartFile file) {
-//        System.out.println("파일 이름: " + file.getOriginalFilename());
-//        return ResponseEntity.ok("업로드 성공");
-//    }
-
     // 게시글 생성
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDto<PostResponseDto>> createPost(

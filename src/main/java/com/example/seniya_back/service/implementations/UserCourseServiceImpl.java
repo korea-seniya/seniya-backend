@@ -29,6 +29,7 @@ public class UserCourseServiceImpl implements UserCourseService {
 
         dto = courses.stream()
                 .map(course -> CourseListResponseDto.builder()
+                        .courseId(course.getCourseId())
                         .name(course.getTrainerProfile().getUser().getName())
                         .title(course.getTitle())
                         .description(course.getDescription())
@@ -51,6 +52,7 @@ public class UserCourseServiceImpl implements UserCourseService {
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.FILE_NOT_FOUND));
 
         dto = CourseDetailResponseDto.builder()
+                .courseId(course.getCourseId())
                 .trainerId(course.getTrainerProfile().getTrainerId())
                 .trainerName(course.getTrainerProfile().getUser().getName())
                 .title(course.getTitle())
@@ -71,6 +73,10 @@ public class UserCourseServiceImpl implements UserCourseService {
 
         List<Course> courses = courseRepository.findByCategory(category);
 
+        if (courses == null || courses.isEmpty()) {
+            throw new EntityNotFoundException(ResponseMessage.FILE_NOT_FOUND);
+        }
+
         dto = courses.stream()
                 .map(course -> CourseListResponseDto.builder()
                         .courseId(course.getCourseId())
@@ -88,5 +94,23 @@ public class UserCourseServiceImpl implements UserCourseService {
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS,dto).getBody();
     }
 
+    @Override
+    public ResponseDto<List<CourseListResponseDto>> getCoursesByTrainerName(String trainerName) {
+        List<Course> courses = courseRepository.findByTrainerProfile_User_NameContaining(trainerName);
 
+        List<CourseListResponseDto> dtos = courses.stream()
+                .map(course -> CourseListResponseDto.builder()
+                        .courseId(course.getCourseId())
+                        .name(course.getTrainerProfile().getUser().getName())
+                        .title(course.getTitle())
+                        .description(course.getDescription())
+                        .classDate(course.getDate())
+                        .classStartTime(course.getStartTime())
+                        .classEndTime(course.getEndTime())
+                        .classroom(course.getRoom())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, dtos).getBody();
+    }
 }
