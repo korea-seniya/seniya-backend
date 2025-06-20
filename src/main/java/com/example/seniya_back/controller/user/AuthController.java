@@ -1,6 +1,7 @@
 package com.example.seniya_back.controller.user;
 
 import com.example.seniya_back.common.constants.ApiMappingPattern;
+import com.example.seniya_back.common.constants.ResponseCode;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.user.request.EmailSendRequestDto;
 import com.example.seniya_back.dto.user.request.UserPasswordResetRequestDto;
@@ -54,6 +55,8 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+
+
     // 4) 이메일 전송
     @PostMapping(ApiMappingPattern.EMAIL_API)
     public Mono<ResponseEntity<String>> sendEmail(@Valid @RequestBody EmailSendRequestDto dto) {
@@ -64,8 +67,9 @@ public class AuthController {
     @GetMapping(("/verification-codes/email"))
     public Mono<ResponseEntity<String>> verifyEmailAlt(@RequestParam String token) {
         try {
+
             Claims claims = jwtProvider.getClaims(token);
-            String email = claims.get("username", String.class);
+            String email = claims.get("email", String.class);
 
             return mailService.completeEmailVerification(email)
                     .then(Mono.fromCallable(() -> ResponseEntity.ok("이메일 인증이 완료되었습니다.")))
@@ -78,9 +82,28 @@ public class AuthController {
     }
 
 
+
+
+
     // 6) 비밀번호 재설정
     @PutMapping("/reset-password")
     public Mono<ResponseEntity<String>> resetPassword(@Valid @RequestBody UserPasswordResetRequestDto dto) {
         return authService.resetPassword(dto);
+    }
+
+    // 7) 아이디 중복 확인
+    @GetMapping("/check-username")
+    public ResponseEntity<ResponseDto<Boolean>> checkUsername(@RequestParam String username) {
+        boolean available = !authService.existsByUsername(username);
+        String message = available ? "사용 가능한 아이디 입니다." : "이미 존재하는 아이디입니다.";
+        return ResponseEntity.ok(ResponseDto.success(ResponseCode.SUCCESS, message, available).getBody());
+    }
+
+    // 8) 이메일 중복 확인
+    @GetMapping("/check-email")
+    public ResponseEntity<ResponseDto<Boolean>> checkEmail(@RequestParam String email) {
+        boolean available = !authService.existsByEmail(email);
+        String message = available ? "사용 가능한 이메일 주소 입니다." : "이미 존재하는 이메일 주소입니다.";
+        return ResponseEntity.ok(ResponseDto.success(ResponseCode.SUCCESS, message, available).getBody());
     }
 }

@@ -1,6 +1,5 @@
 package com.example.seniya_back.config;
 
-import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.filter.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +15,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -58,23 +56,16 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers(
-                                        "/api/v1/auth/**"                              // 회원가입, 로그인, 이메일 인증
-                                ).permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/v1/notices/**").permitAll() // 공지 조회
-                                .requestMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
+                                .requestMatchers("/api/v1/auth/**", "api/v1/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/notices/**","/api/v1/posts/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/courses/public/**").permitAll()
-//                                .requestMatchers(
-//                                        "/api/v1/user/**",
-//                                        "/api/v1/posts/**",                             // 게시물 관련 요청
-//                                        "/api/v1/posts/*/comments",                     // 댓글 생성
-//                                        "/api/v1/posts/*/comments/*"     ,               // 댓글 수정/삭제
-//                                        "/api/v1/health-data/**"
-//                                ).hasRole("USER")
-                        .requestMatchers(
-                                "/api/v1/notices/**"                            //공지
-                        ).hasRole("ADMIN").anyRequest().authenticated()
+                                       
+                                .requestMatchers("/api/v1/user/**").hasRole("USER")
+                                       
+                                .requestMatchers(HttpMethod.POST,"/api/v1/posts/**").hasRole("USER")
+                                .requestMatchers(HttpMethod.POST,"/api/v1/notices/**").hasRole("ADMIN")
+                                .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

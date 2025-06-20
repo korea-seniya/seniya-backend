@@ -8,7 +8,7 @@ import java.time.LocalTime;
 
 @Getter
 @AllArgsConstructor
-public class ParticipationInfoDto { // 취소된 수업 정보
+public class ParticipationInfoResponseDto { // 취소된 수업 정보
 
     private String name;
     private String title;
@@ -17,4 +17,5 @@ public class ParticipationInfoDto { // 취소된 수업 정보
     private LocalTime classStartTime;
     private LocalTime classEndTime;
     private String category;
+    private String classroom;
 }
