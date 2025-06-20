@@ -26,7 +26,6 @@ public interface PostService {
 
     ResponseDto<List<PostListResponseDto>> searchByTitle(String title);
 
- ResponseDto<List<PostListResponseDto>> searchByRole(String roleName);
+    ResponseDto<List<PostListResponseDto>> searchByRole(String roleName);
 
-// ResponseDto<PostResponseDto> createPost(String username, @Valid PostCreateRequestDto dto);
 }
