@@ -36,6 +36,7 @@ public class UserCourseServiceImpl implements UserCourseService {
                         .classStartTime(course.getStartTime())
                         .classEndTime(course.getEndTime())
                         .classroom(course.getRoom())
+                        .category(course.getCategory())
                         .build())
                 .collect(Collectors.toList());
 
@@ -58,6 +59,7 @@ public class UserCourseServiceImpl implements UserCourseService {
                 .classStartTime(course.getStartTime())
                 .classEndTime(course.getEndTime())
                 .classroom(course.getRoom())
+                .category(course.getCategory())
                 .build();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, dto).getBody();

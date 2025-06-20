@@ -3,6 +3,7 @@ package com.example.seniya_back.controller.userCourse;
 import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.common.enums.Category;
 import com.example.seniya_back.dto.ResponseDto;
+import com.example.seniya_back.dto.course.request.CourseByCategoryRequestDto;
 import com.example.seniya_back.dto.course.response.CourseDetailResponseDto;
 import com.example.seniya_back.dto.course.response.CourseListResponseDto;
 import com.example.seniya_back.service.UserCourseService;
@@ -36,9 +37,9 @@ public class userCourseController {
     // 카테고리 별 수업 검색
     @GetMapping("/{category}")
     public ResponseEntity<ResponseDto<List<CourseListResponseDto>>> getCoursesByCategory(
-            @RequestParam("category") Category category
-    ) {
-        ResponseDto<List<CourseListResponseDto>> response = userCourseService.getCoursesByCategory(category);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+            @RequestParam CourseByCategoryRequestDto dto
+            ) {
+        ResponseDto<List<CourseListResponseDto>> responseDto = userCourseService.getCoursesByCategory(dto.getCategory());
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 }

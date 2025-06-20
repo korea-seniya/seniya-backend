@@ -54,11 +54,11 @@ public class PostController {
     }
 
     // 게시글 수정
-    @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDto<PostDetailResponseDto>> updatePost(
             @AuthenticationPrincipal String username,
             @PathVariable Long postId,
-            @RequestPart("data") PostUpdateRequestDto dto,
+            @RequestPart(value = "data", required = false) PostUpdateRequestDto dto,
             @RequestPart(value = "file", required = false) List<MultipartFile> files
     ) throws IOException {
         ResponseDto<PostDetailResponseDto> response = postService.updatePost(username, postId, dto, files);
