@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class CreatePaymentRequestDto {
-    private Method method;
     private int couponCount;
-//    private LocalDateTime createdAt;
+    private Method method;
 }
