@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,13 +54,15 @@ public class CourseFilterServiceImpl implements CourseFilterService {
     }
 
     @Override
-    public ResponseDto<List<CourseResponseDto>> quickSearchCourses(Category category, String trainer, LocalDate classDate) {
+    public ResponseDto<List<CourseResponseDto>> quickSearchCourses(Category category, String trainer, LocalDate classDate, LocalTime classStartTime, LocalTime classEndTime) {
         List<CourseResponseDto> respDtos = null;
 
         List<Course> filteredCourse = courseRepository.findAll().stream()
                 .filter(course -> classDate == null || course.getDate().toLocalDate().equals(classDate))
                 .filter(course -> trainer == null || course.getTrainerProfile().getUser().getName().equals(trainer))
                 .filter(course -> category == null || course.getCategory().equals(category))
+                .filter(course -> classStartTime == null || classStartTime.equals(course.getStartTime()))
+                .filter(course -> classEndTime == null || classEndTime.equals(course.getEndTime()))
                 .collect(Collectors.toList());
 
         respDtos = filteredCourse.stream()
