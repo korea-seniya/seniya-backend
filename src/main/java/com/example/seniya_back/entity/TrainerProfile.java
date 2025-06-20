@@ -22,6 +22,9 @@ public class TrainerProfile extends BaseTimeEntity{
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(nullable = false)
+    private String name;
+    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Specialty specialty;

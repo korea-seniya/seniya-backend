@@ -9,14 +9,13 @@ import java.time.LocalTime;
 @Getter
 @AllArgsConstructor
 public class ParticipationResponseDto { // 신청한 수업 목록 조회
-
-    private String name;
+    private String category;
     private String title;
     private String description;
-    private LocalDate classDate;
-    private LocalTime classStartTime;
-    private LocalTime classEndTime;
-    private String category;
-    private String classroom;
+    private String trainerName;
+    private LocalDate courseDate;
+    private LocalTime courseStartTime;
+    private LocalTime courseEndTime;
+    private String courseRoom;
 
 }
