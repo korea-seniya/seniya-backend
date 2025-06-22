@@ -22,7 +22,7 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public Mono<ResponseEntity<String>> sendSimpleMessage(String email) {
-        return Mono.fromSupplier(() -> {
+        return Mono.fromCallable(() -> {
             Long userId = userRepository.findByEmail(email)
                     .map(User::getUserId)
                     .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
@@ -38,18 +38,19 @@ public class MailServiceImpl implements MailService {
             mailSender.send(message);
 
             return ResponseEntity.ok("인증 메일 전송 완료");
-
-        });
+        }).subscribeOn(Schedulers.boundedElastic());  // 블로킹 작업 스케줄러에 올림
     }
 
     @Override
     public Mono<Void> completeEmailVerification(String email) {
         return Mono.fromRunnable(() -> {
             userRepository.findByEmail(email).ifPresent(user -> {
-                user.setEmailVerified(true);
-                userRepository.save(user);
+                if (!user.isEmailVerified()) {
+                    user.setEmailVerified(true);
+                    userRepository.save(user);
+                    System.out.println("이메일 인증 처리 완료: " + email);
+                }
             });
-            System.out.println("이메일 인증 처리 완료: " + email);
         }).subscribeOn(Schedulers.boundedElastic()).then();
     }
 }
