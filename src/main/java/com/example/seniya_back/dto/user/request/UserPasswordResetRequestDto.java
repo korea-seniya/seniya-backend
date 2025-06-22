@@ -26,4 +26,7 @@ public class UserPasswordResetRequestDto { // 비밀번호 재설정
 
     @NotBlank(message = "전화번호는 필수 입력 값 입니다.")
     private String phone;
+
+    @NotBlank(message = "토큰은 필수 입력 값 입니다.")
+    private String token;  // 이메일 인증 토큰
 }
