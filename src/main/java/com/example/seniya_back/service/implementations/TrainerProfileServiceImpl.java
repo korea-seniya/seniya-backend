@@ -3,7 +3,9 @@ package com.example.seniya_back.service.implementations;
 import com.example.seniya_back.common.constants.ResponseCode;
 import com.example.seniya_back.common.constants.ResponseMessage;
 import com.example.seniya_back.dto.ResponseDto;
+import com.example.seniya_back.dto.trainer.requestDto.CertificateRequestDto;
 import com.example.seniya_back.dto.trainer.requestDto.TrainerProfileRequestDto;
+import com.example.seniya_back.dto.trainer.responseDto.CertificateResponseDto;
 import com.example.seniya_back.dto.trainer.responseDto.TrainerProfileCreateResponseDto;
 import com.example.seniya_back.dto.trainer.responseDto.TrainerProfileResponseDto;
 import com.example.seniya_back.entity.Certificate;
@@ -56,21 +58,29 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
                 .build();
 
         List<Certificate> certificates = dto.getCertificates().stream()
-                .map(certification -> Certificate.builder()
-                        .certificate(certification.getCertificate())
-                        .certificationDate(certification.getCertificationDate())
-                        .build()
-                )
+                .map(certDto -> Certificate.builder()
+                        .certificate(certDto.getCertificate())
+                        .certificationDate(certDto.getCertificationDate())
+                        .trainerProfile(newTrainerProfile)
+                        .build())
                 .collect(Collectors.toList());
 
         newTrainerProfile.setCertificates(certificates);
 
         trainerProfileRepository.save(newTrainerProfile);
 
+        List<CertificateResponseDto> certDtos = newTrainerProfile.getCertificates().stream()
+                .map(cert -> CertificateResponseDto.builder()
+                        .certificate(cert.getCertificate())
+                        .certificationDate(cert.getCertificationDate())
+                        .build())
+                .collect(Collectors.toList());
+
+
         responseDto = TrainerProfileCreateResponseDto.builder()
                 .name(newTrainerProfile.getUser().getName())
                 .specialty(newTrainerProfile.getSpecialty())
-                .certificates(newTrainerProfile.getCertificates())
+                .certificates(certDtos)
                 .experienceYears(newTrainerProfile.getExperienceYears())
                 .description(newTrainerProfile.getDescription())
                 .createdAt(newTrainerProfile.getCreatedAt())
@@ -94,10 +104,17 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
 
         TrainerProfile trainer = trainerProfileRepository.findByUser(user);
 
+        List<CertificateResponseDto> certDtos = trainer.getCertificates().stream()
+                .map(cert -> CertificateResponseDto.builder()
+                        .certificate(cert.getCertificate())
+                        .certificationDate(cert.getCertificationDate())
+                        .build())
+                .collect(Collectors.toList());
+
         responseDto = TrainerProfileResponseDto.builder()
                 .name(trainer.getUser().getName())
                 .specialty(trainer.getSpecialty())
-                .certificates(trainer.getCertificates())
+                .certificates(certDtos)
                 .experienceYears(trainer.getExperienceYears())
                 .description(trainer.getDescription())
                 .createdAt(trainer.getCreatedAt())
@@ -115,24 +132,41 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
         String roleName = user.getRole().getRoleName();
-
-        if(!roleName.equals("TRAINER")) {
+        if (!roleName.equals("TRAINER")) {
             throw new NoPermissionException(ResponseMessage.NO_PERMISSION);
         }
 
         TrainerProfile trainer = trainerProfileRepository.findByUser(user);
 
-        trainer.setSpecialty(dto.getSpecialty());
+        List<Certificate> certificates = dto.getCertificates().stream()
+                .map(certification -> Certificate.builder()
+                        .certificate(certification.getCertificate())
+                        .certificationDate(certification.getCertificationDate())
+                        .trainerProfile(trainer)
+                        .build()
+                )
+                .collect(Collectors.toList());
 
+        trainer.getCertificates().clear();
+        trainer.getCertificates().addAll(certificates);
+
+        trainer.setSpecialty(dto.getSpecialty());
         trainer.setExperienceYears(dto.getExperienceYears());
         trainer.setDescription(dto.getDescription());
 
         trainerProfileRepository.save(trainer);
 
+        List<CertificateResponseDto> certDtos = trainer.getCertificates().stream()
+                .map(cert -> CertificateResponseDto.builder()
+                        .certificate(cert.getCertificate())
+                        .certificationDate(cert.getCertificationDate())
+                        .build())
+                .collect(Collectors.toList());
+
         responseDto = TrainerProfileResponseDto.builder()
                 .name(trainer.getUser().getName())
                 .specialty(trainer.getSpecialty())
-                .certificates(trainer.getCertificates())
+                .certificates(certDtos)
                 .experienceYears(trainer.getExperienceYears())
                 .description(trainer.getDescription())
                 .createdAt(trainer.getCreatedAt())
