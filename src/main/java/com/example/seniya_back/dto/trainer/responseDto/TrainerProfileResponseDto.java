@@ -15,7 +15,7 @@ import java.util.List;
 public class TrainerProfileResponseDto{
     private String name;
     private Specialty specialty;
-    private List<Certificate> certificates;
+    private List<CertificateResponseDto> certificates;
     private Integer experienceYears;
     private String description;
     private LocalDateTime createdAt;
