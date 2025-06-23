@@ -13,7 +13,10 @@ public interface MailService {
             String email
     );
 
+    Mono<Void> completeEmailVerification(
+            @Email(message = "유효한 이메일 주소여야 합니다.")
+            @NotBlank(message = "이메일은 필수입니다.")
+            String email
+    );
 
-
-    Mono<Void> completeEmailVerification(String email);
 }

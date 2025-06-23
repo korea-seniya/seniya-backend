@@ -6,7 +6,7 @@ import com.example.seniya_back.dto.comment.response.CommentCreateResponseDto;
 import com.example.seniya_back.dto.comment.response.CommentUpdateResponseDto;
 
 public interface CommentService {
-    CommentCreateResponseDto createComment(Long postId, Long userId, CommentCreateRequestDto dto);
+    CommentCreateResponseDto createComment(Long postId, CommentCreateRequestDto dto, String username);
 
     CommentUpdateResponseDto updateComment(Long postId, Long commentId, CommentUpdateRequestDto dto);
 

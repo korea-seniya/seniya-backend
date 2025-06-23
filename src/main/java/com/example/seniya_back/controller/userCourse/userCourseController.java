@@ -3,7 +3,6 @@ package com.example.seniya_back.controller.userCourse;
 import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.common.enums.Category;
 import com.example.seniya_back.dto.ResponseDto;
-import com.example.seniya_back.dto.course.request.CourseByCategoryRequestDto;
 import com.example.seniya_back.dto.course.response.CourseDetailResponseDto;
 import com.example.seniya_back.dto.course.response.CourseListResponseDto;
 import com.example.seniya_back.service.UserCourseService;
@@ -40,6 +39,14 @@ public class userCourseController {
             @RequestParam(required = false) Category category
     ) {
         ResponseDto<List<CourseListResponseDto>> responseDto = userCourseService.getCoursesByCategory(category);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+    @GetMapping(params = "trainerName")
+    public ResponseEntity<ResponseDto<List<CourseListResponseDto>>> getCoursesByTrainerName(
+            @RequestParam("trainerName") String trainerName
+    ) {
+        ResponseDto<List<CourseListResponseDto>> responseDto = userCourseService.getCoursesByTrainerName(trainerName);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 

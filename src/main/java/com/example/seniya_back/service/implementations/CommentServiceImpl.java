@@ -26,11 +26,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentCreateResponseDto createComment(Long postId, Long userId, CommentCreateRequestDto dto) {
+    public CommentCreateResponseDto createComment(Long postId, CommentCreateRequestDto dto, String username) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 게시글이 존재하지 않습니다."));
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("해당 사용자가 존재하지 않습니다."));
 
         Comment newComment = Comment.builder()
@@ -44,7 +44,7 @@ public class CommentServiceImpl implements CommentService {
         return new CommentCreateResponseDto(
                 newComment.getCommentId(),
                 post.getPostId(),
-                user.getUserId(),
+                user.getUsername(),
                 newComment.getContent(),
                 newComment.getCreatedAt()
         );

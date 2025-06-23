@@ -1,10 +1,11 @@
 package com.example.seniya_back.dto.trainer.responseDto;
 
 import com.example.seniya_back.common.enums.Specialty;
+import com.example.seniya_back.entity.Certificate;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Setter
 @Getter
@@ -14,8 +15,7 @@ import java.time.LocalDateTime;
 public class TrainerProfileResponseDto{
     private String name;
     private Specialty specialty;
-    private String certificate;
-    private LocalDate certificationDate;
+    private List<CertificateResponseDto> certificates;
     private Integer experienceYears;
     private String description;
     private LocalDateTime createdAt;

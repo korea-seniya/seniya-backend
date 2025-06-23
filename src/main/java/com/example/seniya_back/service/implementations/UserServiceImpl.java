@@ -50,7 +50,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException(ResponseMessage.USER_NOT_FOUND));
 
-        // username 수정 검증 및 변경
         if (dto.getUsername() != null && !user.getUsername().equals(dto.getUsername())) {
             userRepository.findByUsername(dto.getUsername())
                     .ifPresent(existingUser -> {
@@ -59,7 +58,6 @@ public class UserServiceImpl implements UserService {
             user.setUsername(dto.getUsername());
         }
 
-        // phone 수정 검증 및 변경
         if (dto.getPhone() != null && !dto.getPhone().equals(user.getPhone())) {
             userRepository.findByPhone(dto.getPhone())
                     .ifPresent(existingUser -> {
@@ -68,7 +66,6 @@ public class UserServiceImpl implements UserService {
             user.setPhone(dto.getPhone());
         }
 
-        // email 수정 검증 및 변경
         if (dto.getEmail() != null && !dto.getEmail().equals(user.getEmail())) {
             userRepository.findByEmail(dto.getEmail())
                     .ifPresent(existingUser -> {
@@ -77,7 +74,6 @@ public class UserServiceImpl implements UserService {
             user.setEmail(dto.getEmail());
         }
 
-        // 변경 후 응답 DTO 생성
         GetMyInfoResponseDto responseDto = GetMyInfoResponseDto.builder()
                 .id(user.getUserId())
                 .username(user.getUsername())

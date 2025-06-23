@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,18 +25,9 @@ public class CommentController {
     public ResponseEntity<ResponseDto<CommentCreateResponseDto>> createComment(
             @PathVariable Long postId,
             @Valid @RequestBody CommentCreateRequestDto dto,
-            Authentication authentication
+            @AuthenticationPrincipal String username
     ) {
-        // 보통 authentication.getName() 은 String 타입의 username(userId가 아닐 수도 있음)
-        // 만약 userId가 문자열이라면 Long.parseLong() 으로 변환 시도
-        Long userId;
-        try {
-            userId = Long.parseLong(authentication.getName());
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("Authentication 정보에서 userId를 가져올 수 없습니다.");
-        }
-
-        CommentCreateResponseDto responseDto = commentService.createComment(postId, userId, dto);
+        CommentCreateResponseDto responseDto = commentService.createComment(postId, dto, username);
         return ResponseDto.success("SUCCESS", "댓글이 성공적으로 등록되었습니다.", responseDto);
     }
 
