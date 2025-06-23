@@ -27,6 +27,7 @@ public class ParticipationServiceImpl implements ParticipationService {
 
         return participations.stream()
                 .map(p -> new ParticipationResponseDto(
+                        p.getParticipationId(),
                         p.getCourse().getCategory().name(),
                         p.getCourse().getTitle(),
                         p.getCourse().getDescription(),
