@@ -9,7 +9,9 @@ import jakarta.validation.Valid;
 public interface HealthDataService {
     ResponseDto<HealthDataResponseDto> createHealthData(String username, @Valid HealthDataRequestDto dto);
 
-    ResponseDto<HealthDataResponseDto> updateHealthData(String username, Long id, @Valid HealthDataUpdRequestDto dto);
+    ResponseDto<HealthDataResponseDto> updateHealthData(String username, @Valid HealthDataUpdRequestDto dto);
 
-    ResponseDto<HealthDataResponseDto> getHealthDataById(String username, Long id);
+    ResponseDto<HealthDataResponseDto> getHealthDataByUsername(String username);
+
+//    ResponseDto<HealthDataResponseDto> getHealthDataById(String username);
 }

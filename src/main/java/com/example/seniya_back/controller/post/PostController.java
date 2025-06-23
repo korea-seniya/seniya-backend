@@ -76,15 +76,16 @@ public class PostController {
 
     // 게시글 제목 검색
     @GetMapping("/search-by-title")
-    public ResponseEntity<ResponseDto<List<PostListResponseDto>>> searchByTitle(@RequestBody PostSearchByTitleRequestDto dto) {
-        ResponseDto<List<PostListResponseDto>> posts = postService.searchByTitle(dto.getTitle());
+    public ResponseEntity<ResponseDto<List<PostListResponseDto>>> searchByTitle(@RequestParam String title) {
+        ResponseDto<List<PostListResponseDto>> posts = postService.searchByTitle(title);
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
-    // 작성자 권한 별 검색
+
     @GetMapping("/search-by-role")
-    public ResponseEntity<ResponseDto<List<PostListResponseDto>>> searchByRole(@RequestBody PostSearchByRoleRequestDto dto) {
-        ResponseDto<List<PostListResponseDto>> posts = postService.searchByRole(dto.getRoleName());
+    public ResponseEntity<ResponseDto<List<PostListResponseDto>>> searchByRole(@RequestParam String roleName) {
+        ResponseDto<List<PostListResponseDto>> posts = postService.searchByRole(roleName);
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
+
 }

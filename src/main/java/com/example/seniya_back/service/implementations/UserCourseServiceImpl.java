@@ -69,15 +69,16 @@ public class UserCourseServiceImpl implements UserCourseService {
 
     @Override
     public ResponseDto<List<CourseListResponseDto>> getCoursesByCategory(Category category) {
-        List<CourseListResponseDto> dto = null;
+        List<Course> courses;
 
-        List<Course> courses = courseRepository.findByCategory(category);
-
-        if (courses == null || courses.isEmpty()) {
-            throw new EntityNotFoundException(ResponseMessage.FILE_NOT_FOUND);
+        if (category == null) {
+            // category가 없으면 전체 목록 조회 (예시)
+            courses = courseRepository.findAll();
+        } else {
+            courses = courseRepository.findByCategory(category);
         }
 
-        dto = courses.stream()
+        List<CourseListResponseDto> dto = courses.stream()
                 .map(course -> CourseListResponseDto.builder()
                         .courseId(course.getCourseId())
                         .name(course.getTrainerProfile().getUser().getName())
@@ -91,7 +92,7 @@ public class UserCourseServiceImpl implements UserCourseService {
                         .build())
                 .collect(Collectors.toList());
 
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS,dto).getBody();
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, dto).getBody();
     }
 
     @Override
@@ -110,7 +111,6 @@ public class UserCourseServiceImpl implements UserCourseService {
                         .classroom(course.getRoom())
                         .build())
                 .collect(Collectors.toList());
-
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, dtos).getBody();
     }
 }

@@ -36,7 +36,7 @@ public class userCourseController {
     // 카테고리 별 수업 검색
     @GetMapping("/category")
     public ResponseEntity<ResponseDto<List<CourseListResponseDto>>> getCoursesByCategory(
-            @RequestParam("category") Category category
+            @RequestParam(required = false) Category category
     ) {
         ResponseDto<List<CourseListResponseDto>> responseDto = userCourseService.getCoursesByCategory(category);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
@@ -49,4 +49,5 @@ public class userCourseController {
         ResponseDto<List<CourseListResponseDto>> responseDto = userCourseService.getCoursesByTrainerName(trainerName);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
+
 }

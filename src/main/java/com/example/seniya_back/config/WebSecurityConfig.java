@@ -61,7 +61,7 @@ public class WebSecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/courses/public/**").permitAll()
                                 .requestMatchers("/api/v1/user/**").hasRole("USER")
-
+                                .requestMatchers(HttpMethod.DELETE, "/api/v1/users/me").authenticated()
                                 .requestMatchers(HttpMethod.POST,"/api/v1/posts/**").hasRole("USER")
                                 .requestMatchers(HttpMethod.POST,"/api/v1/notices/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()

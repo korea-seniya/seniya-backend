@@ -108,11 +108,11 @@ public class HealthDataServiceImpl implements HealthDataService {
 
     @Override
     @Transactional
-    public ResponseDto<HealthDataResponseDto> updateHealthData(String username, Long id, HealthDataUpdRequestDto dto) {
+    public ResponseDto<HealthDataResponseDto> updateHealthData(String username, HealthDataUpdRequestDto dto) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
-        HealthData healthData = healthDateRepository.findById(id)
+        HealthData healthData = healthDateRepository.findByUser(user)
                 .orElseThrow(() -> new IllegalArgumentException(ResponseMessage.FILE_NOT_FOUND));
 
         if (!healthData.getUser().getUsername().equals(username)) {
@@ -223,19 +223,14 @@ public class HealthDataServiceImpl implements HealthDataService {
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
     }
 
-
-
     @Override
-    public ResponseDto<HealthDataResponseDto> getHealthDataById(String username, Long id) {
+    public ResponseDto<HealthDataResponseDto> getHealthDataByUsername(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
-        HealthData healthData = healthDateRepository.findById(id)
+        // 사용자 기준으로 HealthData 가져오기
+        HealthData healthData = healthDateRepository.findByUser(user)
                 .orElseThrow(() -> new IllegalArgumentException(ResponseMessage.FILE_NOT_FOUND));
-
-        if (!healthData.getUser().getUsername().equals(username)) {
-            throw new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND);
-        }
 
         HealthDataResponseDto responseDto = HealthDataResponseDto.builder()
                 .healthDataId(healthData.getHealthDataId())
@@ -260,5 +255,42 @@ public class HealthDataServiceImpl implements HealthDataService {
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
     }
+
+
+//    @Override
+//    public ResponseDto<HealthDataResponseDto> getHealthDataById(String username, Long id) {
+//        User user = userRepository.findByUsername(username)
+//                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
+//
+//        HealthData healthData = healthDateRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException(ResponseMessage.FILE_NOT_FOUND));
+//
+//        if (!healthData.getUser().getUsername().equals(username)) {
+//            throw new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND);
+//        }
+//
+//        HealthDataResponseDto responseDto = HealthDataResponseDto.builder()
+//                .healthDataId(healthData.getHealthDataId())
+//                .height(healthData.getHeight())
+//                .weight(healthData.getWeight())
+//                .bodyFatPercentage(healthData.getBodyFatPercentage())
+//                .bloodPressure(healthData.getBloodPressure())
+//                .smoking(healthData.getSmoking())
+//                .drinking(healthData.getDrinking())
+//                .diseases(healthData.getDisease().stream()
+//                        .map(DiseaseResponseDto::from)
+//                        .toList())
+//                .medications(healthData.getMedication().stream()
+//                        .map(MedicationResponseDto::from)
+//                        .toList())
+//                .allergies(healthData.getAllergy().stream()
+//                        .map(AllergyResponseDto::from)
+//                        .toList())
+//                .createdAt(healthData.getCreatedAt())
+//                .updatedAt(healthData.getUpdatedAt())
+//                .build();
+//
+//        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
+//    }
 
 }
