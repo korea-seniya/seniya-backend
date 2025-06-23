@@ -27,16 +27,18 @@ public class HealthDataController {
     }
 
     // 건강 데이터 수정
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseDto<HealthDataResponseDto>> updateHealthData(@AuthenticationPrincipal String username, @PathVariable Long id, @Valid @RequestBody HealthDataUpdRequestDto dto) {
-        ResponseDto<HealthDataResponseDto> response = healthDataService.updateHealthData(username, id, dto);
+    @PutMapping("/update")
+    public ResponseEntity<ResponseDto<HealthDataResponseDto>> updateHealthData(@AuthenticationPrincipal String username,  @Valid @RequestBody HealthDataUpdRequestDto dto) {
+        ResponseDto<HealthDataResponseDto> response = healthDataService.updateHealthData(username, dto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // 건강 데이터 조회
-    @GetMapping("/me/{id}")
-    public ResponseEntity<ResponseDto<HealthDataResponseDto>> getHealthData(@AuthenticationPrincipal String username, @PathVariable Long id) {
-        ResponseDto<HealthDataResponseDto> healthdata = healthDataService.getHealthDataById(username, id);
+    @GetMapping("/me")
+    public ResponseEntity<ResponseDto<HealthDataResponseDto>> getMyHealthData(
+            @AuthenticationPrincipal String username
+    ) {
+        ResponseDto<HealthDataResponseDto> healthdata = healthDataService.getHealthDataByUsername(username);
         return ResponseEntity.status(HttpStatus.OK).body(healthdata);
     }
+
 }

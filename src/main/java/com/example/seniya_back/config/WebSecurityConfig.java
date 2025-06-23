@@ -65,13 +65,14 @@ public class WebSecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/courses/public/**").permitAll()
-//                                .requestMatchers(
-//                                        "/api/v1/user/**",
-//                                        "/api/v1/posts/**",                             // 게시물 관련 요청
-//                                        "/api/v1/posts/*/comments",                     // 댓글 생성
-//                                        "/api/v1/posts/*/comments/*"     ,               // 댓글 수정/삭제
-//                                        "/api/v1/health-data/**"
-//                                ).hasRole("USER")
+                                .requestMatchers(HttpMethod.DELETE, "/api/v1/users/me").authenticated()
+                                .requestMatchers(
+                                        "/api/v1/user/**",
+                                        "/api/v1/posts/**",                             // 게시물 관련 요청
+                                        "/api/v1/posts/*/comments",                     // 댓글 생성
+                                        "/api/v1/posts/*/comments/*"     ,               // 댓글 수정/삭제
+                                        "/api/v1/health-data/**"
+                                ).hasRole("USER")
                         .requestMatchers(
                                 "/api/v1/notices/**"                            //공지
                         ).hasRole("ADMIN").anyRequest().authenticated()

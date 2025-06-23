@@ -266,32 +266,6 @@ public class PostServiceImpl implements PostService {
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos).getBody();
     }
 
-//    @Override
-//    public ResponseDto<PostResponseDto> createPost(String username, PostCreateRequestDto dto) {
-//        PostResponseDto responseDto = null;
-//
-//        User user = userRepository.findByUsername(username)
-//                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
-//
-//        Post newPost = Post.builder()
-//                .user(user)
-//                .title(dto.getTitle())
-//                .content(dto.getContent())
-//                .build();
-//
-//        Post savedPost = postRepository.save(newPost);
-//
-//        responseDto = PostResponseDto.builder()
-//                .postId(savedPost.getPostId())
-//                .title(savedPost.getTitle())
-//                .content(savedPost.getContent())
-//                .createdAt(savedPost.getCreatedAt())
-//                .updatedAt(savedPost.getUpdatedAt())
-//                .build();
-//
-//        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
-//    }
-
     private void saveFile(MultipartFile file, Long targetId, TargetType type) throws IOException {
         File dir = new File(uploadDir);
         if (!dir.exists()) {

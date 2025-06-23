@@ -22,6 +22,7 @@ public class UserController {
     // === UserController mapping pattern === //
     private static final String GET_USER_INFO = "/me";
     private static final String PUT_USER_INFO = "/me";
+    private static final String DELETE_USER_INFO = "/me";
 
     // 1) 회원 정보 조회
     @GetMapping(GET_USER_INFO)
@@ -43,7 +44,7 @@ public class UserController {
     }
 
     // 3) 회원 탈퇴
-   @DeleteMapping
+   @DeleteMapping(DELETE_USER_INFO)
     public ResponseEntity<ResponseDto<?>> deleteUser(
             @AuthenticationPrincipal String username
    ){
