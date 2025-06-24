@@ -26,7 +26,7 @@ public class TrainerProfile extends BaseTimeEntity{
     @Column(nullable = false)
     private Specialty specialty;
 
-    @OneToMany(mappedBy = "trainerProfile", cascade =  CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "trainerProfile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Certificate> certificates;
 
     private Integer experienceYears;

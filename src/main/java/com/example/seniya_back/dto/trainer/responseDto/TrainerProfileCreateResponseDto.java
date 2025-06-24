@@ -1,7 +1,6 @@
 package com.example.seniya_back.dto.trainer.responseDto;
 
 import com.example.seniya_back.common.enums.Specialty;
-import com.example.seniya_back.entity.Certificate;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,5 +17,6 @@ public class TrainerProfileCreateResponseDto {
     private List<CertificateResponseDto> certificates;
     private Integer experienceYears;
     private String description;
+    private String profileImageUrl;
     private LocalDateTime createdAt;
 }

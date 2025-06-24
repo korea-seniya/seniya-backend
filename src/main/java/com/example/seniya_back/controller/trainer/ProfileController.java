@@ -3,6 +3,7 @@ package com.example.seniya_back.controller.trainer;
 import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.trainer.requestDto.TrainerProfileRequestDto;
+import com.example.seniya_back.dto.trainer.requestDto.UpdateTrainerProfileRequestDto;
 import com.example.seniya_back.dto.trainer.responseDto.TrainerProfileCreateResponseDto;
 import com.example.seniya_back.dto.trainer.responseDto.TrainerProfileResponseDto;
 import com.example.seniya_back.service.TrainerProfileService;
@@ -12,8 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.naming.NoPermissionException;
+import java.io.IOException;
 
 @RestController
 @RequestMapping(ApiMappingPattern.TRAINER_PROFILE_API)
@@ -24,9 +27,10 @@ public class ProfileController {
     @PostMapping("/me")
     public ResponseEntity<ResponseDto<TrainerProfileCreateResponseDto>> createProfile(
             @AuthenticationPrincipal String username,
-            @Valid @RequestBody TrainerProfileRequestDto dto
-    ) throws NoPermissionException {
-        ResponseDto<TrainerProfileCreateResponseDto> response = trainerProfileService.createProfile(username, dto);
+            @RequestPart(value = "dto") @Valid TrainerProfileRequestDto dto,
+            @RequestPart(value = "file", required = false) MultipartFile file
+    ) throws NoPermissionException, IOException {
+        ResponseDto<TrainerProfileCreateResponseDto> response = trainerProfileService.createProfile(username, dto, file);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -41,9 +45,10 @@ public class ProfileController {
     @PutMapping("/me")
     public ResponseEntity<ResponseDto<TrainerProfileResponseDto>> updateProfile(
             @AuthenticationPrincipal String username,
-            @Valid @RequestBody TrainerProfileRequestDto dto
-    ) throws NoPermissionException {
-        ResponseDto<TrainerProfileResponseDto> response = trainerProfileService.updateProfile(username, dto);
+            @RequestPart(value = "dto") @Valid UpdateTrainerProfileRequestDto dto,
+            @RequestPart(value = "file", required = false) MultipartFile file
+    ) throws NoPermissionException, IOException {
+        ResponseDto<TrainerProfileResponseDto> response = trainerProfileService.updateProfile(username, dto, file);
         return ResponseEntity.ok(response);
     }
 }
