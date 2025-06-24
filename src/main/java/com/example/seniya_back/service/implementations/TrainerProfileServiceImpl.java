@@ -18,10 +18,10 @@ import com.example.seniya_back.repository.UploadFileRepository;
 import com.example.seniya_back.repository.UserRepository;
 import com.example.seniya_back.service.TrainerProfileService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.naming.NoPermissionException;
@@ -138,10 +138,11 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
         String profileImageUrl = null;
 
         Optional<UploadFile> profileUrl = fileRepo.findFirstByTargetIdAndTargetType(trainer.getTrainerId(), TargetType.PROFILE);
+        System.out.println(profileUrl);
         if (profileUrl.isPresent()) {
             profileImageUrl = profileUrl.get().getFilePath();
         }
-
+        System.out.println(profileImageUrl);
         responseDto = TrainerProfileResponseDto.builder()
                 .name(trainer.getUser().getName())
                 .specialty(trainer.getSpecialty())
