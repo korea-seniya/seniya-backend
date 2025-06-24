@@ -55,31 +55,28 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        // GET 허용
+
+                   
                         .requestMatchers(HttpMethod.GET, "/api/v1/notices/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/courses/public/**").permitAll()
 
-                        // 인증 없이 접근 허용
-                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/files/**", "/api/v1/auth/**", "/api/v1/**").permitAll()
+                      
+
                         .requestMatchers("/favicon.ico", "/error").permitAll()
 
-                        // POST 제한
+             
                         .requestMatchers(HttpMethod.POST, "/api/v1/notices/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/v1/posts/**").hasRole("USER")
 
-
                         .requestMatchers(HttpMethod.PUT, "/api/v1/notices/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/notices/**").hasRole("ADMIN")
-
-                        // 사용자 권한
+                 
                         .requestMatchers("/api/v1/user/**").hasRole("USER")
-
-                        // 기타
+                 
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/users/me").authenticated()
-
-                        // 그 외는 인증 필요
                         .anyRequest().authenticated()
                 )
 
