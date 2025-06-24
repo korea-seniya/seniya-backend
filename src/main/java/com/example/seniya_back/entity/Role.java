@@ -38,4 +38,8 @@ public class    Role {
         users.add(user);
         user.setRole(this);
     }
+
+    public int getId() {
+        return roleId.intValue();
+    }
 }
