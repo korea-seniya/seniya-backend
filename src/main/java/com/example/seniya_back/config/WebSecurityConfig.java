@@ -55,7 +55,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api/v1/auth/**", "/api/v1/**").permitAll()
+                                .requestMatchers("/files/**", "/api/v1/auth/**", "/api/v1/**").permitAll()
                         .requestMatchers("/favicon.ico", "/error").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/notices/**","/api/v1/posts/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
