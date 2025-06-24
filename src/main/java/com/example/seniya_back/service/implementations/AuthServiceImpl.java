@@ -90,8 +90,8 @@ public class AuthServiceImpl implements AuthService {
 
         String token = jwtProvider.generateToken(user.getUsername(), user.getRole().getRoleName());
         int exprTime = jwtProvider.getExpiration();
-
-        UserSignInResponseDto data = new UserSignInResponseDto(token, responseDto, exprTime);
+        int roleId = user.getRole().getId();
+        UserSignInResponseDto data = new UserSignInResponseDto(token, responseDto, exprTime, roleId);
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data).getBody();
     }
 

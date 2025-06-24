@@ -9,5 +9,5 @@ public class UserSignInResponseDto {
      private String token;
      private UserResponseDto user;
      private int exprTime;
-//private User user;
+     private int roleId;
 }
