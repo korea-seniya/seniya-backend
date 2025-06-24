@@ -25,7 +25,7 @@ public class PostDetailResponseDto {
     @AllArgsConstructor
     public static class CommentDto {
         private Long commentId;
-        private String username;
+        private String name;
         private String content;
         private LocalDateTime createdAt;
     }
