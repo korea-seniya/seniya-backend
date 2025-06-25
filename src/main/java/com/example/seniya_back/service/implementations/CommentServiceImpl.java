@@ -1,9 +1,13 @@
 package com.example.seniya_back.service.implementations;
 
+import com.example.seniya_back.common.constants.ResponseCode;
+import com.example.seniya_back.common.constants.ResponseMessage;
+import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.comment.request.CommentCreateRequestDto;
 import com.example.seniya_back.dto.comment.request.CommentUpdateRequestDto;
 import com.example.seniya_back.dto.comment.response.CommentCreateResponseDto;
 import com.example.seniya_back.dto.comment.response.CommentUpdateResponseDto;
+import com.example.seniya_back.dto.post.response.CommentResponseDto;
 import com.example.seniya_back.entity.Comment;
 import com.example.seniya_back.entity.Post;
 import com.example.seniya_back.entity.User;
@@ -16,6 +20,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -26,11 +33,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentCreateResponseDto createComment(Long postId, Long userId, CommentCreateRequestDto dto) {
+    public CommentCreateResponseDto createComment(Long postId, CommentCreateRequestDto dto, String username) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 게시글이 존재하지 않습니다."));
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("해당 사용자가 존재하지 않습니다."));
 
         Comment newComment = Comment.builder()
@@ -44,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
         return new CommentCreateResponseDto(
                 newComment.getCommentId(),
                 post.getPostId(),
-                user.getUserId(),
+                user.getName(),
                 newComment.getContent(),
                 newComment.getCreatedAt()
         );
@@ -80,5 +87,19 @@ public class CommentServiceImpl implements CommentService {
         }
 
         commentRepository.delete(comment);
+    }
+
+    @Override
+    public ResponseDto<List<CommentResponseDto>> getComment(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 게시글이 존재하지 않습니다."));
+
+        List<Comment> comments = commentRepository.findByPost_PostId(postId);
+
+        List<CommentResponseDto> responseDtos = comments.stream()
+                .map(CommentResponseDto::new) // 👈 생성자 활용
+                .collect(Collectors.toList());
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos).getBody();
     }
 }

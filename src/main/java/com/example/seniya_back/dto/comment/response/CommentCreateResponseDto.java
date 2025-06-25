@@ -9,16 +9,17 @@ import java.time.LocalDateTime;
 @Setter
 
 public class CommentCreateResponseDto {
+    private String name;
     private Long commentId;
     private Long postId;
     private Long userId;
     private String content;
     private LocalDateTime createdAt;
 
-    public CommentCreateResponseDto(Long commentId, Long postId, Long userId, String content, LocalDateTime createdAt) {
+    public CommentCreateResponseDto(Long commentId, Long postId, String name, String content, LocalDateTime createdAt) {
         this.commentId = commentId;
         this.postId = postId;
-        this.userId = userId;
+        this.name = name;
         this.content = content;
         this.createdAt = createdAt;
     }

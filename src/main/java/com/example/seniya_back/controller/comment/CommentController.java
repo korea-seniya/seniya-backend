@@ -5,12 +5,17 @@ import com.example.seniya_back.dto.comment.request.CommentCreateRequestDto;
 import com.example.seniya_back.dto.comment.request.CommentUpdateRequestDto;
 import com.example.seniya_back.dto.comment.response.CommentCreateResponseDto;
 import com.example.seniya_back.dto.comment.response.CommentUpdateResponseDto;
+import com.example.seniya_back.dto.post.response.CommentResponseDto;
 import com.example.seniya_back.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/posts/{postId}/comments")
@@ -24,20 +29,18 @@ public class CommentController {
     public ResponseEntity<ResponseDto<CommentCreateResponseDto>> createComment(
             @PathVariable Long postId,
             @Valid @RequestBody CommentCreateRequestDto dto,
-            Authentication authentication
+            @AuthenticationPrincipal String username
     ) {
-        // 보통 authentication.getName() 은 String 타입의 username(userId가 아닐 수도 있음)
-        // 만약 userId가 문자열이라면 Long.parseLong() 으로 변환 시도
-        Long userId;
-        try {
-            userId = Long.parseLong(authentication.getName());
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("Authentication 정보에서 userId를 가져올 수 없습니다.");
-        }
-
-        CommentCreateResponseDto responseDto = commentService.createComment(postId, userId, dto);
+        CommentCreateResponseDto responseDto = commentService.createComment(postId, dto, username);
         return ResponseDto.success("SUCCESS", "댓글이 성공적으로 등록되었습니다.", responseDto);
     }
+
+    @GetMapping
+    public ResponseEntity<ResponseDto<List<CommentResponseDto>>> getComment(@PathVariable Long postId) {
+        ResponseDto<List<CommentResponseDto>> comments = commentService.getComment(postId);
+        return ResponseEntity.status(HttpStatus.OK).body(comments);
+    }
+
 
 
     // 댓글 수정

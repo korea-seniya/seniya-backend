@@ -64,12 +64,12 @@ public class InquiryController {
 
     // 문의 수정
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseDto<InquiryByIdResponseDto>> updateInquiry(
+    public ResponseEntity<ResponseDto<InquiryResponseDto>> updateInquiry(
             @AuthenticationPrincipal String username,
             @PathVariable Long id,
             @Valid @RequestBody InquiryRequestDto dto
     ) {
-        ResponseDto<InquiryByIdResponseDto> inquiry = inquiryService.updateInquiry(username, id, dto);
+        ResponseDto<InquiryResponseDto> inquiry = inquiryService.updateInquiry(username, id, dto);
         return ResponseEntity.ok(inquiry);
     }
 

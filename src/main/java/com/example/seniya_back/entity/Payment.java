@@ -38,4 +38,5 @@ public class Payment extends BaseTimeEntity{
 
     @Column(nullable = false)
     private int couponCount;
+
 }

@@ -10,7 +10,7 @@ import com.example.seniya_back.entity.Course;
 import com.example.seniya_back.entity.Participations;
 import com.example.seniya_back.entity.User;
 import com.example.seniya_back.repository.CourseRepository;
-import com.example.seniya_back.repository.ParticipationsRepository;
+//import com.example.seniya_back.repository.ParticipationsRepository;
 import com.example.seniya_back.repository.PaymentRepository;
 import com.example.seniya_back.repository.UserRepository;
 import com.example.seniya_back.service.AdminUserService;
@@ -27,7 +27,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     private final UserRepository userRepository;
     private final PaymentRepository paymentRepository;
-    private final ParticipationsRepository participationsRepository;
+    //private final ParticipationsRepository participationsRepository;
     private final CourseRepository courseRepository;
 
     @Override

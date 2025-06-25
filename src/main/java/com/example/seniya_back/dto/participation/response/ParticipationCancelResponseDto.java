@@ -8,6 +8,6 @@ import lombok.Getter;
 public class ParticipationCancelResponseDto { // 신청한 수업 취소
 
     private String message;  // 수업 취소 메시지
-    private ParticipationInfoDto data;
+    private ParticipationInfoResponseDto data;
 
 }

@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class TrainerApplicationResponseDto {
     private Long id;
     private String username;
+    private String name;
     private LocalDate appliedDate;
     private ApprovalStatus approvalStatus;
     private LocalDateTime createdAt;

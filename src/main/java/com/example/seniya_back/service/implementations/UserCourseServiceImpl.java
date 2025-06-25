@@ -52,6 +52,7 @@ public class UserCourseServiceImpl implements UserCourseService {
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.FILE_NOT_FOUND));
 
         dto = CourseDetailResponseDto.builder()
+                .courseId(course.getCourseId())
                 .trainerId(course.getTrainerProfile().getTrainerId())
                 .trainerName(course.getTrainerProfile().getUser().getName())
                 .title(course.getTitle())
@@ -123,6 +124,4 @@ public class UserCourseServiceImpl implements UserCourseService {
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, dto).getBody();
     }
-
-
 }

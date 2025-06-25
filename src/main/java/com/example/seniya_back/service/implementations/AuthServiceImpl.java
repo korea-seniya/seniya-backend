@@ -15,6 +15,7 @@ import com.example.seniya_back.provider.JwtProvider;
 import com.example.seniya_back.repository.RoleRepository;
 import com.example.seniya_back.repository.UserRepository;
 import com.example.seniya_back.service.AuthService;
+import io.jsonwebtoken.Claims;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ import java.util.DuplicateFormatFlagsException;
 
 @Service
 @RequiredArgsConstructor
-public class  AuthServiceImpl implements AuthService {
+public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -35,7 +36,6 @@ public class  AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseDto<UserSignUpResponseDto> signup(UserSignUpRequestDto dto) {
-
         String username = dto.getUsername();
         String password = dto.getPassword();
         String confirmPassword = dto.getConfirmPassword();
@@ -43,22 +43,17 @@ public class  AuthServiceImpl implements AuthService {
         String email = dto.getEmail();
         String phone = dto.getPhone();
 
-        // 패스워드 일치 여부 확인
         if (!password.equals(confirmPassword)) {
-            // 일치하지 않은 경우
             throw new IllegalArgumentException(ResponseCode.FAIL);
         }
 
-        if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(email).isPresent()) {
             throw new DuplicateFormatFlagsException(ResponseCode.FAIL);
         }
 
-        // 권한 정보 확인
         Role userRole = roleRepository.findByRoleName("USER")
                 .orElseGet(() -> roleRepository.save(Role.builder().roleName("USER").build()));
 
-        System.out.println(userRole.getRoleName());
-        // 패스워드 암호화
         String encodePassword = bCryptPasswordEncoder.encode(password);
 
         User user = User.builder()
@@ -68,35 +63,24 @@ public class  AuthServiceImpl implements AuthService {
                 .name(name)
                 .phone(phone)
                 .role(userRole)
+                .emailVerified(false) // 회원가입 시 기본값 false로 설정
                 .build();
 
         userRepository.save(user);
 
         UserSignUpResponseDto data = new UserSignUpResponseDto();
-        return ResponseDto.success(ResponseCode.SUCCESS, "회원 가입이 완료되었습니다.",data).getBody();
-
+        return ResponseDto.success(ResponseCode.SUCCESS, "회원 가입이 완료되었습니다.", data).getBody();
     }
-
 
     @Override
     public ResponseDto<UserSignInResponseDto> login(UserSignInRequestDto dto) {
         String username = dto.getUsername();
         String password = dto.getPassword();
 
-        UserSignInResponseDto data = null;
-
         User user = userRepository.findByUsername(username)
-                .orElse(null);
-
-        int exprTime = jwtProvider.getExpiration();
-
-        if (user == null) {
-           throw new EntityNotFoundException(ResponseCode.USER_NOT_FOUND);
-        }
+                .orElseThrow(() -> new EntityNotFoundException(ResponseCode.USER_NOT_FOUND));
 
         if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
-            // .matches(평문 비밀번호, 암호화된 비밀번호)
-            // : 평문 비밀번호(실제 비밀번호)와 암호화된 비밀번호를 비교하여 일치 여부 반환(boolean)
             throw new IllegalArgumentException(ResponseCode.FAIL);
         }
 
@@ -104,11 +88,11 @@ public class  AuthServiceImpl implements AuthService {
                 user.getUserId(), user.getRole().getRoleName(), user.getName()
         );
 
-        String token = jwtProvider.generateToken(user.getUsername(), user.getRole().getRoleName(), user.getId());
-
-
-        data = new UserSignInResponseDto(token, responseDto, exprTime);
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS,data).getBody();
+        String token = jwtProvider.generateToken(user.getUsername(), user.getRole().getRoleName());
+        int exprTime = jwtProvider.getExpiration();
+        int roleId = user.getRole().getId();
+        UserSignInResponseDto data = new UserSignInResponseDto(token, responseDto, exprTime, roleId);
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, data).getBody();
     }
 
     @Override
@@ -116,19 +100,69 @@ public class  AuthServiceImpl implements AuthService {
         return ResponseDto.success(ResponseCode.SUCCESS, "로그아웃 처리 완료").getBody();
     }
 
+    @Override
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
 
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    // 이메일 인증 완료 처리 - email_verified 컬럼 true로 변경
+    @Override
+    public Mono<Void> completeEmailVerification(String email) {
+        return Mono.fromRunnable(() -> {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalArgumentException("가입된 이메일이 아닙니다."));
+            if (!user.isEmailVerified()) {
+                user.setEmailVerified(true);
+                userRepository.save(user);
+            }
+        }).subscribeOn(Schedulers.boundedElastic()).then();
+    }
+
+    @Override
+    public Mono<String> verifyResetPasswordToken(String token) {
+        try {
+            Claims claims = jwtProvider.getClaims(token);
+            String email = claims.get("email", String.class);
+
+            return Mono.just(email)
+                    .flatMap(e -> Mono.fromCallable(() -> {
+                        User user = userRepository.findByEmail(e)
+                                .orElseThrow(() -> new IllegalArgumentException("가입된 이메일이 아닙니다."));
+                        if (!user.isEmailVerified()) {
+                            throw new IllegalArgumentException("이메일 인증이 필요합니다.");
+                        }
+                        return e;
+                    }).subscribeOn(Schedulers.boundedElastic()));
+        } catch (Exception e) {
+            return Mono.error(new IllegalArgumentException("유효하지 않은 토큰입니다."));
+        }
+    }
+
+    @Override
+    public Mono<ResponseEntity<String>> resetPassword(String email, String newPassword) {
+        return Mono.fromCallable(() -> {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalArgumentException("가입된 이메일이 아닙니다."));
+            user.setPassword(bCryptPasswordEncoder.encode(newPassword));
+            userRepository.save(user);
+            return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+        }).subscribeOn(Schedulers.boundedElastic());
+    }
 
     @Override
     public Mono<ResponseEntity<String>> resetPassword(UserPasswordResetRequestDto dto) {
         return Mono.fromCallable(() -> {
-            User user = (User) userRepository.findByEmail(dto.getEmail())
+            User user = userRepository.findByEmail(dto.getEmail())
                     .orElseThrow(() -> new IllegalArgumentException("가입된 이메일이 아닙니다."));
 
             if (!user.isEmailVerified()) {
                 return ResponseEntity.badRequest().body("이메일 인증이 필요합니다.");
             }
-
-            // 비밀번호, 비밀번호 확인 유효성 검사 필수! (일치 여부, 형식 여부)
 
             user.setPassword(bCryptPasswordEncoder.encode(dto.getNewPassword()));
             userRepository.save(user);
@@ -137,5 +171,5 @@ public class  AuthServiceImpl implements AuthService {
         }).onErrorResume(e -> Mono.just(
                 ResponseEntity.badRequest().body("비밀번호 재설정 실패: " + e.getMessage())
         )).subscribeOn(Schedulers.boundedElastic());
-        }
     }
+}

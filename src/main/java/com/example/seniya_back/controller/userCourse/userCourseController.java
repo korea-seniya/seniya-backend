@@ -3,7 +3,6 @@ package com.example.seniya_back.controller.userCourse;
 import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.common.enums.Category;
 import com.example.seniya_back.dto.ResponseDto;
-import com.example.seniya_back.dto.course.request.CourseByCategoryRequestDto;
 import com.example.seniya_back.dto.course.response.CourseDetailResponseDto;
 import com.example.seniya_back.dto.course.response.CourseListResponseDto;
 import com.example.seniya_back.service.UserCourseService;
