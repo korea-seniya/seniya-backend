@@ -4,11 +4,17 @@ import com.example.seniya_back.common.constants.ResponseCode;
 import com.example.seniya_back.common.constants.ResponseMessage;
 import com.example.seniya_back.common.enums.Category;
 import com.example.seniya_back.dto.ResponseDto;
+import com.example.seniya_back.dto.course.response.CourseApplyResponseDto;
 import com.example.seniya_back.dto.course.response.CourseDetailResponseDto;
 import com.example.seniya_back.dto.course.response.CourseListResponseDto;
 import com.example.seniya_back.entity.Course;
+import com.example.seniya_back.entity.Participations;
+import com.example.seniya_back.entity.User;
 import com.example.seniya_back.repository.CourseRepository;
+import com.example.seniya_back.repository.ParticipationsRepository;
+import com.example.seniya_back.repository.UserRepository;
 import com.example.seniya_back.service.UserCourseService;
+import com.sun.jdi.request.DuplicateRequestException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +26,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserCourseServiceImpl implements UserCourseService {
     private final CourseRepository courseRepository;
+    private final UserRepository userRepository;
+    private final ParticipationsRepository participationsRepository;
 
     @Override
     public ResponseDto<List<CourseListResponseDto>> getAllCourses() {
@@ -123,5 +131,41 @@ public class UserCourseServiceImpl implements UserCourseService {
                 .collect(Collectors.toList());
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, dto).getBody();
+    }
+
+    @Override
+    public ResponseDto<CourseApplyResponseDto> applyCourse(String username, Long id) {
+        CourseApplyResponseDto responseDto = null;
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
+
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND));
+
+        if (participationsRepository.existsByUserAndCourse(user, course)){
+            throw new DuplicateRequestException(ResponseMessage.FAILED);
+        }
+
+        Participations participation = Participations.builder()
+                .user(user)
+                .course(course)
+                .build();
+        participationsRepository.save(participation);
+
+        responseDto = CourseApplyResponseDto.builder()
+                .courseId(course.getCourseId())
+                .userId(user.getUserId())
+                .userName(user.getName())
+                .trainerId(course.getTrainerProfile().getTrainerId())
+                .trainerName(course.getTrainerProfile().getUser().getName())
+                .title(course.getTitle())
+                .date(course.getDate())
+                .startTime(course.getStartTime())
+                .endTime(course.getEndTime())
+                .room(course.getRoom())
+                .build();
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
     }
 }

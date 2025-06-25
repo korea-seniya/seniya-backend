@@ -3,12 +3,14 @@ package com.example.seniya_back.controller.userCourse;
 import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.common.enums.Category;
 import com.example.seniya_back.dto.ResponseDto;
+import com.example.seniya_back.dto.course.response.CourseApplyResponseDto;
 import com.example.seniya_back.dto.course.response.CourseDetailResponseDto;
 import com.example.seniya_back.dto.course.response.CourseListResponseDto;
 import com.example.seniya_back.service.UserCourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +33,15 @@ public class userCourseController {
     public ResponseEntity<ResponseDto<CourseDetailResponseDto>> getUserCourseById(@PathVariable Long id) {
         ResponseDto<CourseDetailResponseDto> response = userCourseService.getCourseById(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<ResponseDto<CourseApplyResponseDto>> applyCourse(
+            @AuthenticationPrincipal String username,
+            @PathVariable Long id
+    ) {
+        ResponseDto<CourseApplyResponseDto> response = userCourseService.applyCourse(username, id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping(params = "category")
