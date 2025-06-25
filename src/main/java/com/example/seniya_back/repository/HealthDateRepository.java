@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface HealthDateRepository extends JpaRepository<HealthData, Long> {
     Optional<HealthData> findByUser(User user);
+
+    boolean existsByUser(User user);
 }

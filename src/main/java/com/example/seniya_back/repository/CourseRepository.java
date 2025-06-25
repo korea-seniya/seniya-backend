@@ -13,5 +13,5 @@ import java.util.List;
 public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findByCategory(Category category);
 
-    List<Course> findByTrainerProfile_User_NameContaining(String trainerName);
+    List<Course> findByTrainerProfile_User_Name(String trainerName);
 }
