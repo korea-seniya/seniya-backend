@@ -38,7 +38,7 @@ public class MailServiceImpl implements MailService {
             mailSender.send(message);
 
             return ResponseEntity.ok("인증 메일 전송 완료");
-        }).subscribeOn(Schedulers.boundedElastic());  // 블로킹 작업 스케줄러에 올림
+        }).subscribeOn(Schedulers.boundedElastic());
     }
 
     @Override
@@ -52,5 +52,10 @@ public class MailServiceImpl implements MailService {
                 }
             });
         }).subscribeOn(Schedulers.boundedElastic()).then();
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

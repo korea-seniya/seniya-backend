@@ -15,11 +15,14 @@ import com.example.seniya_back.service.MailService;
 import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping(ApiMappingPattern.AUTH_API)
@@ -29,55 +32,47 @@ public class AuthController {
     private final AuthService authService;
     private final MailService mailService;
     private final JwtProvider jwtProvider;
-
     private static final String SIGN_UP = "/signup";
     private static final String SIGN_IN = "/signin";
     private static final String LOG_OUT = "/logout";
-
-    // 1) 회원가입
-    @PostMapping(SIGN_UP)
+    @PostMapping("/signup")
     public ResponseEntity<ResponseDto<UserSignUpResponseDto>> signup(@Valid @RequestBody UserSignUpRequestDto dto) {
         ResponseDto<UserSignUpResponseDto> response = authService.signup(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // 2) 로그인
-    @PostMapping(SIGN_IN)
+    @PostMapping("/signin")
     public ResponseEntity<ResponseDto<UserSignInResponseDto>> login(@Valid @RequestBody UserSignInRequestDto dto) {
-        ResponseDto<UserSignInResponseDto> response = authService.login(dto);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(authService.login(dto));
     }
 
-    // 3) 로그아웃
-    @PostMapping(LOG_OUT)
+    @PostMapping("/logout")
     public ResponseEntity<ResponseDto<?>> logout(@AuthenticationPrincipal String username) {
-        ResponseDto<?> response = authService.logout(username);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(authService.logout(username));
     }
 
-    // 4) 이메일 전송
-    @PostMapping(ApiMappingPattern.EMAIL_API)
+    // 인증 메일 전송
+    @PostMapping("/send-email")
     public Mono<ResponseEntity<String>> sendEmail(@Valid @RequestBody EmailSendRequestDto dto) {
         return mailService.sendSimpleMessage(dto.getEmail());
     }
 
-    // 5) 이메일 인증 처리 - 토큰으로 이메일 추출 후 인증 완료 처리
+    // 이메일 인증 후 리다이렉트
     @GetMapping("/verification-codes/email")
-    public Mono<ResponseEntity<String>> verifyEmailAlt(@RequestParam String token) {
-        try {
-            Claims claims = jwtProvider.getClaims(token);
-            String email = claims.get("email", String.class);
-
-            return mailService.completeEmailVerification(email)
-                    .then(Mono.just(ResponseEntity.ok("이메일 인증이 완료되었습니다.")))
-                    .onErrorReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류"));
-
-        } catch (Exception e) {
-            return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유효하지 않은 토큰입니다."));
-        }
+    public Mono<ResponseEntity<Void>> verifyEmail(@RequestParam String token) {
+        return Mono.fromCallable(() -> jwtProvider.getClaims(token))
+                .map(claims -> claims.get("email", String.class))
+                .flatMap(email -> mailService.completeEmailVerification(email)
+                        .thenReturn(ResponseEntity
+                                .status(HttpStatus.FOUND)
+                                .header(HttpHeaders.LOCATION, "http://localhost:5176/users/me/password-reset?verified=true&email=" + email)
+                                .<Void>build()))
+                .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).<Void>build()));
     }
 
-    // 6) 비밀번호 재설정
+
+
+    // 비밀번호 재설정
     @PutMapping("/reset-password")
     public Mono<ResponseEntity<String>> resetPassword(@Valid @RequestBody UserPasswordResetRequestDto dto) {
         return authService.verifyResetPasswordToken(dto.getToken())
@@ -100,4 +95,13 @@ public class AuthController {
         String message = available ? "사용 가능한 이메일 주소 입니다." : "이미 존재하는 이메일 주소입니다.";
         return ResponseEntity.ok(ResponseDto.success(ResponseCode.SUCCESS, message, available).getBody());
     }
+    @GetMapping("/email-verified")
+    public ResponseEntity<Boolean> isEmailVerified(@RequestParam String email) {
+        boolean verified = authService.isEmailVerified(email);
+        return ResponseEntity.ok(verified);
+    }
+
+
+
 }
+
