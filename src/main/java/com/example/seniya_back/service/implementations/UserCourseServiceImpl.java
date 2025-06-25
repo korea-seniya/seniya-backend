@@ -61,6 +61,8 @@ public class UserCourseServiceImpl implements UserCourseService {
                 .classEndTime(course.getEndTime())
                 .classroom(course.getRoom())
                 .category(course.getCategory())
+                .createdAt(course.getCreatedAt())
+                .updatedAt(course.getUpdatedAt())
                 .build();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, dto).getBody();
@@ -71,10 +73,13 @@ public class UserCourseServiceImpl implements UserCourseService {
         List<Course> courses;
 
         if (category == null) {
-            // category가 없으면 전체 목록 조회 (예시)
             courses = courseRepository.findAll();
         } else {
             courses = courseRepository.findByCategory(category);
+        }
+
+        if (courses.isEmpty()) {
+            throw new EntityNotFoundException("해당 카테고리의 강의를 찾을 수 없습니다.");
         }
 
         List<CourseListResponseDto> dto = courses.stream()
@@ -94,6 +99,30 @@ public class UserCourseServiceImpl implements UserCourseService {
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, dto).getBody();
     }
 
+    @Override
+    public ResponseDto<List<CourseListResponseDto>> getCoursesByTrainerName(String trainerName) {
+        List<Course> courses = courseRepository.findByTrainerProfile_User_Name(trainerName);
+
+        if (courses.isEmpty()) {
+            throw new EntityNotFoundException("해당 트레이너의 강의를 찾을 수 없습니다.");
+        }
+
+        List<CourseListResponseDto> dto = courses.stream()
+                .map(course -> CourseListResponseDto.builder()
+                        .courseId(course.getCourseId())
+                        .name(course.getTrainerProfile().getUser().getName())
+                        .title(course.getTitle())
+                        .description(course.getDescription())
+                        .classDate(course.getDate())
+                        .classStartTime(course.getStartTime())
+                        .classEndTime(course.getEndTime())
+                        .category(course.getCategory())
+                        .classroom(course.getRoom())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, dto).getBody();
+    }
 
 
 }

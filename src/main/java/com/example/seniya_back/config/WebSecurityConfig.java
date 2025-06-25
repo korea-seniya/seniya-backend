@@ -64,7 +64,7 @@ public class WebSecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/api/v1/notices/**").permitAll() // 공지 조회
                                 .requestMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/v1/courses/public/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/courses/**").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/api/v1/users/me").authenticated()
                                 .requestMatchers(
                                         "/api/v1/user/**",

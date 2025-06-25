@@ -13,4 +13,6 @@ public interface UserCourseService {
     ResponseDto<CourseDetailResponseDto> getCourseById(Long id);
 
     ResponseDto<List<CourseListResponseDto>> getCoursesByCategory(Category category);
+
+    ResponseDto<List<CourseListResponseDto>> getCoursesByTrainerName(String trainerName);
 }

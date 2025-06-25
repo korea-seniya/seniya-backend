@@ -37,6 +37,10 @@ public class HealthDataServiceImpl implements HealthDataService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
 
+        if (healthDateRepository.existsByUser(user)) {
+            throw new IllegalArgumentException("이미 등록된 건강 데이터가 존재합니다.");
+        }
+
         HealthData newHealthData = HealthData.builder()
                 .user(user)
                 .height(dto.getHeight())
