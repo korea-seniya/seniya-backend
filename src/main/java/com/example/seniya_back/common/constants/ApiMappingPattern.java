@@ -21,6 +21,6 @@ public interface ApiMappingPattern {
     String EMAIL_VERIFY_API = AUTH_API + "/emailVerify";
     String COMMENT_API = POST_API + "/{postId}/comments";
 
-    String COURSE_FILTER_API = "/api/v1/courses";
+    String COURSE_FILTER_API = "/api/v1/courses/filter";
 
 }

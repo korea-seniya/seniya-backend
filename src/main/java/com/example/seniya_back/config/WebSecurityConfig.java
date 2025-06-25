@@ -61,7 +61,6 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/courses/**").permitAll()
 
                         .requestMatchers("/files/**", "/api/v1/auth/**", "/api/v1/**").permitAll()
-                      
 
                         .requestMatchers("/favicon.ico", "/error").permitAll()
 

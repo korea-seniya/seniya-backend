@@ -1,6 +1,8 @@
 package com.example.seniya_back.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +10,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "participations")
 @NoArgsConstructor
 @Getter
+@Builder
+@AllArgsConstructor
 public class Participations {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
