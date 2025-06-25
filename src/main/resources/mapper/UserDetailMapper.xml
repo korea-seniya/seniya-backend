@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.seniya_back.mapper.UserDetailMapper">
+
+    <select id="getUserDetail"
+            resultType="com.example.seniya_back.dto.admin.user.response.GetUserDetailFlatRow">
+        SELECT
+            u.user_id,
+            u.name AS userName,
+            u.phone,
+            r.role_name AS roleName,
+            IFNULL(SUM(p.amount), 0) AS totalAmount,
+            (
+                SELECT COUNT(*) FROM passes pass WHERE pass.user_id = u.user_id
+            ) AS totalCouponCount,
+            (
+                SELECT COUNT(*) FROM passes pass WHERE pass.user_id = u.user_id AND pass.used = FALSE
+            ) AS availableCouponCount,
+            c.course_id AS courseId,
+            c.title,
+            c.description,
+            c.course_date AS courseDate,
+            c.course_start_time AS courseStartTime,
+            c.course_end_time AS courseEndTime,
+            c.category,
+            c.course_room AS courseRoom,
+            c.created_at AS courseCreatedAt,
+            c.updated_at AS courseUpdatedAt,
+            c.trainer_id AS trainerId,
+            tu.name AS trainerName
+        FROM users u
+                 JOIN roles r ON u.role_id = r.role_id
+                 LEFT JOIN payments p ON u.user_id = p.user_id
+                 LEFT JOIN participations pa ON u.user_id = pa.user_id
+                 LEFT JOIN courses c ON pa.course_id = c.course_id
+                 LEFT JOIN trainer_profiles tp ON c.trainer_id = tp.trainer_id
+                 LEFT JOIN users tu ON tp.user_id = tu.user_id
+        WHERE u.user_id = #{userId}
+        GROUP BY u.user_id, c.course_id
+    </select>
+
+</mapper>
