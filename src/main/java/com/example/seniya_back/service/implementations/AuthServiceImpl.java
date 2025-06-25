@@ -172,4 +172,16 @@ public class AuthServiceImpl implements AuthService {
                 ResponseEntity.badRequest().body("비밀번호 재설정 실패: " + e.getMessage())
         )).subscribeOn(Schedulers.boundedElastic());
     }
+
+    @Override
+    public boolean isUsernameAvailable(String username) {
+        return !userRepository.existsByUsername(username);
+    }
+
+    @Override
+    public boolean isEmailVerified(String email) {
+        return userRepository.findByEmail(email)
+                .map(User::isEmailVerified)
+                .orElse(false);
+    }
 }

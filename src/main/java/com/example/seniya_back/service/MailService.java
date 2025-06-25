@@ -19,4 +19,5 @@ public interface MailService {
             String email
     );
 
+    boolean existsByEmail(String email);
 }
