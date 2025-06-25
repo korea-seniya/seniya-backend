@@ -3,15 +3,12 @@ package com.example.seniya_back.service.implementations;
 import com.example.seniya_back.common.constants.ResponseCode;
 import com.example.seniya_back.common.constants.ResponseMessage;
 import com.example.seniya_back.dto.ResponseDto;
-import com.example.seniya_back.dto.admin.course.response.CourseResponseDto;
 import com.example.seniya_back.dto.admin.user.response.GetAllUserResponseDto;
-import com.example.seniya_back.dto.admin.user.response.GetUserDetailRespDto;
-import com.example.seniya_back.entity.Course;
-import com.example.seniya_back.entity.Participations;
+import com.example.seniya_back.dto.admin.user.response.GetUserCourseResponseDto;
+import com.example.seniya_back.dto.admin.user.response.GetUserDetailFlatRow;
+import com.example.seniya_back.dto.admin.user.response.GetUserDetailResponseDto;
 import com.example.seniya_back.entity.User;
-import com.example.seniya_back.repository.CourseRepository;
-//import com.example.seniya_back.repository.ParticipationsRepository;
-import com.example.seniya_back.repository.PaymentRepository;
+import com.example.seniya_back.mapper.UserDetailMapper;
 import com.example.seniya_back.repository.UserRepository;
 import com.example.seniya_back.service.AdminUserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -26,9 +23,7 @@ import java.util.stream.Collectors;
 public class AdminUserServiceImpl implements AdminUserService {
 
     private final UserRepository userRepository;
-    private final PaymentRepository paymentRepository;
-    //private final ParticipationsRepository participationsRepository;
-    private final CourseRepository courseRepository;
+    private final UserDetailMapper userDetailMapper;
 
     @Override
     public ResponseDto<List<GetAllUserResponseDto>> getAllUser() {
@@ -51,41 +46,46 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public ResponseDto<GetUserDetailRespDto> getUserById(long id) {
-        GetUserDetailRespDto respDto = null;
+    public ResponseDto<GetUserDetailResponseDto> getUserDetail(long userId) {
+        List<GetUserDetailFlatRow> rows = userDetailMapper.getUserDetail(userId);
 
-        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.USER_NOT_FOUND));
+        if (rows.isEmpty()) {
+            throw new EntityNotFoundException("해당 유저가 존재하지 않습니다.");
+        }
 
-//        List<Participations> participations = participationsRepository.findAllByUserId(user.getUserId());
-//
-//        List<Course> findCourses = participations.stream()
-//                .map(participation -> courseRepository.findById(participation.getCourse().getCourseId())
-//                        .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND)))
-//                .collect(Collectors.toList());
-//
-//        List<CourseResponseDto> findCourseRespDtos = findCourses.stream()
-//                .map(course -> CourseResponseDto.builder()
-//                        .name(course.getTrainerProfile().getUser().getName())
-//                        .title(course.getTitle())
-//                        .description(course.getDescription())
-//                        .classDate(course.getDate())
-//                        .classStartTime(course.getStartTime())
-//                        .classEndTime(course.getEndTime())
-//                        .category(course.getCategory())
-//                        .classroom(course.getRoom())
-//                        .build())
-//                .collect(Collectors.toList());
+        GetUserDetailFlatRow first = rows.get(0);
 
-        respDto = GetUserDetailRespDto.builder()
-                .name(user.getName())
-                .phone(user.getPhone())
-                .roleName(user.getRole().getRoleName())
-                .totalAmount(paymentRepository.findTotalAmountByUserId(user.getUserId()))
-                .totalCouponCount(paymentRepository.findTotalCouponCountByUserId(user.getUserId()))
-                .availableCouponCount(paymentRepository.findAvailableCouponCountByUserId(user.getUserId()))
-//                .courses(findCourseRespDtos)
+        List<GetUserCourseResponseDto> courses = rows.stream()
+                .filter(row -> row.getCourseId() != null)
+                .map(row -> GetUserCourseResponseDto.builder()
+                        .courseId(row.getCourseId())
+                        .title(row.getTitle())
+                        .description(row.getDescription())
+                        .courseDate(row.getCourseDate())
+                        .courseStartTime(row.getCourseStartTime())
+                        .courseEndTime(row.getCourseEndTime())
+                        .category(row.getCategory())
+                        .courseRoom(row.getCourseRoom())
+                        .courseCreatedAt(row.getCourseCreatedAt())
+                        .courseUpdatedAt(row.getCourseUpdatedAt())
+                        .trainerId(row.getTrainerId())
+                        .trainerName(row.getTrainerName())
+                        .build())
+                .toList();
+
+        GetUserDetailResponseDto result = GetUserDetailResponseDto.builder()
+                .userName(first.getUserName())
+                .phone(first.getPhone())
+                .roleName(first.getRoleName())
+                .totalAmount(first.getTotalAmount())
+                .totalCouponCount(first.getTotalCouponCount())
+                .availableCouponCount(first.getAvailableCouponCount())
+                .courses(courses)
                 .build();
 
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, respDto).getBody();
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, result).getBody();
     }
+
+
+
 }

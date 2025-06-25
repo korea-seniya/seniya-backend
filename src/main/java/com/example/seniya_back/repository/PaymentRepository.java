@@ -17,7 +17,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     BigDecimal findTotalAmountByUserId(@Param("userId") Long userId);
 
     @Query("SELECT SUM(p.couponCount) FROM Payment p WHERE p.user.userId = :userId")
-    int findTotalCouponCountByUserId(Long userId);
+    Integer findTotalCouponCountByUserId(Long userId);
 
     @Query("""
     SELECT

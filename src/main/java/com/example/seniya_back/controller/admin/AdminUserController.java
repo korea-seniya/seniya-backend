@@ -2,8 +2,9 @@ package com.example.seniya_back.controller.admin;
 
 import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.dto.ResponseDto;
+import com.example.seniya_back.dto.admin.course.response.CourseResponseDto;
 import com.example.seniya_back.dto.admin.user.response.GetAllUserResponseDto;
-import com.example.seniya_back.dto.admin.user.response.GetUserDetailRespDto;
+import com.example.seniya_back.dto.admin.user.response.GetUserDetailResponseDto;
 import com.example.seniya_back.service.AdminUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,9 +29,9 @@ public class AdminUserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto<GetUserDetailRespDto>> getUserById(@PathVariable long id) {
-        ResponseDto<GetUserDetailRespDto> response = adminUserService.getUserById(id);
+    @GetMapping("/{userId}")
+    public ResponseEntity<ResponseDto<GetUserDetailResponseDto>> getUserDetail(@PathVariable long userId) {
+        ResponseDto<GetUserDetailResponseDto> response = adminUserService.getUserDetail(userId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

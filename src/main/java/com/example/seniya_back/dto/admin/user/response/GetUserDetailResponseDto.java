@@ -1,6 +1,5 @@
 package com.example.seniya_back.dto.admin.user.response;
 
-import com.example.seniya_back.dto.admin.course.response.CourseResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,14 +10,13 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
-public class GetUserDetailRespDto {
-    private String name;
+public class GetUserDetailResponseDto {
+    private String userName;
     private String phone;
     private String roleName;
-
 
     private BigDecimal totalAmount;
     private int totalCouponCount;
     private int availableCouponCount;
-    private List<CourseResponseDto> courses;
+    private List<GetUserCourseResponseDto> courses;
 }
