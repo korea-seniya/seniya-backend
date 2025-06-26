@@ -23,4 +23,5 @@ public interface ApiMappingPattern {
 
     String COURSE_FILTER_API = "/api/v1/courses/filter";
 
+    String PASS_API = "/api/v1/passes";
 }
