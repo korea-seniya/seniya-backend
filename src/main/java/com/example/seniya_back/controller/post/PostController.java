@@ -57,7 +57,7 @@ public class PostController {
             @AuthenticationPrincipal String username,
             @PathVariable("postId") Long postId) {
         ResponseDto<?> response = postService.deletePost(username, postId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 게시글 전체 조회
