@@ -69,7 +69,7 @@ public class AuthController {
                         .thenReturn(ResponseEntity
                                 .status(HttpStatus.FOUND)
                                 .header(HttpHeaders.LOCATION,
-                                        "http://localhost:5176/users/me/password-reset?token=" +
+                                        "http://localhost:5174/users/me/password-reset?token=" +
                                                 entry.getValue() + "&email=" + entry.getKey())
                                 .<Void>build()))
                 .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).<Void>build()));
