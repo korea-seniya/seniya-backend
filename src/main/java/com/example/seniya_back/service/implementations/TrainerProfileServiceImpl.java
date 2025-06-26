@@ -7,6 +7,7 @@ import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.trainer.requestDto.TrainerProfileRequestDto;
 import com.example.seniya_back.dto.trainer.requestDto.UpdateTrainerProfileRequestDto;
 import com.example.seniya_back.dto.trainer.responseDto.CertificateResponseDto;
+import com.example.seniya_back.dto.trainer.responseDto.PopularTrainerResponseDto;
 import com.example.seniya_back.dto.trainer.responseDto.TrainerProfileCreateResponseDto;
 import com.example.seniya_back.dto.trainer.responseDto.TrainerProfileResponseDto;
 import com.example.seniya_back.entity.Certificate;
@@ -20,6 +21,8 @@ import com.example.seniya_back.service.TrainerProfileService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -232,6 +235,34 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
                 .profileImageUrl(profileImageUrl)
                 .createdAt(trainer.getCreatedAt())
                 .updatedAt(trainer.getUpdatedAt())
+                .build();
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
+    }
+
+    @Override
+    public ResponseDto<PopularTrainerResponseDto> popularTrainer() {
+        PopularTrainerResponseDto responseDto = null;
+        Pageable topOne = PageRequest.of(0, 1);
+        List<Object[]> results = trainerProfileRepository.findPopularTrainers(topOne);
+        if (results.isEmpty()) {
+            throw new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND);
+        }
+
+        Object[] topResult = results.get(0);
+        TrainerProfile trainer = (TrainerProfile) topResult[0];
+        Long count = (Long) topResult[1];
+
+        String profileImageUrl = fileRepo.findFirstByTargetIdAndTargetType(trainer.getTrainerId(), TargetType.PROFILE)
+                .map(UploadFile::getFilePath)
+                .orElse(null);
+
+        responseDto = PopularTrainerResponseDto.builder()
+                .trainerId(trainer.getTrainerId())
+                .name(trainer.getUser().getName())
+                .specialty(trainer.getSpecialty())
+                .profileImageUrl(profileImageUrl)
+                .courseCount(count.intValue())
                 .build();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
