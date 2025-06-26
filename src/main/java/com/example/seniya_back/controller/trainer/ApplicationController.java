@@ -16,13 +16,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(ApiMappingPattern.TRAINER_APPLY_API)
+@RequestMapping
 @RequiredArgsConstructor
 public class ApplicationController {
     private final TrainerApplicationService trainerApplicationService;
 
+    private final String pattern = ApiMappingPattern.TRAINER_APPLY_API;
     // 권한 신청
-    @PostMapping
+    @PostMapping(pattern)
     public ResponseEntity<ResponseDto<TrainerApplicationStatusResponseDto>> applyTrainer(
             @AuthenticationPrincipal String username
     ) {
@@ -31,7 +32,7 @@ public class ApplicationController {
     }
 
     // 나의 트레이너 신청 조회
-    @GetMapping("/me")
+    @GetMapping(pattern + "/me")
     public ResponseEntity<ResponseDto<TrainerApplicationStatusResponseDto>> getMyApplication(
             @AuthenticationPrincipal String username
     ) {
@@ -41,14 +42,14 @@ public class ApplicationController {
 
     // 관리자용
     // 신청 전체 목록 조회
-    @GetMapping
+    @GetMapping("/admin" + pattern)
     public ResponseEntity<ResponseDto<List<TrainerApplicationResponseDto>>> getAllApplication() {
         ResponseDto<List<TrainerApplicationResponseDto>>response = trainerApplicationService.getAllApplication();
         return ResponseEntity.ok(response);
     }
 
     // 신청 단건 조회
-    @GetMapping("/{id}")
+    @GetMapping("/admin" + pattern + "/{id}")
     public ResponseEntity<ResponseDto<TrainerApplicationDetailResponseDto>> getApplicationById(
             @PathVariable Long id
     ) {
@@ -57,7 +58,7 @@ public class ApplicationController {
     }
 
     // 신청 상태 변경
-    @PutMapping("/{id}")
+    @PutMapping("/admin" + pattern + "/{id}")
     public ResponseEntity<ResponseDto<TrainerApplicationStatusResponseDto>> updateStatus(
             @PathVariable Long id,
             @RequestBody TrainerApplicationStatusRequestDto dto

@@ -70,9 +70,13 @@ public class WebSecurityConfig {
 
                         .requestMatchers(HttpMethod.PUT, "/api/v1/notices/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/notices/**").hasRole("ADMIN")
-                 
+
                         .requestMatchers("/api/v1/user/**").hasRole("USER")
-                 
+                        .requestMatchers(HttpMethod.PUT,"/api/v1/inquiries/:id/response").hasRole("TRAINER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/trainer-profiles/me").hasRole("TRAINER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/trainer-profiles/me").hasRole("TRAINER")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/trainer-profiles/me").hasRole("TRAINER")
+
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/users/me").authenticated()
                         .anyRequest().authenticated()
                 )

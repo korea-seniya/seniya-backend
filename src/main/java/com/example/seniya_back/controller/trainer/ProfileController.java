@@ -4,6 +4,7 @@ import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.trainer.requestDto.TrainerProfileRequestDto;
 import com.example.seniya_back.dto.trainer.requestDto.UpdateTrainerProfileRequestDto;
+import com.example.seniya_back.dto.trainer.responseDto.PopularTrainerResponseDto;
 import com.example.seniya_back.dto.trainer.responseDto.TrainerProfileCreateResponseDto;
 import com.example.seniya_back.dto.trainer.responseDto.TrainerProfileResponseDto;
 import com.example.seniya_back.service.TrainerProfileService;
@@ -49,6 +50,12 @@ public class ProfileController {
             @RequestPart(value = "file", required = false) MultipartFile file
     ) throws NoPermissionException, IOException {
         ResponseDto<TrainerProfileResponseDto> response = trainerProfileService.updateProfile(username, dto, file);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<ResponseDto<PopularTrainerResponseDto>> popularTrainer() {
+        ResponseDto<PopularTrainerResponseDto> response = trainerProfileService.popularTrainer();
         return ResponseEntity.ok(response);
     }
 }

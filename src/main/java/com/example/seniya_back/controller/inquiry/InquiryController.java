@@ -13,7 +13,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -85,7 +84,6 @@ public class InquiryController {
 
     // 문의 답변
     @PutMapping("/{id}/response")
-    @PreAuthorize("hasRole('TRAINER') or hasRole('ADMIN')")
     public ResponseEntity<ResponseDto<InquiryByIdResponseDto>> inquiryAnswer(
             @AuthenticationPrincipal String username,
             @PathVariable Long id,
