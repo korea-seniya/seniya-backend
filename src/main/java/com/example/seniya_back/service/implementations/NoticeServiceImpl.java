@@ -122,7 +122,5 @@ public class NoticeServiceImpl implements NoticeService {
                 .updatedAt(notice.getUpdatedAt())
                 .build();
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
-
     }
-
 }
