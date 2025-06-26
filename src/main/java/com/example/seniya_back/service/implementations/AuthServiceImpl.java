@@ -143,6 +143,7 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+
     @Override
     public Mono<ResponseEntity<String>> resetPassword(String email, String newPassword) {
         return Mono.fromCallable(() -> {
@@ -156,21 +157,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Mono<ResponseEntity<String>> resetPassword(UserPasswordResetRequestDto dto) {
-        return Mono.fromCallable(() -> {
-            User user = userRepository.findByEmail(dto.getEmail())
-                    .orElseThrow(() -> new IllegalArgumentException("가입된 이메일이 아닙니다."));
-
-            if (!user.isEmailVerified()) {
-                return ResponseEntity.badRequest().body("이메일 인증이 필요합니다.");
-            }
-
-            user.setPassword(bCryptPasswordEncoder.encode(dto.getNewPassword()));
-            userRepository.save(user);
-
-            return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
-        }).onErrorResume(e -> Mono.just(
-                ResponseEntity.badRequest().body("비밀번호 재설정 실패: " + e.getMessage())
-        )).subscribeOn(Schedulers.boundedElastic());
+        return verifyResetPasswordToken(dto.getToken())
+                .flatMap(email -> resetPassword(email, dto.getNewPassword()))
+                .onErrorResume(e -> Mono.just(
+                        ResponseEntity.badRequest().body("비밀번호 재설정 실패: " + e.getMessage())
+                ));
     }
 
     @Override

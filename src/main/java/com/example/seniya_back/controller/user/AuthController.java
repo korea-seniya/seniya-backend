@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.AbstractMap;
 
 @RestController
 @RequestMapping(ApiMappingPattern.AUTH_API)
@@ -57,15 +58,19 @@ public class AuthController {
         return mailService.sendSimpleMessage(dto.getEmail());
     }
 
-    // 이메일 인증 후 리다이렉트
     @GetMapping("/verification-codes/email")
     public Mono<ResponseEntity<Void>> verifyEmail(@RequestParam String token) {
         return Mono.fromCallable(() -> jwtProvider.getClaims(token))
-                .map(claims -> claims.get("email", String.class))
-                .flatMap(email -> mailService.completeEmailVerification(email)
+                .map(claims -> {
+                    String email = claims.get("email", String.class);
+                    return new AbstractMap.SimpleEntry<>(email, token); // 이메일 + 토큰 같이 리턴
+                })
+                .flatMap(entry -> mailService.completeEmailVerification(entry.getKey())
                         .thenReturn(ResponseEntity
                                 .status(HttpStatus.FOUND)
-                                .header(HttpHeaders.LOCATION, "http://localhost:5176/users/me/password-reset?verified=true&email=" + email)
+                                .header(HttpHeaders.LOCATION,
+                                        "http://localhost:5176/users/me/password-reset?token=" +
+                                                entry.getValue() + "&email=" + entry.getKey())
                                 .<Void>build()))
                 .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).<Void>build()));
     }
@@ -79,6 +84,7 @@ public class AuthController {
                 .flatMap(email -> authService.resetPassword(email, dto.getNewPassword()))
                 .onErrorResume(e -> Mono.just(ResponseEntity.badRequest().body(e.getMessage())));
     }
+
 
     // 7) 아이디 중복 확인
     @GetMapping("/check-username")
