@@ -15,6 +15,8 @@ import com.example.seniya_back.repository.UserRepository;
 import com.example.seniya_back.service.NoticeService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -123,4 +125,21 @@ public class NoticeServiceImpl implements NoticeService {
                 .build();
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
     }
+    @Override
+    public ResponseDto<List<NoticeListResponseDto>> getTopNotices(int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        List<Notice> notices = noticeRepository.findNoticesWithPriority(pageable); // 위 쿼리 메서드 사용 시
+
+        List<NoticeListResponseDto> responseDtos = notices.stream()
+                .map(notice -> NoticeListResponseDto.builder()
+                        .username(notice.getUser().getName())
+                        .noticeId(notice.getNoticeId())
+                        .title(notice.getTitle())
+                        .createdAt(notice.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos).getBody();
+    }
+
 }

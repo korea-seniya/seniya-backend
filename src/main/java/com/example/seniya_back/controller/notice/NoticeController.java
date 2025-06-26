@@ -65,4 +65,13 @@ public class NoticeController {
         ResponseDto<GetNoticeDetailResponseDto> response = noticeService.getNoticeById(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("/top")
+    public ResponseEntity<ResponseDto<List<NoticeListResponseDto>>> getTopNotices(
+            @RequestParam(defaultValue = "5") int limit
+    ) {
+        ResponseDto<List<NoticeListResponseDto>> response = noticeService.getTopNotices(limit);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 }

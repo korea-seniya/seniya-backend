@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface NoticeService {
 
+    ResponseDto<List<NoticeListResponseDto>> getTopNotices(int limit);
 
     ResponseDto<NoticeResponseDto> createNotice(NoticeCreateRequestDto dto);
 
