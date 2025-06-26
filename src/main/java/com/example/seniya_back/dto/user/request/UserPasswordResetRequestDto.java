@@ -11,10 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserPasswordResetRequestDto { // 비밀번호 재설정
 
-    @Email(message = "올바른 이메일 형식이어야 합니다.")
-    @NotBlank(message = "이메일은 필수 입력 값 입니다.")
-    private String email;
-
     @NotBlank(message = "토큰은 필수 입력 값 입니다.")
     private String token;
 
