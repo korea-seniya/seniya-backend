@@ -1,5 +1,6 @@
 package com.example.seniya_back.controller.participation;
 
+import com.example.seniya_back.common.constants.ApiMappingPattern;
 import com.example.seniya_back.dto.participation.response.ParticipationInfoResponseDto;
 import com.example.seniya_back.dto.participation.response.ParticipationResponseDto;
 import com.example.seniya_back.dto.participation.response.ParticipationCancelResponseDto;
@@ -12,16 +13,20 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/participations")
+@RequestMapping(ApiMappingPattern.PARTICIPATION_API)
 public class ParticipationController {
 
     private final ParticipationService participationService;
 
     // 사용자가 신청한 수업 목록 조회
     @GetMapping("/me")
-    public List<ParticipationResponseDto> getMyParticipations(@AuthenticationPrincipal(expression = "username") String username) {
+    public List<ParticipationResponseDto> getMyParticipations(
+            @AuthenticationPrincipal String username
+    ) {
+        System.out.println(">>> username: " + username);
         return participationService.getMyParticipations(username);
     }
+
 
     // 단일 수업 신청 정보 조회
     @GetMapping("/{participationId}")
@@ -36,9 +41,10 @@ public class ParticipationController {
     //수업 신청 취소
     @DeleteMapping("/{participationId}")
     public ParticipationCancelResponseDto cancelParticipation(
-            @AuthenticationPrincipal(expression = "username") String username,
+            @AuthenticationPrincipal String username,
             @PathVariable Long participationId
     ) {
         return participationService.cancelParticipation(username, participationId);
     }
+
 }

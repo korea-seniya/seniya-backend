@@ -72,7 +72,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/notices/**").hasRole("ADMIN")
                  
                         .requestMatchers("/api/v1/user/**").hasRole("USER")
-                 
+
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/users/me").authenticated()
                         .anyRequest().authenticated()
                 )

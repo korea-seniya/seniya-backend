@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +24,7 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     @Transactional(readOnly = true)
     public List<ParticipationResponseDto> getMyParticipations(String username) {
+
         List<Participations> participations = participationsRepository.findAllByUser_Username(username);
 
         return participations.stream()
@@ -43,7 +45,10 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     @Transactional(readOnly = true)
     public ParticipationInfoResponseDto getParticipationInfo(String username, Long participationId) {
-        Participations participation = participationsRepository.findByParticipationIdAndUser_Username(participationId, username)
+
+        Optional<Participations> participationOpt = participationsRepository.findByParticipationIdAndUser_Username(participationId, username);
+
+        Participations participation = participationOpt
                 .orElseThrow(() -> new IllegalArgumentException("해당 수업 신청 정보를 찾을 수 없습니다."));
 
         return new ParticipationInfoResponseDto(
@@ -59,7 +64,10 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public ParticipationCancelResponseDto cancelParticipation(String username, Long participationId) {
-        Participations participation = participationsRepository.findByParticipationIdAndUser_Username(participationId, username)
+
+        Optional<Participations> participationOpt = participationsRepository.findByParticipationIdAndUser_Username(participationId, username);
+
+        Participations participation = participationOpt
                 .orElseThrow(() -> new IllegalArgumentException("해당 수업 신청 정보를 찾을 수 없습니다."));
 
         ParticipationInfoResponseDto info = new ParticipationInfoResponseDto(
