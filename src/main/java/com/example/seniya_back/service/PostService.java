@@ -4,6 +4,7 @@ import com.example.seniya_back.dto.Inquiry.responseDto.InquiryResponseDto;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.post.request.PostCreateRequestDto;
 import com.example.seniya_back.dto.post.request.PostUpdateRequestDto;
+import com.example.seniya_back.dto.post.response.PopularPostResponseDto;
 import com.example.seniya_back.dto.post.response.PostDetailResponseDto;
 import com.example.seniya_back.dto.post.response.PostListResponseDto;
 import com.example.seniya_back.dto.post.response.PostResponseDto;
@@ -28,4 +29,5 @@ public interface PostService {
 
     ResponseDto<List<PostListResponseDto>> searchByRole(String roleName);
 
+ ResponseDto<List<PopularPostResponseDto>> getPopularPosts(int limit);
 }

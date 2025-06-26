@@ -6,6 +6,7 @@ import com.example.seniya_back.dto.post.request.PostCreateRequestDto;
 import com.example.seniya_back.dto.post.request.PostSearchByRoleRequestDto;
 import com.example.seniya_back.dto.post.request.PostSearchByTitleRequestDto;
 import com.example.seniya_back.dto.post.request.PostUpdateRequestDto;
+import com.example.seniya_back.dto.post.response.PopularPostResponseDto;
 import com.example.seniya_back.dto.post.response.PostDetailResponseDto;
 import com.example.seniya_back.dto.post.response.PostListResponseDto;
 import com.example.seniya_back.dto.post.response.PostResponseDto;
@@ -86,6 +87,13 @@ public class PostController {
     public ResponseEntity<ResponseDto<List<PostListResponseDto>>> searchByRole(@RequestParam String roleName) {
         ResponseDto<List<PostListResponseDto>> posts = postService.searchByRole(roleName);
         return ResponseEntity.status(HttpStatus.OK).body(posts);
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<ResponseDto<List<PopularPostResponseDto>>> getPopularPosts(
+            @RequestParam(defaultValue = "5") int limit) {
+        ResponseDto<List<PopularPostResponseDto>> popularPosts = postService.getPopularPosts(limit);
+        return ResponseEntity.status(HttpStatus.OK).body(popularPosts);
     }
 
 }

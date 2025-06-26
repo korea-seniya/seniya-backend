@@ -7,6 +7,7 @@ import com.example.seniya_back.dto.Inquiry.responseDto.InquiryResponseDto;
 import com.example.seniya_back.dto.ResponseDto;
 import com.example.seniya_back.dto.post.request.PostCreateRequestDto;
 import com.example.seniya_back.dto.post.request.PostUpdateRequestDto;
+import com.example.seniya_back.dto.post.response.PopularPostResponseDto;
 import com.example.seniya_back.dto.post.response.PostDetailResponseDto;
 import com.example.seniya_back.dto.post.response.PostListResponseDto;
 import com.example.seniya_back.dto.post.response.PostResponseDto;
@@ -20,6 +21,8 @@ import com.example.seniya_back.service.PostService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -264,6 +267,18 @@ public class PostServiceImpl implements PostService {
                 .toList();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos).getBody();
+    }
+
+    @Override
+    public ResponseDto<List<PopularPostResponseDto>> getPopularPosts(int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        List<Post> posts = postRepository.findTopPostsByCommentCount(pageable);
+
+        List<PopularPostResponseDto> popularPosts = posts.stream()
+                .map(PopularPostResponseDto::fromEntity)
+                .collect(Collectors.toList());
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, popularPosts).getBody();
     }
 
     private void saveFile(MultipartFile file, Long targetId, TargetType type) throws IOException {
