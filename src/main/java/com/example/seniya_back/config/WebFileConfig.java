@@ -21,8 +21,6 @@ public class WebFileConfig implements WebMvcConfigurer {
         // 팀원과 상의 후 삭제하거나, 필요하다면 유지합니다.
         // registry.addResourceHandler("/uploads/**")
         //         .addResourceLocations("file:" + uploadDir + "/");
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:C:///upload/file/");
     }
 
 }

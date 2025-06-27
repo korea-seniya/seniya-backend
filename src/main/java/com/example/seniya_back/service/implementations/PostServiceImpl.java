@@ -72,7 +72,7 @@ public class PostServiceImpl implements PostService {
 
         List<UploadFile> uploadFiles = uploadFileRepository.findByTargetIdAndTargetType(post.getPostId(), TargetType.POST);
         List<String> imageUrls = uploadFiles.stream()
-                .map(UploadFile::getUrl)
+                .map(UploadFile::getFilePath)
                 .toList();
 
         PostResponseDto responseDto = PostResponseDto.builder()
@@ -130,7 +130,7 @@ public class PostServiceImpl implements PostService {
 
         List<UploadFile> uploadFiles = uploadFileRepository.findByTargetIdAndTargetType(post.getPostId(), TargetType.POST);
         List<String> imageUrls = uploadFiles.stream()
-                .map(UploadFile::getUrl)
+                .map(UploadFile::getFilePath)
                 .collect(Collectors.toList());
 
         PostDetailResponseDto responseDto = PostDetailResponseDto.builder()
@@ -207,7 +207,7 @@ public class PostServiceImpl implements PostService {
         List<UploadFile> uploadFiles = uploadFileRepository.findByTargetIdAndTargetType(post.getPostId(), TargetType.POST);
 
         List<String> imageUrls = uploadFiles.stream()
-                .map(UploadFile::getUrl)
+                .map(UploadFile::getFilePath)
                 .collect(Collectors.toList());
 
         List<PostDetailResponseDto.CommentDto> commentDtos = post.getComments().stream()
