@@ -14,6 +14,7 @@ import com.example.seniya_back.entity.Certificate;
 import com.example.seniya_back.entity.TrainerProfile;
 import com.example.seniya_back.entity.UploadFile;
 import com.example.seniya_back.entity.User;
+import com.example.seniya_back.mapper.PopularTrainerMapper;
 import com.example.seniya_back.repository.TrainerProfileRepository;
 import com.example.seniya_back.repository.UploadFileRepository;
 import com.example.seniya_back.repository.UserRepository;
@@ -21,8 +22,6 @@ import com.example.seniya_back.service.TrainerProfileService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +39,7 @@ import java.util.stream.Collectors;
 public class TrainerProfileServiceImpl implements TrainerProfileService {
     private final UserRepository userRepository;
     private final TrainerProfileRepository trainerProfileRepository;
+    private final PopularTrainerMapper popularTrainerMapper;
 
     private final UploadFileRepository fileRepo;
 
@@ -243,27 +243,28 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
     @Override
     public ResponseDto<PopularTrainerResponseDto> popularTrainer() {
         PopularTrainerResponseDto responseDto = null;
-        Pageable topOne = PageRequest.of(0, 1);
-        List<Object[]> results = trainerProfileRepository.findPopularTrainers(topOne);
-        if (results.isEmpty()) {
-            throw new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND);
-        }
+//        Pageable topOne = PageRequest.of(0, 1);
+//        List<Object[]> results = trainerProfileRepository.findPopularTrainers(topOne);
+//        if (results.isEmpty()) {
+//            throw new EntityNotFoundException(ResponseMessage.RESOURCE_NOT_FOUND);
+//        }
 
-        Object[] topResult = results.get(0);
-        TrainerProfile trainer = (TrainerProfile) topResult[0];
-        Long count = (Long) topResult[1];
+//        Object[] topResult = results.get(0);
+//        TrainerProfile trainer = (TrainerProfile) topResult[0];
+//        Long count = (Long) topResult[1];
 
-        String profileImageUrl = fileRepo.findFirstByTargetIdAndTargetType(trainer.getTrainerId(), TargetType.PROFILE)
-                .map(UploadFile::getFilePath)
-                .orElse(null);
-
-        responseDto = PopularTrainerResponseDto.builder()
-                .trainerId(trainer.getTrainerId())
-                .name(trainer.getUser().getName())
-                .specialty(trainer.getSpecialty())
-                .profileImageUrl(profileImageUrl)
-                .courseCount(count.intValue())
-                .build();
+//        String profileImageUrl = fileRepo.findFirstByTargetIdAndTargetType(trainer.getTrainerId(), TargetType.PROFILE)
+//                .map(UploadFile::getFilePath)
+//                .orElse(null);
+//
+//        responseDto = PopularTrainerResponseDto.builder()
+//                .trainerId(trainer.getTrainerId())
+//                .name(trainer.getUser().getName())
+//                .specialty(trainer.getSpecialty())
+//                .profileImageUrl(profileImageUrl)
+//                .courseCount(count.intValue())
+//                .build();
+        responseDto = popularTrainerMapper.findPopularTrainer();
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto).getBody();
     }

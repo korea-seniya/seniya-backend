@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.seniya_back.mapper.PopularTrainerMapper">
+
+    <select id="findPopularTrainer"
+            resultType="com.example.seniya_back.dto.trainer.responseDto.PopularTrainerResponseDto">
+        SELECT tp.trainer_id AS trainerId,
+               u.name,
+               tp.specialty,
+               uf.file_path AS profileImageUrl,
+               COUNT(p.participation_id) AS courseCount
+        FROM participations p
+            JOIN courses c
+                ON c.course_id = p.course_id
+            JOIN trainer_profiles tp
+                ON tp.trainer_id = c.trainer_id
+            JOIN users u
+                ON u.user_id = tp.user_id
+            LEFT JOIN upload_files uf
+                ON uf.target_id = tp.trainer_id
+                AND uf.target_type = 'PROFILE'
+        GROUP BY tp.trainer_id, u.name, tp.specialty, uf.file_path
+        ORDER BY courseCount DESC
+        LIMIT 1;
+    </select>
+</mapper>
